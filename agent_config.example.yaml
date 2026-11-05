@@ -1,0 +1,7 @@
+# Copy to agent_config.yaml. Create both agents in the Band web app. Never commit the real file.
+counterparty_buyer:
+  agent_id: ""
+  api_key: ""
+counterparty_vendor:   # the name of this agent must contain "vendor"
+  agent_id: ""
+  api_key: ""

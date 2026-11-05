@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Counterparty</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314213d'/%3E%3Cpath d='M22 11a8 8 0 1 0 0 10' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f4f5f7; --surface: #ffffff; --line: #e1e3e8; --grid: #eceef1;
+  --ink: #12151c; --ink-2: #4c5361; --ink-3: #6f7685;
+  --memory: #2a78d6; --memory-tint: #e8f1fb; --twin: #c7551f; --twin-tint: #fbeee8;
+  --good: #0d7a4f; --good-tint: #e4f4ed; --bad: #b3261e; --bad-tint: #fbeaea; --warn: #8a5a00; --warn-tint: #fbf1dc;
+  --navy: #14213d;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0d1117; --surface: #161b24; --line: #2a3140; --grid: #222936;
+    --ink: #eef0f4; --ink-2: #b4bbc8; --ink-3: #8d95a5;
+    --memory: #5a9fee; --memory-tint: #182a40; --twin: #e8804b; --twin-tint: #38221a;
+    --good: #4cc594; --good-tint: #12302a; --bad: #f08a83; --bad-tint: #3a1d1b; --warn: #e0b35a; --warn-tint: #352a13;
+    --navy: #0a1020;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; }
+button, select { font: inherit; color: inherit; }
+header { background: var(--navy); color: #fff; }
+.bar { max-width: 1320px; margin: auto; padding: 14px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.brand b { font-size: 19px; letter-spacing: -.2px; display: block; }
+.brand span { color: #b9c2d6; font-size: 12.5px; }
+.controls { margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.controls select { background: #223052; border: 1px solid #3a4a70; color: #fff; border-radius: 7px; padding: 7px 9px; max-width: 280px; }
+.btn { border: 1px solid transparent; border-radius: 7px; padding: 7px 14px; font-weight: 600; cursor: pointer; }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn.primary { background: #3b82e0; color: #fff; }
+.btn.ghost { background: transparent; border-color: #4a5b85; color: #fff; }
+.pill { display: inline-block; font-size: 11.5px; font-weight: 700; border-radius: 99px; padding: 2px 9px; letter-spacing: .2px; }
+.notice { background: var(--warn-tint); color: var(--warn); border-bottom: 1px solid var(--line); }
+.notice.live { background: var(--good-tint); color: var(--good); }
+.notice div { max-width: 1320px; margin: auto; padding: 8px 20px; font-size: 13px; }
+main { max-width: 1320px; margin: auto; padding: 16px 20px 40px; display: grid; gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+h2 { font-size: 15px; margin: 0 0 2px; letter-spacing: -.1px; }
+.sub { color: var(--ink-3); font-size: 12.5px; margin: 0 0 10px; }
+.top { display: grid; grid-template-columns: minmax(250px, 1fr) minmax(0, 2.2fr); gap: 14px; }
+.hero { font-size: 40px; font-weight: 700; letter-spacing: -1px; line-height: 1.1; font-variant-numeric: tabular-nums; margin: 4px 0; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; margin-top: 12px; }
+.tile small { display: block; color: var(--ink-3); font-size: 12px; }
+.tile b { font-size: 17px; font-variant-numeric: tabular-nums; }
+.lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.lane-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.price { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; font-size: 16px; }
+.chat { height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 4px; }
+.msg { max-width: 88%; border-radius: 9px; padding: 6px 10px; font-size: 13px; }
+.msg.vendor { background: var(--bg); align-self: flex-start; }
+.msg.buyer { align-self: flex-end; color: var(--ink); }
+.memory .msg.buyer { background: var(--memory-tint); }
+.twin .msg.buyer { background: var(--twin-tint); }
+.msg.final { outline: 1.5px solid var(--warn); }
+.msg.challenge { outline: 1.5px solid var(--memory); font-weight: 600; }
+.msg.walked { background: var(--bad-tint); color: var(--bad); font-weight: 600; }
+.tag { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .3px; margin-bottom: 1px; }
+.deal-title { font-weight: 600; }
+.empty { color: var(--ink-3); padding: 28px 8px; text-align: center; }
+.split { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.tab { border: 1px solid var(--line); background: transparent; border-radius: 99px; padding: 4px 12px; cursor: pointer; font-size: 12.5px; }
+.tab[aria-selected="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+.mems { max-height: 360px; overflow-y: auto; display: grid; gap: 8px; }
+.mem { border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: start; }
+.mem p { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+.forget { background: transparent; border: 1px solid var(--bad); color: var(--bad); border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.forget:disabled { opacity: .5; cursor: wait; }
+.value { grid-column: 1 / -1; border-radius: 7px; padding: 8px 10px; font-size: 13px; }
+.value.pos { background: var(--good-tint); color: var(--good); }
+.value.neg { background: var(--bad-tint); color: var(--bad); }
+.value.none { background: var(--bg); color: var(--ink-2); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th { text-align: left; color: var(--ink-3); font-weight: 600; font-size: 12px; border-bottom: 1px solid var(--line); padding: 5px 8px 5px 0; }
+td { border-bottom: 1px solid var(--grid); padding: 6px 8px 6px 0; }
+.scroll-x { overflow-x: auto; }
+.belief { border-left: 2px solid var(--line); padding: 2px 0 8px 10px; font-size: 12.5px; color: var(--ink-2); }
+.belief b { display: block; color: var(--ink); font-size: 12px; }
+.chart-wrap { position: relative; }
+.tip { position: absolute; pointer-events: none; background: var(--navy); color: #fff; border-radius: 7px; padding: 6px 9px; font-size: 12px; white-space: nowrap; display: none; z-index: 2; }
+svg text { fill: var(--ink-3); font-size: 11px; font-variant-numeric: tabular-nums; }
+details summary { cursor: pointer; color: var(--ink-3); font-size: 12.5px; margin-top: 8px; }
+footer { color: var(--ink-3); font-size: 12px; text-align: center; padding: 0 20px 24px; }
+.error { background: var(--bad-tint); color: var(--bad); border-radius: 8px; padding: 8px 12px; }
+@media (max-width: 900px) { .top, .lanes, .split { grid-template-columns: minmax(0, 1fr); } .hero { font-size: 32px; } .chat { height: 240px; } }
+@media (max-width: 480px) { main { padding: 12px 16px 28px; } .bar { padding: 12px 16px; } .controls { margin-left: 0; } }
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="brand"><b>Counterparty</b><span>The buyer that remembers every bluff</span></div>
+  <div class="controls">
+    <label><span hidden>Number of deals</span><select id="deals" aria-label="Number of deals">
+      <option value="12">12 deals</option><option value="24" selected>24 deals</option><option value="36">36 deals</option></select></label>
+    <button class="btn primary" id="start">Start race</button>
+    <label><span hidden>Recorded run</span><select id="runs" aria-label="Recorded run"></select></label>
+    <button class="btn ghost" id="replay">Replay</button>
+  </div>
+</div></header>
+<div class="notice" id="notice"><div id="noticeText">Connecting…</div></div>
+<main>
+  <div id="err" class="error" hidden></div>
+  <section class="top">
+    <div class="card">
+      <h2>Saved by remembering</h2>
+      <p class="sub">Memoryless buyer's cost minus the remembering buyer's cost, on identical deals</p>
+      <div class="hero" id="hero">₹0</div>
+      <div id="progress" class="sub" style="margin:0">No race yet</div>
+      <div class="tiles">
+        <div class="tile"><small>Average per deal</small><b id="meanGap">–</b></div>
+        <div class="tile"><small>95% interval, per deal</small><b id="ci">–</b></div>
+        <div class="tile"><small>Deals lost, with memory</small><b id="lostM">–</b></div>
+        <div class="tile"><small>Deals lost, no memory</small><b id="lostT">–</b></div>
+        <div class="tile"><small>"Final" prices challenged</small><b id="bluffs">–</b></div>
+        <div class="tile"><small>LLM errors / fallbacks</small><b id="llm">–</b></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Is it learning?</h2>
+      <p class="sub">Cumulative rupees saved over the deals. A rising line means memory keeps paying.</p>
+      <div class="chart-wrap" id="chartWrap"><svg id="chart" width="100%" height="230" role="img" aria-label="Cumulative rupees saved per deal"></svg><div class="tip" id="tip"></div></div>
+      <details><summary>Show as a table</summary><div class="scroll-x"><table id="dealTable"><thead><tr><th>#</th><th>Vendor</th><th>No memory</th><th>With memory</th><th>Saved</th></tr></thead><tbody></tbody></table></div></details>
+    </div>
+  </section>
+  <section class="lanes">
+    <div class="card twin">
+      <div class="lane-head"><span class="dot" style="background:var(--twin)"></span><h2>No memory</h2><span class="price" id="twinPrice"></span></div>
+      <p class="sub deal-sub" style="margin-bottom:8px">Every deal is its first deal</p>
+      <div class="chat" id="chatTwin" aria-live="off"><div class="empty">Waiting for a deal</div></div>
+    </div>
+    <div class="card memory">
+      <div class="lane-head"><span class="dot" style="background:var(--memory)"></span><h2 id="memTitle">With memory</h2><span class="price" id="memPrice"></span></div>
+      <p class="sub deal-sub" id="memSub" style="margin-bottom:8px">Recalls this vendor's history before negotiating</p>
+      <div class="chat" id="chatMem" aria-live="off"><div class="empty">Waiting for a deal</div></div>
+    </div>
+  </section>
+  <section class="split">
+    <div class="card">
+      <h2>What is one memory worth?</h2>
+      <p class="sub">Forget a deal and the buyer renegotiates the same new deal without it, on the same seeds. The difference is that memory's value.</p>
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <button class="forget" id="forgetVendor" hidden style="margin-bottom:10px"></button>
+      <div class="value" id="vendorValue" hidden style="margin-bottom:10px"></div>
+      <div class="mems" id="mems"><div class="empty">Memories appear as deals finish</div></div>
+    </div>
+    <div class="card">
+      <h2>Vendor track record</h2>
+      <p class="sub">Computed from closed deals, never from what vendors claimed</p>
+      <div class="scroll-x"><table id="ledger"><thead><tr><th>Vendor</th><th>False finals</th><th>False claims</th><th>Walked</th><th>Avg saved</th></tr></thead><tbody></tbody></table></div>
+      <h2 style="margin-top:16px">How its belief changed</h2>
+      <p class="sub">The bank's reflection on each vendor as evidence grew</p>
+      <div id="beliefs"><div class="empty">Reflections appear during the race</div></div>
+    </div>
+  </section>
+</main>
+<footer>Vendors are simulated, so all figures are simulated and are not real procurement savings.<br>© 2026 Thirth Patel. Counterparty, a Matrix product. All rights reserved.</footer>
+<script>
+const $ = id => document.getElementById(id);
+const rupee = n => (n < 0 ? "−₹" : "₹") + Math.abs(Math.round(n)).toLocaleString("en-IN");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let state, source, currentMode = "rehearsal", vendorTab = null;
+
+function fresh() {
+  return { deals: [], total: 0, memories: {}, values: {}, beliefs: [], running: false };
+}
+state = fresh();
+
+function setNotice(mode, extra) {
+  currentMode = mode;
+  $("memTitle").textContent = mode === "live" ? "With Hindsight memory" : "With local memory (rehearsal)";
+  const n = $("notice");
+  n.classList.toggle("live", mode === "live");
+  $("noticeText").textContent = mode === "live"
+    ? "LIVE: Groq LLM decisions and Hindsight memory. " + (extra || "Vendors are simulated, so savings are simulated too.")
+    : "REHEARSAL: scripted buyer and local memory, for practising the demo. These numbers say nothing about the real agent. " + (extra || "");
+}
+
+async function refreshStatus() {
+  const s = await (await fetch("/api/status")).json();
+  setNotice(s.mode, s.mode === "rehearsal" && s.missing.length ? "Add " + s.missing.join(" and ") + " to .env for live mode." : "");
+  const select = $("runs");
+  select.innerHTML = s.runs.length ? s.runs.map(r => `<option value="${esc(r.file)}">${esc(r.mode)} · ${r.deals} deals · ${rupee(r.mean_gap)}/deal · ${esc(r.file.slice(0, 13))}</option>`).join("") : "<option value=''>No recorded runs</option>";
+  $("replay").disabled = !s.runs.length || s.running;
+  $("start").disabled = s.running;
+}
+
+function connect() {
+  if (source) source.close();
+  source = new EventSource("/api/stream");
+  source.onmessage = e => handle(JSON.parse(e.data));
+}
+
+function line(arm, m) {
+  const box = arm === "twin" ? $("chatTwin") : $("chatMem");
+  const empty = box.querySelector(".empty"); if (empty) empty.remove();
+  const el = document.createElement("div");
+  const challenge = m.role === "buyer" && m.against_final;
+  el.className = "msg " + m.role + (m.final ? " final" : "") + (m.walked ? " walked" : "") + (challenge ? " challenge" : "");
+  const label = m.walked ? "VENDOR WALKED" : m.final ? "VENDOR SAYS FINAL" : challenge ? "CHALLENGED A FINAL" : m.role === "buyer" ? "BUYER" : "VENDOR";
+  el.innerHTML = `<span class="tag">${label}</span>${esc(m.text)}`;
+  box.append(el); box.scrollTop = box.scrollHeight;
+}
+
+function handle(e) {
+  if (e.type === "reset") { resetView(); return; }
+  if (e.type === "race_start") { resetView(); state.total = e.total; state.running = true; setNotice(e.mode, e.replay ? "Replaying a recorded run." : ""); controls(); }
+  if (e.type === "deal_start") {
+    $("chatTwin").innerHTML = ""; $("chatMem").innerHTML = "";
+    $("twinPrice").textContent = ""; $("memPrice").textContent = "";
+    $("progress").textContent = `Deal ${e.deal} of ${e.total}: ${e.vendor}, ${e.year}-${String(e.month).padStart(2,"0")}${e.quarter_end ? " (quarter-end)" : ""}`;
+  }
+  if (e.type === "message") line(e.arm, e);
+  if (e.type === "deal_end") dealEnd(e);
+  if (e.type === "playbook") { state.beliefs.push(e); renderBeliefs(); }
+  if (e.type === "race_end") {
+    state.running = false; const s = e.summary;
+    $("meanGap").textContent = rupee(s.mean_gap);
+    $("ci").textContent = `${rupee(s.ci95[0])} to ${rupee(s.ci95[1])}`;
+    $("lostM").textContent = s.memory_lost; $("lostT").textContent = s.twin_lost;
+    $("bluffs").textContent = s.bluffs_challenged;
+    $("llm").textContent = `${e.llm_errors ?? 0} / ${e.fallbacks ?? 0}`;
+    $("progress").textContent = `Finished ${s.deals} deals. First third ${rupee(s.first_third_gap)}/deal, last third ${rupee(s.last_third_gap)}/deal.`;
+    controls(); refreshStatus();
+  }
+  if (e.type === "error") { $("err").hidden = false; $("err").textContent = e.message; state.running = false; controls(); }
+}
+
+function controls() { $("start").disabled = state.running; $("replay").disabled = state.running; }
+
+function dealEnd(e) {
+  state.deals.push(e);
+  $("hero").textContent = rupee(e.cumulative_saved);
+  $("twinPrice").textContent = e.twin_outcome === "closed" ? rupee(e.twin_price) : "Lost: " + rupee(e.twin_price);
+  $("memPrice").textContent = e.memory_outcome === "closed" ? rupee(e.memory_price) : "Lost: " + rupee(e.memory_price);
+  $("memSub").textContent = `Recalled ${e.memories_used.length} memories for this deal`;
+  (state.memories[e.vendor_slug] = state.memories[e.vendor_slug] || { name: e.vendor, items: [] }).items.unshift(e);
+  if (!vendorTab) vendorTab = e.vendor_slug;
+  const row = document.createElement("tr");
+  row.innerHTML = `<td>${e.deal}</td><td>${esc(e.vendor)}</td><td>${rupee(e.twin_price)}</td><td>${rupee(e.memory_price)}</td><td>${rupee(e.saved)}</td>`;
+  document.querySelector("#dealTable tbody").append(row);
+  const gaps = state.deals.map(d => d.saved);
+  $("meanGap").textContent = rupee(gaps.reduce((a, b) => a + b, 0) / gaps.length);
+  $("lostM").textContent = state.deals.filter(d => d.memory_outcome !== "closed").length;
+  $("lostT").textContent = state.deals.filter(d => d.twin_outcome !== "closed").length;
+  $("bluffs").textContent = state.deals.filter(d => d.challenged).length;
+  renderChart(); renderTabs(); renderMems(); renderLedger();
+}
+
+function renderChart() {
+  const svg = $("chart"), W = svg.clientWidth || 700, H = 230, L = 62, R = 14, T = 12, B = 26;
+  const pts = state.deals; const n = Math.max(state.total, pts.length, 2);
+  const ys = pts.map(p => p.cumulative_saved);
+  const rawMin = Math.min(0, ...ys), rawMax = Math.max(1000, ...ys);
+  const step = niceStep((rawMax - rawMin) / 4);
+  const min = Math.floor(rawMin / step) * step, max = Math.ceil(rawMax / step) * step;
+  const X = i => L + (i / (n - 1)) * (W - L - R), Y = v => T + (1 - (v - min) / (max - min)) * (H - T - B);
+  let g = "";
+  for (let v = min; v <= max + 1; v += step) {
+    g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v === 0 ? "var(--ink-3)" : "var(--grid)"}"/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end">${rupeeShort(v)}</text>`;
+  }
+  const every = Math.max(1, Math.ceil(n / 8));
+  for (let i = 0; i < n; i += every) g += `<text x="${X(i)}" y="${H - 8}" text-anchor="middle">${i + 1}</text>`;
+  if (pts.length) {
+    const d = pts.map((p, i) => `${i ? "L" : "M"}${X(i)} ${Y(p.cumulative_saved)}`).join("");
+    g += `<path d="${d}L${X(pts.length - 1)} ${Y(0)}L${X(0)} ${Y(0)}Z" fill="var(--memory)" opacity=".1"/>`;
+    g += `<path d="${d}" fill="none" stroke="var(--memory)" stroke-width="2" stroke-linejoin="round"/>`;
+    g += `<circle cx="${X(pts.length - 1)}" cy="${Y(ys.at(-1))}" r="4.5" fill="var(--memory)" stroke="var(--surface)" stroke-width="2"/>`;
+    g += `<line id="cross" y1="${T}" y2="${H - B}" stroke="var(--ink-3)" stroke-dasharray="3 3" opacity="0"/>`;
+  }
+  svg.innerHTML = g;
+  svg.onmousemove = ev => {
+    if (!pts.length) return;
+    const rect = svg.getBoundingClientRect(), i = Math.max(0, Math.min(pts.length - 1, Math.round((ev.clientX - rect.left - L) / (W - L - R) * (n - 1))));
+    const p = pts[i], tip = $("tip"), cross = svg.querySelector("#cross");
+    cross.setAttribute("x1", X(i)); cross.setAttribute("x2", X(i)); cross.setAttribute("opacity", 1);
+    tip.style.display = "block"; tip.innerHTML = `Deal ${p.deal}, ${esc(p.vendor)}<br>This deal ${rupee(p.saved)} · Total ${rupee(p.cumulative_saved)}`;
+    tip.style.left = Math.min(X(i) + 10, W - tip.offsetWidth - 4) + "px"; tip.style.top = (Y(p.cumulative_saved) > 70 ? Y(p.cumulative_saved) - 48 : Y(p.cumulative_saved) + 10) + "px";
+  };
+  svg.onmouseleave = () => { $("tip").style.display = "none"; const c = svg.querySelector("#cross"); if (c) c.setAttribute("opacity", 0); };
+}
+function niceStep(raw) { const m = Math.pow(10, Math.floor(Math.log10(raw || 1))); const r = raw / m; return (r <= 1 ? 1 : r <= 2 ? 2 : r <= 5 ? 5 : 10) * m; }
+function rupeeShort(v) { const a = Math.abs(v); const s = a >= 100000 ? (a / 100000).toFixed(a % 100000 ? 1 : 0) + "L" : a >= 1000 ? (a / 1000).toFixed(a % 1000 ? 1 : 0) + "k" : a; return (v < 0 ? "−₹" : "₹") + s; }
+
+function renderTabs() {
+  $("tabs").innerHTML = Object.entries(state.memories).map(([slug, v]) =>
+    `<button class="tab" role="tab" aria-selected="${slug === vendorTab}" data-slug="${esc(slug)}">${esc(v.name)} (${v.items.length})</button>`).join("");
+  $("tabs").querySelectorAll(".tab").forEach(b => b.onclick = () => { vendorTab = b.dataset.slug; renderTabs(); renderMems(); });
+}
+
+function renderVendorForget(group) {
+  const b = $("forgetVendor"), box = $("vendorValue"), v = state.values["vendor:" + vendorTab];
+  b.hidden = false; b.disabled = state.running || v === "busy";
+  b.textContent = v === "busy" ? "Rerunning…" : `Forget everything about ${group.name}`;
+  b.onclick = () => forget("vendor:" + vendorTab, { vendor: vendorTab });
+  box.hidden = !v || v === "busy";
+  if (v && v !== "busy") {
+    box.className = "value " + (v.error || v.value < 0 ? "neg" : v.value > 0 ? "pos" : "none");
+    box.innerHTML = v.error ? esc(v.error) : `<b>${group.items.length} memories were worth ${rupee(v.value)} on the next deal</b><br>Average of ${v.seeds} reruns, range ${rupee(v.min)} to ${rupee(v.max)}.`;
+  }
+}
+
+function renderMems() {
+  const group = state.memories[vendorTab]; if (!group) return;
+  renderVendorForget(group);
+  const scroll = $("mems").scrollTop;
+  $("mems").innerHTML = group.items.map(m => {
+    const v = state.values[m.deal_id];
+    let value = "";
+    if (v && v.error) value = `<div class="value neg">${esc(v.error)}</div>`;
+    else if (v && v !== "busy") {
+      const cls = v.value > 0 ? "pos" : v.value < 0 ? "neg" : "none";
+      const head = v.value > 0 ? `This memory was worth ${rupee(v.value)} on the next deal` : v.value < 0 ? `This memory cost ${rupee(-v.value)} on the next deal` : "Forgetting this one changed nothing: other memories teach the same lesson";
+      value = `<div class="value ${cls}"><b>${head}</b><br>${v.seeds} reruns of the next ${esc(group.name)} deal, range ${rupee(v.min)} to ${rupee(v.max)}. With it ${rupee(v.rows[0].with_memory)}, without it ${rupee(v.rows[0].without_memory)} on the first rerun.</div>`;
+    }
+    return `<div class="mem"><p>${esc(m.memory_text)}</p><button class="forget" data-id="${esc(m.deal_id)}" ${state.running ? "disabled" : ""}>${v === "busy" ? "Rerunning…" : "Forget"}</button>${v === "busy" ? "" : value}</div>`;
+  }).join("");
+  $("mems").scrollTop = scroll;
+  $("mems").querySelectorAll(".forget").forEach(b => b.onclick = () => forget(b.dataset.id, { document_id: b.dataset.id }));
+}
+
+async function forget(id, target) {
+  state.values[id] = "busy"; renderMems();
+  try {
+    const r = await fetch("/api/forget", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...target, seeds: currentMode === "live" ? 3 : 5 }) });
+    const data = await r.json();
+    state.values[id] = r.ok ? data : { error: data.detail || "Could not rerun the deal." };
+  } catch (err) { state.values[id] = { error: "Could not reach the server." }; }
+  renderMems();
+}
+
+function renderLedger() {
+  const rows = {};
+  for (const d of state.deals) {
+    const r = rows[d.vendor] = rows[d.vendor] || { finals: 0, claims: 0, walks: 0, saved: 0, n: 0 };
+    r.finals += d.false_finals; r.claims += d.false_claims; r.walks += d.walked ? 1 : 0; r.saved += d.saved; r.n++;
+  }
+  document.querySelector("#ledger tbody").innerHTML = Object.entries(rows).map(([name, r]) =>
+    `<tr><td>${esc(name)}</td><td>${r.finals}</td><td>${r.claims}</td><td>${r.walks}</td><td>${rupee(r.saved / r.n)}</td></tr>`).join("");
+}
+
+function renderBeliefs() {
+  const latest = state.beliefs.slice(-6).reverse();
+  $("beliefs").innerHTML = latest.map(b => `<div class="belief"><b>${esc(b.name)}, after ${b.after_deal} deals</b>${esc(b.text)}</div>`).join("");
+}
+
+function resetView() {
+  state = fresh(); vendorTab = null;
+  ["chatTwin", "chatMem"].forEach(id => $(id).innerHTML = '<div class="empty">Waiting for a deal</div>');
+  $("hero").textContent = "₹0"; ["meanGap", "ci", "lostM", "lostT", "bluffs", "llm"].forEach(id => $(id).textContent = "–");
+  $("twinPrice").textContent = ""; $("memPrice").textContent = ""; $("tabs").innerHTML = "";
+  $("forgetVendor").hidden = true; $("vendorValue").hidden = true;
+  $("mems").innerHTML = '<div class="empty">Memories appear as deals finish</div>';
+  $("beliefs").innerHTML = '<div class="empty">Reflections appear during the race</div>';
+  document.querySelector("#ledger tbody").innerHTML = ""; document.querySelector("#dealTable tbody").innerHTML = "";
+  $("err").hidden = true; renderChart();
+}
+
+async function post(path, body) {
+  $("err").hidden = true;
+  const r = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if (!r.ok) { const d = await r.json(); $("err").hidden = false; $("err").textContent = d.detail || "Request failed."; }
+}
+$("start").onclick = () => post("/api/race", { deals: +$("deals").value, mode: "auto" });
+$("replay").onclick = () => $("runs").value && post("/api/replay", { run: $("runs").value, pace: 0.05 });
+window.addEventListener("resize", renderChart);
+refreshStatus().then(connect);
+renderChart();
+</script>
+</body>
+</html>

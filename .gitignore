@@ -1,0 +1,8 @@
+.env
+agent_config.yaml
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+# Rehearsal runs are practice data. Live runs are kept so the demo can replay them.
+runs/*rehearsal*.json
