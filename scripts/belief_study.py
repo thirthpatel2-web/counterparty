@@ -49,24 +49,28 @@ def block(found: list[dict], notes: bool = False) -> str:
         partial_note = (f"\n\nStudy `{p['id']}` (seed 203) was invalidated when Hindsight Cloud ran out of credit "
                         "after checkpoint 3. Its valid checkpoints 1-3 alone give Hindsight "
                         f"{tally('hindsight', [p], 3)}, and arithmetic {tally('arithmetic', [p], 3)}.")
-    return (f"{len(found)} live stud{'y' if len(found) == 1 else 'ies'}: "
-            + ", ".join(f"`{s['id']}` ({s.get('backend') or 'Hindsight Cloud'})" for s in found)
-            + f". {failures} failed briefings.\n\n"
-            "Share of the 9 questions (3 per vendor) that the briefing answered correctly. Saying \"unknown\" counts "
-            "as not correct.\n\n"
-            + ("Hindsight was given only the buyer's messy notes, with no verdicts. Arithmetic was given perfectly "
-               "structured records of the same deals, which a real buyer doesn't have.\n\n" if notes else "")
-            + f"{head}\n{row('Hindsight reflect briefing' + (' on messy notes' if notes else ''), hs)}\n"
-            f"{row('Exact arithmetic over ' + ('perfectly structured records' if notes else 'the same records'), ar)}\n\n"
-            f"Range across studies for Hindsight: {spread(hs)}.\n\n"
-            f"Across all checkpoints, Hindsight: {tally('hindsight', found)}. Arithmetic: "
-            f"{tally('arithmetic', found)}. The calibrated score counts +1 per right answer and -1 per confidently "
-            "wrong one, so guessing doesn't pay. Both curves rise as the same deals arrive. Arithmetic is a "
-            "hand-written rule over " + ("structured data the notes don't give, a ceiling Hindsight isn't expected to "
-                                         "reach." if notes else "the same labels, not a ceiling.")
-            f"{partial_note}\n\n"
-            "The questions: does the vendor bluff about \"final\"? At which round does it walk away? Is quarter-end "
-            "cheaper? The answers are checked against the simulator's hidden traits.")
+    studies_list = ", ".join(f"`{s['id']}` ({s.get('backend') or 'Hindsight Cloud'})" for s in found)
+    setup = ("Hindsight was given only the buyer's messy notes, with no verdicts. Arithmetic was given perfectly "
+             "structured records of the same deals, which a real buyer doesn't have.\n\n") if notes else ""
+    hs_name = "Hindsight reflect briefing" + (" on messy notes" if notes else "")
+    ar_name = "Exact arithmetic over " + ("perfectly structured records" if notes else "the same records")
+    ceiling = ("structured data the notes don't give, a ceiling Hindsight isn't expected to reach." if notes
+               else "the same labels, not a ceiling.")
+    parts = [
+        f"{len(found)} live stud{'y' if len(found) == 1 else 'ies'}: {studies_list}. {failures} failed briefings.\n\n",
+        "Share of the 9 questions (3 per vendor) that the briefing answered correctly. Saying \"unknown\" counts "
+        "as not correct.\n\n",
+        setup,
+        f"{head}\n{row(hs_name, hs)}\n{row(ar_name, ar)}\n\n",
+        f"Range across studies for Hindsight: {spread(hs)}.\n\n",
+        f"Across all checkpoints, Hindsight: {tally('hindsight', found)}. Arithmetic: {tally('arithmetic', found)}. "
+        "The calibrated score counts +1 per right answer and -1 per confidently wrong one, so guessing doesn't pay. "
+        f"Both curves rise as the same deals arrive. Arithmetic is a hand-written rule over {ceiling}",
+        f"{partial_note}\n\n",
+        "The questions: does the vendor bluff about \"final\"? At which round does it walk away? Is quarter-end "
+        "cheaper? The answers are checked against the simulator's hidden traits.",
+    ]
+    return "".join(parts)
 
 
 def write_readme(found: list[dict], marker: str = "BELIEFS") -> None:

@@ -87,7 +87,7 @@ Share of the 9 questions (3 per vendor) that the briefing answered correctly. Sa
 
 Range across studies for Hindsight: 22%–44% | 33%–44% | 67%–78% | 78%–89% | 78%–89% | 89%–100%.
 
-Across all checkpoints, Hindsight: 73 right, 5 confidently wrong, 30 unknown, out of 108; calibrated score +0.63. Arithmetic: 75 right, 0 confidently wrong, 33 unknown, out of 108; calibrated score +0.69. The calibrated score counts +1 per right answer and -1 per confidently wrong one, so guessing doesn't pay. Both curves rise as the same records arrive. Arithmetic is a hand-written rule over the same labels, not a ceiling.
+Across all checkpoints, Hindsight: 73 right, 5 confidently wrong, 30 unknown, out of 108; calibrated score +0.63. Arithmetic: 75 right, 0 confidently wrong, 33 unknown, out of 108; calibrated score +0.69. The calibrated score counts +1 per right answer and -1 per confidently wrong one, so guessing doesn't pay. Both curves rise as the same deals arrive. Arithmetic is a hand-written rule over the same labels, not a ceiling.
 
 Study `20261106-141812-509f` (seed 203) was invalidated when Hindsight Cloud ran out of credit after checkpoint 3. Its valid checkpoints 1-3 alone give Hindsight 12 right, 3 confidently wrong, 12 unknown, out of 27; calibrated score +0.33, and arithmetic 11 right, 0 confidently wrong, 16 unknown, out of 27; calibrated score +0.41.
 
