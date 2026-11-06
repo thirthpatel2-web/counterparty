@@ -133,6 +133,23 @@ def bootstrap_ci(values: list[float], draws: int = 2000, seed: int = 11) -> tupl
     return (means[int(0.025 * draws)], means[int(0.975 * draws) - 1])
 
 
+def accept_first_final(spec: DealSpec) -> int:
+    """The strongest fixed no-memory strategy we know: offer low, accept the first "final" price.
+
+    It needs no LLM, so it is a baseline that wording in a prompt cannot weaken.
+    """
+    talks = Negotiation(VENDOR_BY_SLUG[spec.vendor_slug], spec.month, spec.seed)
+    bid = talks.opening().price * 0.7
+    while True:
+        reply = talks.counter(bid)
+        if reply.deal:
+            return reply.price
+        if reply.walked:
+            return lost_deal_price()
+        if reply.says_final:
+            return talks.accept().price
+
+
 def summarize(pairs: list[dict]) -> dict:
     gaps = [p["twin"]["price"] - p["memory"]["price"] for p in pairs]
     third = max(1, len(pairs) // 3)
@@ -148,7 +165,11 @@ def summarize(pairs: list[dict]) -> dict:
                 "memory_lost": sum(r["memory"]["outcome"] != "closed" for r in rows),
                 "twin_lost": sum(r["twin"]["outcome"] != "closed" for r in rows),
             }
+    fixed = [p["memory"]["price"] - accept_first_final(DealSpec(**p["memory"]["spec"])) for p in pairs]
     return {
+        "vs_fixed_mean": round(statistics.fmean(fixed)) if fixed else 0,
+        "vs_fixed_ci95": [round(v) for v in bootstrap_ci(fixed)],
+        "vs_fixed_last_third": round(statistics.fmean(fixed[-third:])) if fixed else 0,
         "deals": len(pairs), "total_saved": sum(gaps),
         "mean_gap": round(statistics.fmean(gaps)) if gaps else 0,
         "ci95": [round(low), round(high)],

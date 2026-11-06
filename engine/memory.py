@@ -36,14 +36,18 @@ class DealRecord:
             if self.outcome == "closed" and self.closing < price:
                 lines.append(f"At round {round_no} {self.vendor_name} claimed ₹{price:,} was final. That claim was "
                              f"FALSE: the deal later closed ₹{price - self.closing:,} lower.")
+            elif self.outcome == "closed":
+                lines.append(f"At round {round_no} {self.vendor_name} claimed ₹{price:,} was final. The buyer "
+                             "accepted without testing it, so it is UNKNOWN whether that claim was a bluff.")
             else:
-                lines.append(f"At round {round_no} {self.vendor_name} claimed ₹{price:,} was final. "
-                             "No lower price was reached after that claim.")
+                lines.append(f"At round {round_no} {self.vendor_name} claimed ₹{price:,} was final, and the "
+                             "vendor walked away when pushed further, so that claim was TRUE.")
         if self.outcome == "closed":
             lines.append(f"Closed at ₹{self.closing:,} after {self.rounds} rounds.")
         else:
             lines.append(f"{self.vendor_name} WALKED AWAY at round {self.rounds} and the deal was lost. "
-                         f"The last price on the table had been ₹{self.closing:,}.")
+                         f"The last price on the table had been ₹{self.closing:,}. Next time, accept before "
+                         f"making a round {self.rounds} offer to {self.vendor_name}.")
         for claim in self.false_claims:
             lines.append(f"{self.vendor_name} made a {claim.replace('_', ' ')} pressure claim that proved FALSE.")
         return " ".join(lines)

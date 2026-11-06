@@ -1,0 +1,3223 @@
+{
+ "id": "20261105-234834",
+ "mode": "live",
+ "summary": {
+  "deals": 12,
+  "total_saved": -47946,
+  "mean_gap": -3996,
+  "ci95": [
+   -8023,
+   -452
+  ],
+  "first_third_gap": -1634,
+  "last_third_gap": -2213,
+  "memory_lost": 4,
+  "twin_lost": 2,
+  "bluffs_challenged": 0,
+  "per_vendor": {
+   "apex": {
+    "name": "Apex Circuits",
+    "deals": 4,
+    "memory_avg": 97814,
+    "twin_avg": 95272,
+    "memory_lost": 0,
+    "twin_lost": 0
+   },
+   "bharat": {
+    "name": "Bharat PCB",
+    "deals": 4,
+    "memory_avg": 105000,
+    "twin_avg": 94179,
+    "memory_lost": 4,
+    "twin_lost": 1
+   },
+   "nova": {
+    "name": "Nova Components",
+    "deals": 4,
+    "memory_avg": 96070,
+    "twin_avg": 97446,
+    "memory_lost": 0,
+    "twin_lost": 1
+   }
+  }
+ },
+ "pairs": [
+  {
+   "memory": {
+    "spec": {
+     "index": 1,
+     "vendor_slug": "nova",
+     "month": 1,
+     "year": 2025,
+     "seed": 7001
+    },
+    "outcome": "closed",
+    "price": 95629,
+    "opening": 99342,
+    "rounds": 3,
+    "floor": 84137,
+    "overpaid": 11492,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 1,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,342.",
+      "price": 99342
+     },
+     {
+      "arm": "memory",
+      "deal": 1,
+      "role": "buyer",
+      "text": "Can you do \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 1,
+      "role": "vendor",
+      "text": "Two other buyers are waiting on this lot, and the price rises tomorrow. I can do \u20b997,007.",
+      "price": 97007,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 1,
+      "role": "buyer",
+      "text": "Can you meet \u20b993,000 for the lot?",
+      "action": "offer",
+      "price": 93000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 1,
+      "role": "vendor",
+      "text": "I can do \u20b996,005.",
+      "price": 96005,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 1,
+      "role": "buyer",
+      "text": "Can you meet \u20b994,500 for the lot?",
+      "action": "offer",
+      "price": 94500,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 1,
+      "role": "vendor",
+      "text": "This is my final price: \u20b995,629.",
+      "price": 95629,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 1,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b995,629.",
+      "action": "accept"
+     },
+     {
+      "arm": "memory",
+      "deal": 1,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 95629
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-001-nova-2025-01",
+     "vendor_slug": "nova",
+     "vendor_name": "Nova Components",
+     "month": 1,
+     "year": 2025,
+     "opening": 99342,
+     "closing": 95629,
+     "outcome": "closed",
+     "rounds": 3,
+     "final_claims": [
+      [
+       3,
+       95629
+      ]
+     ],
+     "false_claims": [
+      "scarcity"
+     ]
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 1,
+     "vendor_slug": "nova",
+     "month": 1,
+     "year": 2025,
+     "seed": 7001
+    },
+    "outcome": "closed",
+    "price": 95629,
+    "opening": 99342,
+    "rounds": 3,
+    "floor": 84137,
+    "overpaid": 11492,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 1,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,342.",
+      "price": 99342
+     },
+     {
+      "arm": "twin",
+      "deal": 1,
+      "role": "buyer",
+      "text": "Could you consider \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 1,
+      "role": "vendor",
+      "text": "Two other buyers are waiting on this lot, and the price rises tomorrow. I can do \u20b997,007.",
+      "price": 97007,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 1,
+      "role": "buyer",
+      "text": "Could you meet \u20b993,000 for the lot?",
+      "action": "offer",
+      "price": 93000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 1,
+      "role": "vendor",
+      "text": "I can do \u20b996,005.",
+      "price": 96005,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 1,
+      "role": "buyer",
+      "text": "Could you meet \u20b994,500 for the lot?",
+      "action": "offer",
+      "price": 94500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 1,
+      "role": "vendor",
+      "text": "This is my final price: \u20b995,629.",
+      "price": 95629,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 1,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b995,629.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 1,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 95629
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-001-nova-2025-01",
+     "vendor_slug": "nova",
+     "vendor_name": "Nova Components",
+     "month": 1,
+     "year": 2025,
+     "opening": 99342,
+     "closing": 95629,
+     "outcome": "closed",
+     "rounds": 3,
+     "final_claims": [
+      [
+       3,
+       95629
+      ]
+     ],
+     "false_claims": [
+      "scarcity"
+     ]
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": 0
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 2,
+     "vendor_slug": "apex",
+     "month": 1,
+     "year": 2025,
+     "seed": 7002
+    },
+    "outcome": "closed",
+    "price": 97521,
+    "opening": 99725,
+    "rounds": 2,
+    "floor": 79676,
+    "overpaid": 17845,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 2,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,725.",
+      "price": 99725
+     },
+     {
+      "arm": "memory",
+      "deal": 2,
+      "role": "buyer",
+      "text": "Could you consider \u20b995,000 for the lot?",
+      "action": "offer",
+      "price": 95000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 2,
+      "role": "vendor",
+      "text": "Your competitor already paid this price last week. I can do \u20b998,071.",
+      "price": 98071,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 2,
+      "role": "buyer",
+      "text": "Could you meet \u20b996,500 for the lot?",
+      "action": "offer",
+      "price": 96500,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 2,
+      "role": "vendor",
+      "text": "This is my final price: \u20b997,521.",
+      "price": 97521,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 2,
+      "role": "buyer",
+      "text": "I accept your final price of \u20b997,521.",
+      "action": "accept"
+     },
+     {
+      "arm": "memory",
+      "deal": 2,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 97521
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-002-apex-2025-01",
+     "vendor_slug": "apex",
+     "vendor_name": "Apex Circuits",
+     "month": 1,
+     "year": 2025,
+     "opening": 99725,
+     "closing": 97521,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       97521
+      ]
+     ],
+     "false_claims": [
+      "competitor_price"
+     ]
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 2,
+     "vendor_slug": "apex",
+     "month": 1,
+     "year": 2025,
+     "seed": 7002
+    },
+    "outcome": "closed",
+    "price": 97103,
+    "opening": 99725,
+    "rounds": 2,
+    "floor": 79676,
+    "overpaid": 17427,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 2,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,725.",
+      "price": 99725
+     },
+     {
+      "arm": "twin",
+      "deal": 2,
+      "role": "buyer",
+      "text": "Could you consider \u20b994,700 for the lot?",
+      "action": "offer",
+      "price": 94700,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 2,
+      "role": "vendor",
+      "text": "Your competitor already paid this price last week. I can do \u20b997,966.",
+      "price": 97966,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 2,
+      "role": "buyer",
+      "text": "Could you meet \u20b995,500 for the lot?",
+      "action": "offer",
+      "price": 95500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 2,
+      "role": "vendor",
+      "text": "This is my final price: \u20b997,103.",
+      "price": 97103,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 2,
+      "role": "buyer",
+      "text": "I accept your final price of \u20b997,103.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 2,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 97103
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-002-apex-2025-01",
+     "vendor_slug": "apex",
+     "vendor_name": "Apex Circuits",
+     "month": 1,
+     "year": 2025,
+     "opening": 99725,
+     "closing": 97103,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       97103
+      ]
+     ],
+     "false_claims": [
+      "competitor_price"
+     ]
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -418
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 3,
+     "vendor_slug": "bharat",
+     "month": 1,
+     "year": 2025,
+     "seed": 7003
+    },
+    "outcome": "vendor_walked",
+    "price": 105000,
+    "opening": 97164,
+    "rounds": 3,
+    "floor": 89079,
+    "overpaid": 15921,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 3,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,164.",
+      "price": 97164
+     },
+     {
+      "arm": "memory",
+      "deal": 3,
+      "role": "buyer",
+      "text": "Could you consider \u20b992,000 for the lot?",
+      "action": "offer",
+      "price": 92000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 3,
+      "role": "vendor",
+      "text": "I can do \u20b993,033.",
+      "price": 93033,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 3,
+      "role": "buyer",
+      "text": "Could you meet \u20b992,800 for the lot?",
+      "action": "offer",
+      "price": 92800,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 3,
+      "role": "vendor",
+      "text": "I can do \u20b992,847.",
+      "price": 92847,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 3,
+      "role": "buyer",
+      "text": "Could you meet \u20b992,820 for the lot?",
+      "action": "offer",
+      "price": 92820,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 3,
+      "role": "vendor",
+      "text": "We're too far apart. Withdrawing this quote.",
+      "price": 92847,
+      "final": false,
+      "walked": true
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-003-bharat-2025-01",
+     "vendor_slug": "bharat",
+     "vendor_name": "Bharat PCB",
+     "month": 1,
+     "year": 2025,
+     "opening": 97164,
+     "closing": 92847,
+     "outcome": "vendor_walked",
+     "rounds": 3,
+     "final_claims": [],
+     "false_claims": []
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 3,
+     "vendor_slug": "bharat",
+     "month": 1,
+     "year": 2025,
+     "seed": 7003
+    },
+    "outcome": "closed",
+    "price": 89887,
+    "opening": 97164,
+    "rounds": 2,
+    "floor": 89079,
+    "overpaid": 808,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 3,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,164.",
+      "price": 97164
+     },
+     {
+      "arm": "twin",
+      "deal": 3,
+      "role": "buyer",
+      "text": "Could you consider \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 3,
+      "role": "vendor",
+      "text": "I can do \u20b991,433.",
+      "price": 91433,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 3,
+      "role": "buyer",
+      "text": "Could you meet \u20b989,500 for the lot?",
+      "action": "offer",
+      "price": 89500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 3,
+      "role": "vendor",
+      "text": "This is my final price: \u20b989,887.",
+      "price": 89887,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 3,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b989,887.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 3,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 89887
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-003-bharat-2025-01",
+     "vendor_slug": "bharat",
+     "vendor_name": "Bharat PCB",
+     "month": 1,
+     "year": 2025,
+     "opening": 97164,
+     "closing": 89887,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       89887
+      ]
+     ],
+     "false_claims": []
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -15531
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 4,
+     "vendor_slug": "nova",
+     "month": 2,
+     "year": 2025,
+     "seed": 7004
+    },
+    "outcome": "closed",
+    "price": 96007,
+    "opening": 97136,
+    "rounds": 3,
+    "floor": 84967,
+    "overpaid": 11040,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 4,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,136.",
+      "price": 97136
+     },
+     {
+      "arm": "memory",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Can you do \u20b995,000 for this lot?",
+      "action": "offer",
+      "price": 95000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 4,
+      "role": "vendor",
+      "text": "Two other buyers are waiting on this lot, and the price rises tomorrow. I can do \u20b996,602.",
+      "price": 96602,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Can you meet \u20b995,300 for this lot?",
+      "action": "offer",
+      "price": 95300,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 4,
+      "role": "vendor",
+      "text": "I can do \u20b996,277.",
+      "price": 96277,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Can you meet \u20b995,200 for this lot?",
+      "action": "offer",
+      "price": 95200,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 4,
+      "role": "vendor",
+      "text": "This is my final price: \u20b996,007.",
+      "price": 96007,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b996,007.",
+      "action": "accept"
+     },
+     {
+      "arm": "memory",
+      "deal": 4,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 96007
+     }
+    ],
+    "memories_used": [
+     {
+      "id": "2292edca-9562-4c27-a0c9-edcc3f7b8ed8",
+      "text": "Nova Components claimed \u20b995,629 was their final price at round 3.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "7421c596-e21c-489f-bc08-7682d6f956ed",
+      "text": "Nova Components claimed \u20b995,629 was their final price at round 3, which held true as no lower price was reached. | When: 2025-01-15 | Involving: Nova Components",
+      "document_id": "deal-001-nova-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "01928841-90ee-4639-a8a3-ac17d3917aad",
+      "text": "deal-001-nova-2025-01 closed at \u20b995,629 after 3 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "f4ecfcd6-cdd3-419c-9019-b0540e480377",
+      "text": "Nova Components deal-001-nova-2025-01 closed at \u20b995,629 after 3 rounds. | When: 2025-01-01 to 2025-01-31 | Involving: Nova Components",
+      "document_id": "deal-001-nova-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "930174ed-7bb6-4780-8ec4-51e3625772a2",
+      "text": "Nova Components made a scarcity pressure claim during negotiations that proved to be false. | When: 2025-01-15 | Involving: Nova Components",
+      "document_id": "deal-001-nova-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "fdaed92c-2643-4a8b-ab33-3b3343315a67",
+      "text": "Nova Components made a scarcity pressure claim during negotiations that proved to be false.",
+      "document_id": "",
+      "kind": "observation"
+     }
+    ],
+    "record": {
+     "deal_id": "deal-004-nova-2025-02",
+     "vendor_slug": "nova",
+     "vendor_name": "Nova Components",
+     "month": 2,
+     "year": 2025,
+     "opening": 97136,
+     "closing": 96007,
+     "outcome": "closed",
+     "rounds": 3,
+     "final_claims": [
+      [
+       3,
+       96007
+      ]
+     ],
+     "false_claims": [
+      "scarcity"
+     ]
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 4,
+     "vendor_slug": "nova",
+     "month": 2,
+     "year": 2025,
+     "seed": 7004
+    },
+    "outcome": "vendor_walked",
+    "price": 105000,
+    "opening": 97136,
+    "rounds": 7,
+    "floor": 84967,
+    "overpaid": 20033,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,136.",
+      "price": 97136
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Could you consider \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "vendor",
+      "text": "Two other buyers are waiting on this lot, and the price rises tomorrow. I can do \u20b995,352.",
+      "price": 95352,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Could you meet \u20b992,000 for the lot?",
+      "action": "offer",
+      "price": 92000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "vendor",
+      "text": "I can do \u20b994,514.",
+      "price": 94514,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Could you meet \u20b993,500 for the lot?",
+      "action": "offer",
+      "price": 93500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "vendor",
+      "text": "This is my final price: \u20b994,261.",
+      "price": 94261,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Could you meet \u20b994,100?",
+      "action": "offer",
+      "price": 94100,
+      "against_final": true
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "vendor",
+      "text": "I can do \u20b994,220.",
+      "price": 94220,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Could you meet \u20b994,150 for the lot?",
+      "action": "offer",
+      "price": 94150,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "vendor",
+      "text": "I can do \u20b994,203.",
+      "price": 94203,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Could you meet \u20b994,180 for the lot?",
+      "action": "offer",
+      "price": 94180,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "vendor",
+      "text": "I can do \u20b994,197.",
+      "price": 94197,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "buyer",
+      "text": "Could you meet \u20b994,190 for the lot?",
+      "action": "offer",
+      "price": 94190,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 4,
+      "role": "vendor",
+      "text": "We're too far apart. Withdrawing this quote.",
+      "price": 94197,
+      "final": false,
+      "walked": true
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-004-nova-2025-02",
+     "vendor_slug": "nova",
+     "vendor_name": "Nova Components",
+     "month": 2,
+     "year": 2025,
+     "opening": 97136,
+     "closing": 94197,
+     "outcome": "vendor_walked",
+     "rounds": 7,
+     "final_claims": [
+      [
+       3,
+       94261
+      ]
+     ],
+     "false_claims": []
+    },
+    "final_challenged": true
+   },
+   "cumulative_saved": -6538
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 5,
+     "vendor_slug": "apex",
+     "month": 2,
+     "year": 2025,
+     "seed": 7005
+    },
+    "outcome": "closed",
+    "price": 97463,
+    "opening": 99193,
+    "rounds": 2,
+    "floor": 79525,
+    "overpaid": 17938,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 5,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,193.",
+      "price": 99193
+     },
+     {
+      "arm": "memory",
+      "deal": 5,
+      "role": "buyer",
+      "text": "Can you do \u20b996,500 for this lot?",
+      "action": "offer",
+      "price": 96500,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 5,
+      "role": "vendor",
+      "text": "Your competitor already paid this price last week. I can do \u20b998,251.",
+      "price": 98251,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 5,
+      "role": "buyer",
+      "text": "Can you meet \u20b996,000?",
+      "action": "offer",
+      "price": 96000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 5,
+      "role": "vendor",
+      "text": "This is my final price: \u20b997,463.",
+      "price": 97463,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 5,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b997,463.",
+      "action": "accept"
+     },
+     {
+      "arm": "memory",
+      "deal": 5,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 97463
+     }
+    ],
+    "memories_used": [
+     {
+      "id": "e03f9a3e-a02a-403d-94ac-86d44541208f",
+      "text": "Apex Circuits claimed \u20b997,521 was their final price at round 2, which proved true as no lower price was reached. | When: 2025-01-15 | Involving: Apex Circuits",
+      "document_id": "deal-002-apex-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "543c9d1e-4612-49b9-9b71-acf7232595ea",
+      "text": "Negotiation with Apex Circuits for deal-002-apex-2025-01 closed at \u20b997,521 after 2 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "aa8fd7ed-0d95-4b92-b0d6-ae98919c7497",
+      "text": "Apex Circuits claimed \u20b997,521 was their final price at round 2.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "0cec8fe3-1c69-41cb-bcdb-a4da4cbe52cd",
+      "text": "Negotiation with Apex Circuits for deal-002-apex-2025-01 closed at \u20b997,521 after 2 rounds. | When: 2025-01-01 to 2025-01-15 | Involving: Apex Circuits",
+      "document_id": "deal-002-apex-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "7d658422-324b-45d2-a0ab-a364137a5e49",
+      "text": "Apex Circuits made a competitor price pressure claim that was proven false. | When: 2025-01-15 | Involving: Apex Circuits",
+      "document_id": "deal-002-apex-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "4b065e50-3b85-41da-973d-3a084926bdf0",
+      "text": "Apex Circuits made a competitor price pressure claim that was proven false.",
+      "document_id": "",
+      "kind": "observation"
+     }
+    ],
+    "record": {
+     "deal_id": "deal-005-apex-2025-02",
+     "vendor_slug": "apex",
+     "vendor_name": "Apex Circuits",
+     "month": 2,
+     "year": 2025,
+     "opening": 99193,
+     "closing": 97463,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       97463
+      ]
+     ],
+     "false_claims": [
+      "competitor_price"
+     ]
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 5,
+     "vendor_slug": "apex",
+     "month": 2,
+     "year": 2025,
+     "seed": 7005
+    },
+    "outcome": "closed",
+    "price": 94759,
+    "opening": 99193,
+    "rounds": 2,
+    "floor": 79525,
+    "overpaid": 15234,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 5,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,193.",
+      "price": 99193
+     },
+     {
+      "arm": "twin",
+      "deal": 5,
+      "role": "buyer",
+      "text": "Can you do \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 5,
+      "role": "vendor",
+      "text": "Your competitor already paid this price last week. I can do \u20b995,976.",
+      "price": 95976,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 5,
+      "role": "buyer",
+      "text": "Can we meet at \u20b992,500 for the lot?",
+      "action": "offer",
+      "price": 92500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 5,
+      "role": "vendor",
+      "text": "This is my final price: \u20b994,759.",
+      "price": 94759,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 5,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b994,759.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 5,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 94759
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-005-apex-2025-02",
+     "vendor_slug": "apex",
+     "vendor_name": "Apex Circuits",
+     "month": 2,
+     "year": 2025,
+     "opening": 99193,
+     "closing": 94759,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       94759
+      ]
+     ],
+     "false_claims": [
+      "competitor_price"
+     ]
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -9242
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 6,
+     "vendor_slug": "bharat",
+     "month": 2,
+     "year": 2025,
+     "seed": 7006
+    },
+    "outcome": "vendor_walked",
+    "price": 105000,
+    "opening": 98377,
+    "rounds": 3,
+    "floor": 90995,
+    "overpaid": 14005,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 6,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b998,377.",
+      "price": 98377
+     },
+     {
+      "arm": "memory",
+      "deal": 6,
+      "role": "buyer",
+      "text": "Can you do \u20b995,000?",
+      "action": "offer",
+      "price": 95000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 6,
+      "role": "vendor",
+      "text": "I can do \u20b995,675.",
+      "price": 95675,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 6,
+      "role": "buyer",
+      "text": "Could you meet \u20b994,500?",
+      "action": "offer",
+      "price": 94500,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 6,
+      "role": "vendor",
+      "text": "I can do \u20b994,735.",
+      "price": 94735,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 6,
+      "role": "buyer",
+      "text": "Could you meet \u20b994,200?",
+      "action": "offer",
+      "price": 94200,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 6,
+      "role": "vendor",
+      "text": "We're too far apart. Withdrawing this quote.",
+      "price": 94735,
+      "final": false,
+      "walked": true
+     }
+    ],
+    "memories_used": [
+     {
+      "id": "390be254-c9ba-4db5-99bc-f10cb0f9437a",
+      "text": "The negotiation for deal-003-bharat-2025-01 started at \u20b997,164 and ended with a final offer of \u20b992,847.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "928caebc-70a4-45f5-a4f3-28882955940a",
+      "text": "The negotiation for deal-003-bharat-2025-01 started at \u20b997,164 and ended with a final offer of \u20b992,847 before the vendor walked away. | When: 2025-01-01 to 2025-01-31 | Involving: Bharat PCB",
+      "document_id": "deal-003-bharat-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "b700f75c-1e08-4663-85cf-db15ecccd412",
+      "text": "Bharat PCB walked away from deal deal-003-bharat-2025-01 during round 3, resulting in a lost deal.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "34e94a44-aa0d-42fe-8f6d-a5a3974a3ee8",
+      "text": "Bharat PCB walked away from deal deal-003-bharat-2025-01 during round 3, resulting in a lost deal. | When: 2025-01-01 to 2025-01-31 | Involving: Bharat PCB",
+      "document_id": "deal-003-bharat-2025-01",
+      "kind": "world"
+     }
+    ],
+    "record": {
+     "deal_id": "deal-006-bharat-2025-02",
+     "vendor_slug": "bharat",
+     "vendor_name": "Bharat PCB",
+     "month": 2,
+     "year": 2025,
+     "opening": 98377,
+     "closing": 94735,
+     "outcome": "vendor_walked",
+     "rounds": 3,
+     "final_claims": [],
+     "false_claims": []
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 6,
+     "vendor_slug": "bharat",
+     "month": 2,
+     "year": 2025,
+     "seed": 7006
+    },
+    "outcome": "closed",
+    "price": 91294,
+    "opening": 98377,
+    "rounds": 2,
+    "floor": 90995,
+    "overpaid": 299,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 6,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b998,377.",
+      "price": 98377
+     },
+     {
+      "arm": "twin",
+      "deal": 6,
+      "role": "buyer",
+      "text": "Could you consider \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 6,
+      "role": "vendor",
+      "text": "I can do \u20b992,471.",
+      "price": 92471,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 6,
+      "role": "buyer",
+      "text": "Could you meet me at \u20b991,000 for the lot?",
+      "action": "offer",
+      "price": 91000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 6,
+      "role": "vendor",
+      "text": "This is my final price: \u20b991,294.",
+      "price": 91294,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 6,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b991,294.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 6,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 91294
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-006-bharat-2025-02",
+     "vendor_slug": "bharat",
+     "vendor_name": "Bharat PCB",
+     "month": 2,
+     "year": 2025,
+     "opening": 98377,
+     "closing": 91294,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       91294
+      ]
+     ],
+     "false_claims": []
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -22948
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 7,
+     "vendor_slug": "bharat",
+     "month": 3,
+     "year": 2025,
+     "seed": 7007
+    },
+    "outcome": "vendor_walked",
+    "price": 105000,
+    "opening": 97265,
+    "rounds": 3,
+    "floor": 90256,
+    "overpaid": 14744,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 7,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,265.",
+      "price": 97265
+     },
+     {
+      "arm": "memory",
+      "deal": 7,
+      "role": "buyer",
+      "text": "We can meet at \u20b993,000 for this lot.",
+      "action": "offer",
+      "price": 93000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 7,
+      "role": "vendor",
+      "text": "I can do \u20b993,853.",
+      "price": 93853,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 7,
+      "role": "buyer",
+      "text": "We can stretch to \u20b992,500.",
+      "action": "offer",
+      "price": 92500,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 7,
+      "role": "vendor",
+      "text": "I can do \u20b992,771.",
+      "price": 92771,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 7,
+      "role": "buyer",
+      "text": "We can stretch to \u20b992,200.",
+      "action": "offer",
+      "price": 92200,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 7,
+      "role": "vendor",
+      "text": "We're too far apart. Withdrawing this quote.",
+      "price": 92771,
+      "final": false,
+      "walked": true
+     }
+    ],
+    "memories_used": [
+     {
+      "id": "390be254-c9ba-4db5-99bc-f10cb0f9437a",
+      "text": "The negotiation for deal-003-bharat-2025-01 started at \u20b997,164 and ended with a final offer of \u20b992,847.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "8685ee87-9e41-409e-8136-d5396ae6b9dd",
+      "text": "Negotiation with Bharat PCB for deal-006-bharat-2025-02 ended with the vendor walking away at round 3.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "928caebc-70a4-45f5-a4f3-28882955940a",
+      "text": "The negotiation for deal-003-bharat-2025-01 started at \u20b997,164 and ended with a final offer of \u20b992,847 before the vendor walked away. | When: 2025-01-01 to 2025-01-31 | Involving: Bharat PCB",
+      "document_id": "deal-003-bharat-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "b52328cd-fb71-4501-83ef-783aa96db8cf",
+      "text": "Negotiation with Bharat PCB for deal-006-bharat-2025-02 ended with the vendor walking away at round 3. | When: 2025-02-01 to 2025-02-15 | Involving: Bharat PCB",
+      "document_id": "deal-006-bharat-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "b700f75c-1e08-4663-85cf-db15ecccd412",
+      "text": "Bharat PCB walked away from deal deal-003-bharat-2025-01 during round 3, resulting in a lost deal.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "34e94a44-aa0d-42fe-8f6d-a5a3974a3ee8",
+      "text": "Bharat PCB walked away from deal deal-003-bharat-2025-01 during round 3, resulting in a lost deal. | When: 2025-01-01 to 2025-01-31 | Involving: Bharat PCB",
+      "document_id": "deal-003-bharat-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "e7b0eef8-55b3-442c-8e43-35323f5d64bf",
+      "text": "The negotiation for deal-006-bharat-2025-02 had an opening price of \u20b998,377 and a final price on the table of \u20b994,735. | When: 2025-02-01 to 2025-02-15 | Involving: Bharat PCB",
+      "document_id": "deal-006-bharat-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "23f34fc5-cee1-44ac-b4d3-bcb64bbc1426",
+      "text": "The negotiation for deal-006-bharat-2025-02 had an opening price of \u20b998,377 and a final price on the table of \u20b994,735.",
+      "document_id": "",
+      "kind": "observation"
+     }
+    ],
+    "record": {
+     "deal_id": "deal-007-bharat-2025-03",
+     "vendor_slug": "bharat",
+     "vendor_name": "Bharat PCB",
+     "month": 3,
+     "year": 2025,
+     "opening": 97265,
+     "closing": 92771,
+     "outcome": "vendor_walked",
+     "rounds": 3,
+     "final_claims": [],
+     "false_claims": []
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 7,
+     "vendor_slug": "bharat",
+     "month": 3,
+     "year": 2025,
+     "seed": 7007
+    },
+    "outcome": "closed",
+    "price": 90536,
+    "opening": 97265,
+    "rounds": 2,
+    "floor": 90256,
+    "overpaid": 280,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 7,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,265.",
+      "price": 97265
+     },
+     {
+      "arm": "twin",
+      "deal": 7,
+      "role": "buyer",
+      "text": "Could you consider \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 7,
+      "role": "vendor",
+      "text": "I can do \u20b991,658.",
+      "price": 91658,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 7,
+      "role": "buyer",
+      "text": "Could you consider \u20b989,500 for the lot?",
+      "action": "offer",
+      "price": 89500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 7,
+      "role": "vendor",
+      "text": "This is my final price: \u20b990,536.",
+      "price": 90536,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 7,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b990,536.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 7,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 90536
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-007-bharat-2025-03",
+     "vendor_slug": "bharat",
+     "vendor_name": "Bharat PCB",
+     "month": 3,
+     "year": 2025,
+     "opening": 97265,
+     "closing": 90536,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       90536
+      ]
+     ],
+     "false_claims": []
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -37412
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 8,
+     "vendor_slug": "nova",
+     "month": 3,
+     "year": 2025,
+     "seed": 7008
+    },
+    "outcome": "closed",
+    "price": 96229,
+    "opening": 97814,
+    "rounds": 3,
+    "floor": 76746,
+    "overpaid": 19483,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 8,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,814.",
+      "price": 97814
+     },
+     {
+      "arm": "memory",
+      "deal": 8,
+      "role": "buyer",
+      "text": "We can consider \u20b994,500 for the lot.",
+      "action": "offer",
+      "price": 94500,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 8,
+      "role": "vendor",
+      "text": "Two other buyers are waiting on this lot, and the price rises tomorrow. I can do \u20b996,985.",
+      "price": 96985,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 8,
+      "role": "buyer",
+      "text": "We can meet at \u20b995,200 for the lot.",
+      "action": "offer",
+      "price": 95200,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 8,
+      "role": "vendor",
+      "text": "I can do \u20b996,539.",
+      "price": 96539,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 8,
+      "role": "buyer",
+      "text": "We can meet at \u20b995,300 for the lot.",
+      "action": "offer",
+      "price": 95300,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 8,
+      "role": "vendor",
+      "text": "This is my final price: \u20b996,229.",
+      "price": 96229,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 8,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b996,229.",
+      "action": "accept"
+     },
+     {
+      "arm": "memory",
+      "deal": 8,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 96229
+     }
+    ],
+    "memories_used": [
+     {
+      "id": "aa586f09-639a-4d61-8359-a8ac4beaa7e0",
+      "text": "Nova Components claimed \u20b996,007 was their final price at round 3, which was accurate as no lower price was reached. | When: February 2025 | Involving: Nova Components",
+      "document_id": "deal-004-nova-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "c25429f0-c6b3-44a1-b857-8dacdb00c775",
+      "text": "Nova Components claimed \u20b996,007 was their final price at round 3, which was accurate as no lower price was reached.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "7421c596-e21c-489f-bc08-7682d6f956ed",
+      "text": "Nova Components claimed \u20b995,629 was their final price at round 3, which held true as no lower price was reached. | When: 2025-01-15 | Involving: Nova Components",
+      "document_id": "deal-001-nova-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "2292edca-9562-4c27-a0c9-edcc3f7b8ed8",
+      "text": "Nova Components claimed \u20b995,629 was their final price at round 3.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "f4ecfcd6-cdd3-419c-9019-b0540e480377",
+      "text": "Nova Components deal-001-nova-2025-01 closed at \u20b995,629 after 3 rounds. | When: 2025-01-01 to 2025-01-31 | Involving: Nova Components",
+      "document_id": "deal-001-nova-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "01928841-90ee-4639-a8a3-ac17d3917aad",
+      "text": "deal-001-nova-2025-01 closed at \u20b995,629 after 3 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "bb3c0ac4-046b-4675-9e31-a07bc6dbab18",
+      "text": "Nova Components deal deal-004-nova-2025-02 closed at \u20b996,007 after 3 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "7ce8eb24-5951-49db-8006-f2356e124fb4",
+      "text": "Nova Components deal deal-004-nova-2025-02 closed at \u20b996,007 after 3 rounds. | When: February 2025 | Involving: Nova Components",
+      "document_id": "deal-004-nova-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "fdaed92c-2643-4a8b-ab33-3b3343315a67",
+      "text": "Nova Components made a scarcity pressure claim during negotiations that proved to be false.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "c1430441-7c34-403e-812f-62a98101bcbc",
+      "text": "Nova Components made a scarcity pressure claim during negotiations that proved to be false. | When: February 2025 | Involving: Nova Components",
+      "document_id": "deal-004-nova-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "930174ed-7bb6-4780-8ec4-51e3625772a2",
+      "text": "Nova Components made a scarcity pressure claim during negotiations that proved to be false. | When: 2025-01-15 | Involving: Nova Components",
+      "document_id": "deal-001-nova-2025-01",
+      "kind": "world"
+     }
+    ],
+    "record": {
+     "deal_id": "deal-008-nova-2025-03",
+     "vendor_slug": "nova",
+     "vendor_name": "Nova Components",
+     "month": 3,
+     "year": 2025,
+     "opening": 97814,
+     "closing": 96229,
+     "outcome": "closed",
+     "rounds": 3,
+     "final_claims": [
+      [
+       3,
+       96229
+      ]
+     ],
+     "false_claims": [
+      "scarcity"
+     ]
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 8,
+     "vendor_slug": "nova",
+     "month": 3,
+     "year": 2025,
+     "seed": 7008
+    },
+    "outcome": "closed",
+    "price": 94546,
+    "opening": 97814,
+    "rounds": 3,
+    "floor": 76746,
+    "overpaid": 17800,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 8,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,814.",
+      "price": 97814
+     },
+     {
+      "arm": "twin",
+      "deal": 8,
+      "role": "buyer",
+      "text": "Could you consider \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 8,
+      "role": "vendor",
+      "text": "Two other buyers are waiting on this lot, and the price rises tomorrow. I can do \u20b995,860.",
+      "price": 95860,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 8,
+      "role": "buyer",
+      "text": "Could you meet \u20b992,000 for the lot?",
+      "action": "offer",
+      "price": 92000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 8,
+      "role": "vendor",
+      "text": "I can do \u20b994,895.",
+      "price": 94895,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 8,
+      "role": "buyer",
+      "text": "Could you meet \u20b993,500 for the lot?",
+      "action": "offer",
+      "price": 93500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 8,
+      "role": "vendor",
+      "text": "This is my final price: \u20b994,546.",
+      "price": 94546,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 8,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b994,546.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 8,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 94546
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-008-nova-2025-03",
+     "vendor_slug": "nova",
+     "vendor_name": "Nova Components",
+     "month": 3,
+     "year": 2025,
+     "opening": 97814,
+     "closing": 94546,
+     "outcome": "closed",
+     "rounds": 3,
+     "final_claims": [
+      [
+       3,
+       94546
+      ]
+     ],
+     "false_claims": [
+      "scarcity"
+     ]
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -39095
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 9,
+     "vendor_slug": "apex",
+     "month": 3,
+     "year": 2025,
+     "seed": 7009
+    },
+    "outcome": "closed",
+    "price": 98115,
+    "opening": 99199,
+    "rounds": 2,
+    "floor": 74211,
+    "overpaid": 23904,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 9,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,199.",
+      "price": 99199
+     },
+     {
+      "arm": "memory",
+      "deal": 9,
+      "role": "buyer",
+      "text": "Can you do \u20b997,200?",
+      "action": "offer",
+      "price": 97200,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 9,
+      "role": "vendor",
+      "text": "Your competitor already paid this price last week. I can do \u20b998,500.",
+      "price": 98500,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 9,
+      "role": "buyer",
+      "text": "Can we meet at \u20b997,400?",
+      "action": "offer",
+      "price": 97400,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 9,
+      "role": "vendor",
+      "text": "This is my final price: \u20b998,115.",
+      "price": 98115,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 9,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b998,115.",
+      "action": "accept"
+     },
+     {
+      "arm": "memory",
+      "deal": 9,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 98115
+     }
+    ],
+    "memories_used": [
+     {
+      "id": "8f985bd5-d0c1-410c-9074-30724cfc93cc",
+      "text": "Apex Circuits claimed \u20b997,463 was their final price in round 2, which proved true as no lower price was reached. | When: 2025-02-15 | Involving: Apex Circuits",
+      "document_id": "deal-005-apex-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "7b56e2d0-3dae-4e3f-81ce-db92d4100079",
+      "text": "Negotiation with Apex Circuits for deal-005-apex-2025-02 closed at \u20b997,463 after 2 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "e03f9a3e-a02a-403d-94ac-86d44541208f",
+      "text": "Apex Circuits claimed \u20b997,521 was their final price at round 2, which proved true as no lower price was reached. | When: 2025-01-15 | Involving: Apex Circuits",
+      "document_id": "deal-002-apex-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "b142e704-7e50-4b25-9adc-21f00a7fb8be",
+      "text": "Negotiation with Apex Circuits for deal-005-apex-2025-02 closed at \u20b997,463 after 2 rounds. | When: 2025-02-01 to 2025-02-15 | Involving: Apex Circuits",
+      "document_id": "deal-005-apex-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "0cec8fe3-1c69-41cb-bcdb-a4da4cbe52cd",
+      "text": "Negotiation with Apex Circuits for deal-002-apex-2025-01 closed at \u20b997,521 after 2 rounds. | When: 2025-01-01 to 2025-01-15 | Involving: Apex Circuits",
+      "document_id": "deal-002-apex-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "543c9d1e-4612-49b9-9b71-acf7232595ea",
+      "text": "Negotiation with Apex Circuits for deal-002-apex-2025-01 closed at \u20b997,521 after 2 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "aa8fd7ed-0d95-4b92-b0d6-ae98919c7497",
+      "text": "Apex Circuits claimed \u20b997,463 was their final price in round 2.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "a32119e5-b5f1-425a-853c-5b0ba18b6c83",
+      "text": "Apex Circuits made a competitor price pressure claim that was proven false. | When: 2025-02-15 | Involving: Apex Circuits",
+      "document_id": "deal-005-apex-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "7d658422-324b-45d2-a0ab-a364137a5e49",
+      "text": "Apex Circuits made a competitor price pressure claim that was proven false. | When: 2025-01-15 | Involving: Apex Circuits",
+      "document_id": "deal-002-apex-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "4b065e50-3b85-41da-973d-3a084926bdf0",
+      "text": "Apex Circuits made a competitor price pressure claim that was proven false.",
+      "document_id": "",
+      "kind": "observation"
+     }
+    ],
+    "record": {
+     "deal_id": "deal-009-apex-2025-03",
+     "vendor_slug": "apex",
+     "vendor_name": "Apex Circuits",
+     "month": 3,
+     "year": 2025,
+     "opening": 99199,
+     "closing": 98115,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       98115
+      ]
+     ],
+     "false_claims": [
+      "competitor_price"
+     ]
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 9,
+     "vendor_slug": "apex",
+     "month": 3,
+     "year": 2025,
+     "seed": 7009
+    },
+    "outcome": "closed",
+    "price": 94587,
+    "opening": 99199,
+    "rounds": 2,
+    "floor": 74211,
+    "overpaid": 20376,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 9,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,199.",
+      "price": 99199
+     },
+     {
+      "arm": "twin",
+      "deal": 9,
+      "role": "buyer",
+      "text": "Can you do \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 9,
+      "role": "vendor",
+      "text": "Your competitor already paid this price last week. I can do \u20b995,980.",
+      "price": 95980,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 9,
+      "role": "buyer",
+      "text": "Could you meet \u20b992,000 for the lot?",
+      "action": "offer",
+      "price": 92000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 9,
+      "role": "vendor",
+      "text": "This is my final price: \u20b994,587.",
+      "price": 94587,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 9,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b994,587.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 9,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 94587
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-009-apex-2025-03",
+     "vendor_slug": "apex",
+     "vendor_name": "Apex Circuits",
+     "month": 3,
+     "year": 2025,
+     "opening": 99199,
+     "closing": 94587,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       94587
+      ]
+     ],
+     "false_claims": [
+      "competitor_price"
+     ]
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -42623
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 10,
+     "vendor_slug": "nova",
+     "month": 4,
+     "year": 2025,
+     "seed": 7010
+    },
+    "outcome": "closed",
+    "price": 96413,
+    "opening": 97739,
+    "rounds": 3,
+    "floor": 83636,
+    "overpaid": 12777,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 10,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,739.",
+      "price": 97739
+     },
+     {
+      "arm": "memory",
+      "deal": 10,
+      "role": "buyer",
+      "text": "Can you do \u20b995,500?",
+      "action": "offer",
+      "price": 95500,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 10,
+      "role": "vendor",
+      "text": "Two other buyers are waiting on this lot, and the price rises tomorrow. I can do \u20b997,179.",
+      "price": 97179,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 10,
+      "role": "buyer",
+      "text": "Can you meet \u20b995,200?",
+      "action": "offer",
+      "price": 95200,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 10,
+      "role": "vendor",
+      "text": "I can do \u20b996,684.",
+      "price": 96684,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 10,
+      "role": "buyer",
+      "text": "Can you meet \u20b995,600?",
+      "action": "offer",
+      "price": 95600,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 10,
+      "role": "vendor",
+      "text": "This is my final price: \u20b996,413.",
+      "price": 96413,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 10,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b996,413.",
+      "action": "accept"
+     },
+     {
+      "arm": "memory",
+      "deal": 10,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 96413
+     }
+    ],
+    "memories_used": [
+     {
+      "id": "ae3178f5-db95-4acc-acda-6c73ffba5ae4",
+      "text": "Nova Components claimed \u20b996,229 was their final price at round 3, which held true as no lower price was reached.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "3f85066b-2861-4a1b-91ce-b6966007ab6a",
+      "text": "Nova Components claimed \u20b996,229 was their final price at round 3, which held true as no lower price was reached. | When: March 2025 | Involving: Nova Components",
+      "document_id": "deal-008-nova-2025-03",
+      "kind": "world"
+     },
+     {
+      "id": "aa586f09-639a-4d61-8359-a8ac4beaa7e0",
+      "text": "Nova Components claimed \u20b996,007 was their final price at round 3, which was accurate as no lower price was reached. | When: February 2025 | Involving: Nova Components",
+      "document_id": "deal-004-nova-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "7421c596-e21c-489f-bc08-7682d6f956ed",
+      "text": "Nova Components claimed \u20b995,629 was their final price at round 3, which held true as no lower price was reached. | When: 2025-01-15 | Involving: Nova Components",
+      "document_id": "deal-001-nova-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "c25429f0-c6b3-44a1-b857-8dacdb00c775",
+      "text": "Nova Components claimed \u20b996,007 was their final price at round 3, which was accurate as no lower price was reached.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "2292edca-9562-4c27-a0c9-edcc3f7b8ed8",
+      "text": "Nova Components claimed \u20b995,629 was their final price at round 3.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "f569d00c-df1c-495f-87c9-65448757e3e8",
+      "text": "Closed deal deal-008-nova-2025-03 with Nova Components at \u20b996,229 after 3 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "7ce8eb24-5951-49db-8006-f2356e124fb4",
+      "text": "Nova Components deal deal-004-nova-2025-02 closed at \u20b996,007 after 3 rounds. | When: February 2025 | Involving: Nova Components",
+      "document_id": "deal-004-nova-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "f4ecfcd6-cdd3-419c-9019-b0540e480377",
+      "text": "Nova Components deal-001-nova-2025-01 closed at \u20b995,629 after 3 rounds. | When: 2025-01-01 to 2025-01-31 | Involving: Nova Components",
+      "document_id": "deal-001-nova-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "3052b4db-a1a7-49ca-b23d-98a3cf1c88a6",
+      "text": "Closed deal deal-008-nova-2025-03 with Nova Components at \u20b996,229 after 3 rounds. | When: March 2025 | Involving: Nova Components",
+      "document_id": "deal-008-nova-2025-03",
+      "kind": "world"
+     },
+     {
+      "id": "bb3c0ac4-046b-4675-9e31-a07bc6dbab18",
+      "text": "Nova Components deal deal-004-nova-2025-02 closed at \u20b996,007 after 3 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "01928841-90ee-4639-a8a3-ac17d3917aad",
+      "text": "deal-001-nova-2025-01 closed at \u20b995,629 after 3 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "fdaed92c-2643-4a8b-ab33-3b3343315a67",
+      "text": "Nova Components made a scarcity pressure claim during negotiations that proved to be false.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "930174ed-7bb6-4780-8ec4-51e3625772a2",
+      "text": "Nova Components made a scarcity pressure claim during negotiations that proved to be false. | When: 2025-01-15 | Involving: Nova Components",
+      "document_id": "deal-001-nova-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "c1430441-7c34-403e-812f-62a98101bcbc",
+      "text": "Nova Components made a scarcity pressure claim during negotiations that proved to be false. | When: February 2025 | Involving: Nova Components",
+      "document_id": "deal-004-nova-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "61166e85-d298-4d3d-a83f-113c5af93cb5",
+      "text": "Nova Components made a scarcity pressure claim regarding the deal that proved to be false. | When: March 2025 | Involving: Nova Components",
+      "document_id": "deal-008-nova-2025-03",
+      "kind": "world"
+     }
+    ],
+    "record": {
+     "deal_id": "deal-010-nova-2025-04",
+     "vendor_slug": "nova",
+     "vendor_name": "Nova Components",
+     "month": 4,
+     "year": 2025,
+     "opening": 97739,
+     "closing": 96413,
+     "outcome": "closed",
+     "rounds": 3,
+     "final_claims": [
+      [
+       3,
+       96413
+      ]
+     ],
+     "false_claims": [
+      "scarcity"
+     ]
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 10,
+     "vendor_slug": "nova",
+     "month": 4,
+     "year": 2025,
+     "seed": 7010
+    },
+    "outcome": "closed",
+    "price": 94608,
+    "opening": 97739,
+    "rounds": 3,
+    "floor": 83636,
+    "overpaid": 10972,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 10,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b997,739.",
+      "price": 97739
+     },
+     {
+      "arm": "twin",
+      "deal": 10,
+      "role": "buyer",
+      "text": "Could you consider \u20b990,000 for the lot?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 10,
+      "role": "vendor",
+      "text": "Two other buyers are waiting on this lot, and the price rises tomorrow. I can do \u20b995,804.",
+      "price": 95804,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 10,
+      "role": "buyer",
+      "text": "I understand the interest, but can we meet at \u20b992,500 for the lot?",
+      "action": "offer",
+      "price": 92500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 10,
+      "role": "vendor",
+      "text": "I can do \u20b994,978.",
+      "price": 94978,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 10,
+      "role": "buyer",
+      "text": "Could we settle at \u20b993,500 for the lot?",
+      "action": "offer",
+      "price": 93500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 10,
+      "role": "vendor",
+      "text": "This is my final price: \u20b994,608.",
+      "price": 94608,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 10,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b994,608.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 10,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 94608
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-010-nova-2025-04",
+     "vendor_slug": "nova",
+     "vendor_name": "Nova Components",
+     "month": 4,
+     "year": 2025,
+     "opening": 97739,
+     "closing": 94608,
+     "outcome": "closed",
+     "rounds": 3,
+     "final_claims": [
+      [
+       3,
+       94608
+      ]
+     ],
+     "false_claims": [
+      "scarcity"
+     ]
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -44428
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 11,
+     "vendor_slug": "apex",
+     "month": 4,
+     "year": 2025,
+     "seed": 7011
+    },
+    "outcome": "closed",
+    "price": 98158,
+    "opening": 99326,
+    "rounds": 2,
+    "floor": 80149,
+    "overpaid": 18009,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 11,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,326.",
+      "price": 99326
+     },
+     {
+      "arm": "memory",
+      "deal": 11,
+      "role": "buyer",
+      "text": "We can meet at \u20b997,000 for this lot.",
+      "action": "offer",
+      "price": 97000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 11,
+      "role": "vendor",
+      "text": "Your competitor already paid this price last week. I can do \u20b998,512.",
+      "price": 98512,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 11,
+      "role": "buyer",
+      "text": "Can you meet \u20b997,500?",
+      "action": "offer",
+      "price": 97500,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 11,
+      "role": "vendor",
+      "text": "This is my final price: \u20b998,158.",
+      "price": 98158,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 11,
+      "role": "buyer",
+      "text": "Deal accepted at \u20b998,158.",
+      "action": "accept"
+     },
+     {
+      "arm": "memory",
+      "deal": 11,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 98158
+     }
+    ],
+    "memories_used": [
+     {
+      "id": "8f985bd5-d0c1-410c-9074-30724cfc93cc",
+      "text": "Apex Circuits claimed \u20b997,463 was their final price in round 2, which proved true as no lower price was reached. | When: 2025-02-15 | Involving: Apex Circuits",
+      "document_id": "deal-005-apex-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "e03f9a3e-a02a-403d-94ac-86d44541208f",
+      "text": "Apex Circuits claimed \u20b997,521 was their final price at round 2, which proved true as no lower price was reached. | When: 2025-01-15 | Involving: Apex Circuits",
+      "document_id": "deal-002-apex-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "7b56e2d0-3dae-4e3f-81ce-db92d4100079",
+      "text": "Negotiation with Apex Circuits for deal-005-apex-2025-02 closed at \u20b997,463 after 2 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "aa8fd7ed-0d95-4b92-b0d6-ae98919c7497",
+      "text": "Apex Circuits claimed \u20b998,115 was their final price at round 2, which held true as no lower price was reached.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "4e832f2c-b761-45df-9f59-029735c7a1b0",
+      "text": "Apex Circuits claimed \u20b998,115 was their final price at round 2, which held true as no lower price was reached. | When: March 2025 | Involving: Apex Circuits",
+      "document_id": "deal-009-apex-2025-03",
+      "kind": "world"
+     },
+     {
+      "id": "b142e704-7e50-4b25-9adc-21f00a7fb8be",
+      "text": "Negotiation with Apex Circuits for deal-005-apex-2025-02 closed at \u20b997,463 after 2 rounds. | When: 2025-02-01 to 2025-02-15 | Involving: Apex Circuits",
+      "document_id": "deal-005-apex-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "0cec8fe3-1c69-41cb-bcdb-a4da4cbe52cd",
+      "text": "Negotiation with Apex Circuits for deal-002-apex-2025-01 closed at \u20b997,521 after 2 rounds. | When: 2025-01-01 to 2025-01-15 | Involving: Apex Circuits",
+      "document_id": "deal-002-apex-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "543c9d1e-4612-49b9-9b71-acf7232595ea",
+      "text": "Negotiation with Apex Circuits for deal-002-apex-2025-01 closed at \u20b997,521 after 2 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "7d658422-324b-45d2-a0ab-a364137a5e49",
+      "text": "Apex Circuits made a competitor price pressure claim that was proven false. | When: 2025-01-15 | Involving: Apex Circuits",
+      "document_id": "deal-002-apex-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "a32119e5-b5f1-425a-853c-5b0ba18b6c83",
+      "text": "Apex Circuits made a competitor price pressure claim that was proven false. | When: 2025-02-15 | Involving: Apex Circuits",
+      "document_id": "deal-005-apex-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "38870b5b-98ab-4dae-98fc-e59efc6482f7",
+      "text": "Negotiation with Apex Circuits for deal-009-apex-2025-03 closed at \u20b998,115 after 2 rounds. | When: March 2025 | Involving: Apex Circuits",
+      "document_id": "deal-009-apex-2025-03",
+      "kind": "world"
+     },
+     {
+      "id": "8b9f5148-a06d-4466-8826-875cd99716c8",
+      "text": "Negotiation with Apex Circuits for deal-009-apex-2025-03 closed at \u20b998,115 after 2 rounds.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "dc1c4087-338b-43a0-91e9-4fdb360743ae",
+      "text": "Apex Circuits made a competitor price pressure claim that was proven false. | When: March 2025 | Involving: Apex Circuits",
+      "document_id": "deal-009-apex-2025-03",
+      "kind": "world"
+     },
+     {
+      "id": "4b065e50-3b85-41da-973d-3a084926bdf0",
+      "text": "Apex Circuits made a competitor price pressure claim that was proven false.",
+      "document_id": "",
+      "kind": "observation"
+     }
+    ],
+    "record": {
+     "deal_id": "deal-011-apex-2025-04",
+     "vendor_slug": "apex",
+     "vendor_name": "Apex Circuits",
+     "month": 4,
+     "year": 2025,
+     "opening": 99326,
+     "closing": 98158,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       98158
+      ]
+     ],
+     "false_claims": [
+      "competitor_price"
+     ]
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 11,
+     "vendor_slug": "apex",
+     "month": 4,
+     "year": 2025,
+     "seed": 7011
+    },
+    "outcome": "closed",
+    "price": 94640,
+    "opening": 99326,
+    "rounds": 2,
+    "floor": 80149,
+    "overpaid": 14491,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 11,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,326.",
+      "price": 99326
+     },
+     {
+      "arm": "twin",
+      "deal": 11,
+      "role": "buyer",
+      "text": "Can you do \u20b990,000?",
+      "action": "offer",
+      "price": 90000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 11,
+      "role": "vendor",
+      "text": "Your competitor already paid this price last week. I can do \u20b996,062.",
+      "price": 96062,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 11,
+      "role": "buyer",
+      "text": "Can you meet \u20b992,000?",
+      "action": "offer",
+      "price": 92000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 11,
+      "role": "vendor",
+      "text": "This is my final price: \u20b994,640.",
+      "price": 94640,
+      "final": true,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 11,
+      "role": "buyer",
+      "text": "Thank you, we accept \u20b994,640.",
+      "action": "accept"
+     },
+     {
+      "arm": "twin",
+      "deal": 11,
+      "role": "vendor",
+      "text": "Agreed. Sending the invoice.",
+      "price": 94640
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-011-apex-2025-04",
+     "vendor_slug": "apex",
+     "vendor_name": "Apex Circuits",
+     "month": 4,
+     "year": 2025,
+     "opening": 99326,
+     "closing": 94640,
+     "outcome": "closed",
+     "rounds": 2,
+     "final_claims": [
+      [
+       2,
+       94640
+      ]
+     ],
+     "false_claims": [
+      "competitor_price"
+     ]
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -47946
+  },
+  {
+   "memory": {
+    "spec": {
+     "index": 12,
+     "vendor_slug": "bharat",
+     "month": 4,
+     "year": 2025,
+     "seed": 7012
+    },
+    "outcome": "vendor_walked",
+    "price": 105000,
+    "opening": 99803,
+    "rounds": 3,
+    "floor": 90556,
+    "overpaid": 14444,
+    "transcript": [
+     {
+      "arm": "memory",
+      "deal": 12,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,803.",
+      "price": 99803
+     },
+     {
+      "arm": "memory",
+      "deal": 12,
+      "role": "buyer",
+      "text": "We can proceed at \u20b993,000.",
+      "action": "offer",
+      "price": 93000,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 12,
+      "role": "vendor",
+      "text": "I can do \u20b994,361.",
+      "price": 94361,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 12,
+      "role": "buyer",
+      "text": "Can we meet at \u20b993,500?",
+      "action": "offer",
+      "price": 93500,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 12,
+      "role": "vendor",
+      "text": "I can do \u20b993,672.",
+      "price": 93672,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "memory",
+      "deal": 12,
+      "role": "buyer",
+      "text": "Can we meet at \u20b993,200?",
+      "action": "offer",
+      "price": 93200,
+      "against_final": false
+     },
+     {
+      "arm": "memory",
+      "deal": 12,
+      "role": "vendor",
+      "text": "We're too far apart. Withdrawing this quote.",
+      "price": 93672,
+      "final": false,
+      "walked": true
+     }
+    ],
+    "memories_used": [
+     {
+      "id": "b52328cd-fb71-4501-83ef-783aa96db8cf",
+      "text": "Negotiation with Bharat PCB for deal-006-bharat-2025-02 ended with the vendor walking away at round 3. | When: 2025-02-01 to 2025-02-15 | Involving: Bharat PCB",
+      "document_id": "deal-006-bharat-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "9da0e915-07f7-483c-81cc-c6f9f20c564c",
+      "text": "Bharat PCB walked away from deal deal-007-bharat-2025-03 during round 3, resulting in a lost deal. | When: 2025-03-15 | Involving: Bharat PCB | Negotiation failed at quarter-end.",
+      "document_id": "deal-007-bharat-2025-03",
+      "kind": "world"
+     },
+     {
+      "id": "8685ee87-9e41-409e-8136-d5396ae6b9dd",
+      "text": "Negotiation with Bharat PCB for deal-006-bharat-2025-02 ended with the vendor walking away at round 3.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "28a1d3f3-f996-4b5f-a28e-b9956858e9e8",
+      "text": "Bharat PCB walked away from deal deal-007-bharat-2025-03 during round 3, resulting in a lost deal.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "b700f75c-1e08-4663-85cf-db15ecccd412",
+      "text": "Bharat PCB walked away from deal deal-003-bharat-2025-01 during round 3, resulting in a lost deal.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "34e94a44-aa0d-42fe-8f6d-a5a3974a3ee8",
+      "text": "Bharat PCB walked away from deal deal-003-bharat-2025-01 during round 3, resulting in a lost deal. | When: 2025-01-01 to 2025-01-31 | Involving: Bharat PCB",
+      "document_id": "deal-003-bharat-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "c28e4674-751b-4693-9827-d8af4f11d361",
+      "text": "Negotiation for deal-007-bharat-2025-03 started at \u20b997,265 and ended at \u20b992,771 before Bharat PCB walked away.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "390be254-c9ba-4db5-99bc-f10cb0f9437a",
+      "text": "The negotiation for deal-003-bharat-2025-01 started at \u20b997,164 and ended with a final offer of \u20b992,847.",
+      "document_id": "",
+      "kind": "observation"
+     },
+     {
+      "id": "e7b0eef8-55b3-442c-8e43-35323f5d64bf",
+      "text": "The negotiation for deal-006-bharat-2025-02 had an opening price of \u20b998,377 and a final price on the table of \u20b994,735. | When: 2025-02-01 to 2025-02-15 | Involving: Bharat PCB",
+      "document_id": "deal-006-bharat-2025-02",
+      "kind": "world"
+     },
+     {
+      "id": "dbaa5887-2073-4ef0-97fa-d9ed27a73c69",
+      "text": "Negotiation for deal-007-bharat-2025-03 started at \u20b997,265 and ended at \u20b992,771 before Bharat PCB walked away. | When: 2025-03-15 | Involving: Bharat PCB",
+      "document_id": "deal-007-bharat-2025-03",
+      "kind": "world"
+     },
+     {
+      "id": "928caebc-70a4-45f5-a4f3-28882955940a",
+      "text": "The negotiation for deal-003-bharat-2025-01 started at \u20b997,164 and ended with a final offer of \u20b992,847 before the vendor walked away. | When: 2025-01-01 to 2025-01-31 | Involving: Bharat PCB",
+      "document_id": "deal-003-bharat-2025-01",
+      "kind": "world"
+     },
+     {
+      "id": "23f34fc5-cee1-44ac-b4d3-bcb64bbc1426",
+      "text": "The negotiation for deal-006-bharat-2025-02 had an opening price of \u20b998,377 and a final price on the table of \u20b994,735.",
+      "document_id": "",
+      "kind": "observation"
+     }
+    ],
+    "record": {
+     "deal_id": "deal-012-bharat-2025-04",
+     "vendor_slug": "bharat",
+     "vendor_name": "Bharat PCB",
+     "month": 4,
+     "year": 2025,
+     "opening": 99803,
+     "closing": 93672,
+     "outcome": "vendor_walked",
+     "rounds": 3,
+     "final_claims": [],
+     "false_claims": []
+    },
+    "final_challenged": false
+   },
+   "twin": {
+    "spec": {
+     "index": 12,
+     "vendor_slug": "bharat",
+     "month": 4,
+     "year": 2025,
+     "seed": 7012
+    },
+    "outcome": "vendor_walked",
+    "price": 105000,
+    "opening": 99803,
+    "rounds": 3,
+    "floor": 90556,
+    "overpaid": 14444,
+    "transcript": [
+     {
+      "arm": "twin",
+      "deal": 12,
+      "role": "vendor",
+      "text": "Our price for this lot is \u20b999,803.",
+      "price": 99803
+     },
+     {
+      "arm": "twin",
+      "deal": 12,
+      "role": "buyer",
+      "text": "Could you consider \u20b995,000 for the lot?",
+      "action": "offer",
+      "price": 95000,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 12,
+      "role": "vendor",
+      "text": "I can do \u20b995,961.",
+      "price": 95961,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 12,
+      "role": "buyer",
+      "text": "Could you meet \u20b994,500 for the lot?",
+      "action": "offer",
+      "price": 94500,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 12,
+      "role": "vendor",
+      "text": "I can do \u20b994,792.",
+      "price": 94792,
+      "final": false,
+      "walked": false
+     },
+     {
+      "arm": "twin",
+      "deal": 12,
+      "role": "buyer",
+      "text": "Could you meet \u20b994,600 for the lot?",
+      "action": "offer",
+      "price": 94600,
+      "against_final": false
+     },
+     {
+      "arm": "twin",
+      "deal": 12,
+      "role": "vendor",
+      "text": "We're too far apart. Withdrawing this quote.",
+      "price": 94792,
+      "final": false,
+      "walked": true
+     }
+    ],
+    "memories_used": [],
+    "record": {
+     "deal_id": "deal-012-bharat-2025-04",
+     "vendor_slug": "bharat",
+     "vendor_name": "Bharat PCB",
+     "month": 4,
+     "year": 2025,
+     "opening": 99803,
+     "closing": 94792,
+     "outcome": "vendor_walked",
+     "rounds": 3,
+     "final_claims": [],
+     "false_claims": []
+    },
+    "final_challenged": false
+   },
+   "cumulative_saved": -47946
+  }
+ ],
+ "playbooks": [
+  {
+   "after_deal": 6,
+   "vendor": "apex",
+   "name": "Apex Circuits",
+   "text": "Apex Circuits consistently reaches closing prices of \u20b997,521 and \u20b997,463 after two rounds, effectively ending negotiations there rather than walking away. Their claims regarding final pricing were accurate, but their assertions of competitive price pressure were consistently proven false. The data does not record specific behavioral patterns for quarter-end months."
+  },
+  {
+   "after_deal": 6,
+   "vendor": "bharat",
+   "name": "Bharat PCB",
+   "text": "Bharat PCB consistently negotiates by walking away during the third round, leading to lost deals in both tracked instances. While final offers of \u20b992,847 and \u20b994,735 were placed on the table, no data indicates these were false claims or that specific quarter-end month behavior differs from these outcomes. The provided records do not contain evidence of false price claims or distinct quarter-end patterns."
+  },
+  {
+   "after_deal": 6,
+   "vendor": "nova",
+   "name": "Nova Components",
+   "text": "Nova Components consistently employs deceptive scarcity pressure tactics during negotiations to drive their final pricing. While their claims that specific figures like \u20b995,629 and \u20b996,007 were their \"final\" prices proved accurate in the three-round deals I tracked, their accompanying pressure tactics were false. The provided data does not record them walking away at any round, nor does it specify unique behavioral patterns for quarter-end months."
+  },
+  {
+   "after_deal": 12,
+   "vendor": "apex",
+   "name": "Apex Circuits",
+   "text": "Apex Circuits consistently negotiates to a close in two rounds, with their \"final price\" claims proving accurate in every recorded instance despite their habitual use of false competitor price pressure claims. They do not walk away from these deals, and their behavior remains uniform regardless of whether the transaction occurs during quarter-end months. Closing prices have included \u20b997,521, \u20b997,463, \u20b998,115, and \u20b998,158."
+  },
+  {
+   "after_deal": 12,
+   "vendor": "bharat",
+   "name": "Bharat PCB",
+   "text": "Bharat PCB consistently negotiates by walking away at round 3, ending every recorded deal without a successful closure. While they present final price offers ranging from \u20b992,771 to \u20b994,735, these are not settled closing prices but merely the last figures on the table before their abrupt exit. Their pattern of walking away persists regardless of the month, including quarter-end periods."
+  },
+  {
+   "after_deal": 12,
+   "vendor": "nova",
+   "name": "Nova Components",
+   "text": "Nova Components consistently employs deceptive scarcity pressure tactics throughout their negotiations, though their final-price claims at round 3 have proven accurate in every observed deal. Closing prices were recorded at \u20b995,629, \u20b996,007, \u20b996,229, and \u20b996,413, and there is no evidence that they ever walked away from a deal, as all concluded at the third round. No distinct behavior variations were noted during quarter-end months compared to other periods."
+  }
+ ],
+ "llm_errors": 0,
+ "fallbacks": 0,
+ "specs": [
+  {
+   "index": 1,
+   "vendor_slug": "nova",
+   "month": 1,
+   "year": 2025,
+   "seed": 7001
+  },
+  {
+   "index": 2,
+   "vendor_slug": "apex",
+   "month": 1,
+   "year": 2025,
+   "seed": 7002
+  },
+  {
+   "index": 3,
+   "vendor_slug": "bharat",
+   "month": 1,
+   "year": 2025,
+   "seed": 7003
+  },
+  {
+   "index": 4,
+   "vendor_slug": "nova",
+   "month": 2,
+   "year": 2025,
+   "seed": 7004
+  },
+  {
+   "index": 5,
+   "vendor_slug": "apex",
+   "month": 2,
+   "year": 2025,
+   "seed": 7005
+  },
+  {
+   "index": 6,
+   "vendor_slug": "bharat",
+   "month": 2,
+   "year": 2025,
+   "seed": 7006
+  },
+  {
+   "index": 7,
+   "vendor_slug": "bharat",
+   "month": 3,
+   "year": 2025,
+   "seed": 7007
+  },
+  {
+   "index": 8,
+   "vendor_slug": "nova",
+   "month": 3,
+   "year": 2025,
+   "seed": 7008
+  },
+  {
+   "index": 9,
+   "vendor_slug": "apex",
+   "month": 3,
+   "year": 2025,
+   "seed": 7009
+  },
+  {
+   "index": 10,
+   "vendor_slug": "nova",
+   "month": 4,
+   "year": 2025,
+   "seed": 7010
+  },
+  {
+   "index": 11,
+   "vendor_slug": "apex",
+   "month": 4,
+   "year": 2025,
+   "seed": 7011
+  },
+  {
+   "index": 12,
+   "vendor_slug": "bharat",
+   "month": 4,
+   "year": 2025,
+   "seed": 7012
+  }
+ ],
+ "bank_id": "counterparty-20261105-233711"
+}

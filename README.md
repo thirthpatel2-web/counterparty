@@ -57,7 +57,19 @@ flowchart LR
 ## Results
 
 <!-- RESULTS -->
-No live results recorded yet. Run `python scripts/run_race.py` with keys in `.env`, and this section updates itself.
+Run `20261106-053341`: 12 simulated deals, 0 LLM errors, 0 fallback decisions.
+
+**Against the strongest fixed no-memory strategy** (offer low, accept the first "final"), replayed on the same deals without an LLM, the Hindsight buyer paid ₹6,031 more per deal (95% interval ₹2,619 to ₹9,505; positive means it paid more). In the last third of deals it paid ₹4,024 more per deal.
+
+Against an LLM buyer with no memory and the same prompt: ₹10,247 saved per deal (95% interval ₹6,738 to ₹13,579). Treat this as the weaker comparison, because that buyer's results depend heavily on prompt wording.
+
+| Vendor | Deals | No memory, avg | With Hindsight, avg | Lost, no memory | Lost, with memory |
+| --- | --- | --- | --- | --- | --- |
+| Apex Circuits | 4 | ₹105,000 | ₹93,614 | 4 | 1 |
+| Bharat PCB | 4 | ₹105,000 | ₹93,876 | 4 | 1 |
+| Nova Components | 4 | ₹105,000 | ₹96,767 | 4 | 1 |
+
+Vendors are simulated, so these are not real procurement savings.
 <!-- /RESULTS -->
 
 ## Run it
