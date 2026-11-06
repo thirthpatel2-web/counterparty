@@ -88,8 +88,8 @@ def beliefs():
     for wanted in ("live", "rehearsal"):
         for path in sorted(RUNS_DIR.glob(f"beliefs-*-{wanted}.json")):
             data = json.loads(path.read_text(encoding="utf-8"))
-            if data.get("protocol") == "beliefs-v1":
-                found.append(data)
+            if data.get("protocol") == "beliefs-v1" and "hindsight_neutral" not in data["curve"]:
+                found.append(data)  # the disposition experiment is reported on its own
         if found:
             mode = wanted
             break

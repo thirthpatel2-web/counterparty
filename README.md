@@ -1,10 +1,14 @@
 # Counterparty
 
-**An AI procurement buyer that knows when a vendor is bluffing, because it remembers every time they did.**
+**Before you negotiate, Counterparty tells you which vendors bluff, when they walk away, and when they get cheaper. It learns this from deal outcomes using [Hindsight](https://github.com/vectorize-io/hindsight) agent memory, and we measured whether it's right.**
 
-A vendor says "this is my final price". An AI with no memory has no way to question that. Counterparty recalls that this vendor said the same thing in March, then closed ₹8,000 lower, and keeps talking. It also learns the opposite: which vendors mean it, and which will walk away if pushed.
+A vendor says "this is my final price". One deal can't tell you if that's true. The pattern only shows across many deals. Counterparty retains every deal outcome in Hindsight, and before the next negotiation it uses `reflect` to write a structured briefing: does this vendor bluff, at which round does it walk away, is quarter-end cheaper? Buyers read it, and an AI negotiator can act on it inside a [Band](https://www.band.ai) room.
 
-Counterparty is built on [Hindsight](https://github.com/vectorize-io/hindsight) agent memory, and negotiates live in [Band](https://www.band.ai) rooms.
+**What we found** (all figures in [Results](#results), from runs recorded under a protocol committed in advance):
+
+- **Hindsight learns the truth.** Its briefings went from about 1 in 5 questions right after one deal per vendor to matching exact arithmetic over the same records, checked against the simulator's hidden vendor traits.
+- **Its disposition shapes its beliefs.** A bank set to maximum skepticism called an honest vendor a bluffer for its first 6 deals. We test that directly.
+- **An LLM negotiator didn't beat a one-line rule**, even with memory. Knowing a vendor is not the same as bargaining well, so the briefing is for the human buyer first.
 
 ## Why memory is the product
 
@@ -52,6 +56,8 @@ Our code never writes "what to do next time". It records what happened, and Hind
 
 **The Forget button.** Pick any memory, or a whole vendor. Hindsight clones the bank, deletes those deals from the clone, and the buyer renegotiates the same new deal with each memory, on the same vendor seeds. The screen shows the rupee difference. If other memories teach the same lesson, forgetting one changes nothing, and the screen says so.
 
+**Beliefs checked against the truth.** Vendors are simulated, so their real traits are known. Every briefing Hindsight writes is scored question by question against them, and the dashboard marks each answer right or wrong.
+
 **Honest baselines, fixed in advance.** Every deal is also played by a rule with no memory and no AI, a hand-written learner with perfect memory, and an oracle that knows the vendor's hidden limits. The protocol in [EVALUATION.md](EVALUATION.md) was committed before any run.
 
 **Numbers the LLM can't touch.** Vendor prices come from fixed rules and seeds in `engine/simulator.py`. Vendors never use an LLM, so a score is objective and every run is repeatable on the vendor side.
@@ -65,25 +71,33 @@ Our code never writes "what to do next time". It records what happened, and Hind
 ### Does Hindsight learn the truth about each vendor?
 
 <!-- BELIEFS -->
-1 live study (`20261106-141022-41b9`), 0 failed briefings.
+2 live studies (`20261106-141022-41b9`, `20261106-141455-0417`), 0 failed briefings.
 
 Share of the 9 questions (3 per vendor) that the briefing answered correctly. Saying "unknown" counts as not correct.
 
 | Deals seen per vendor | 1 | 2 | 3 | 4 | 6 | 8 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hindsight reflect briefing | 22% | 33% | 78% | 78% | 78% | 100% |
-| Exact arithmetic over the same records | 22% | 33% | 67% | 78% | 89% | 89% |
+| Hindsight reflect briefing | 33% | 39% | 72% | 83% | 83% | 94% |
+| Exact arithmetic over the same records | 33% | 39% | 72% | 83% | 94% | 94% |
 
-Range across studies for Hindsight: 22%–22% | 33%–33% | 78%–78% | 78%–78% | 78%–78% | 100%–100%.
+Range across studies for Hindsight: 22%–44% | 33%–44% | 67%–78% | 78%–89% | 78%–89% | 89%–100%.
 
 The questions: does the vendor bluff about "final"? At which round does it walk away? Is quarter-end cheaper? The answers are checked against the simulator's hidden traits.
 <!-- /BELIEFS -->
+
+### Does disposition change what Hindsight believes?
+
+<!-- DISPOSITION -->
+Not run yet.
+<!-- /DISPOSITION -->
 
 ### Does an LLM negotiator with memory beat a simple rule?
 
 <!-- RESULTS -->
 No valid live runs recorded yet under the current protocol.
 <!-- /RESULTS -->
+
+The one protocol v2 negotiation attempt (seed 101, `openai/gpt-oss-120b`) was stopped by Groq's daily token limit after 19 of 24 deals, so it isn't a recorded result. Its console output is in [runs/archive-v2-partial](runs/archive-v2-partial/seed-101-console.txt). The LLM buyer paid more than the rule on all 19 deals, including the first, where it had no memory. So the gap comes from the LLM's bargaining, not from memory. We report it rather than tune the prompt against the test again.
 
 ## Run it
 

@@ -74,3 +74,7 @@ Committed before running. In study 201, the skeptical bank (skepticism 5) called
 - **Design:** the same evidence goes to two Hindsight banks that differ only in skepticism, 5 and 3. Run with `python scripts/belief_study.py --seed 301 --neutral`, then `--seed 302 --neutral`.
 - **Measure:** how many of Bharat's checkpoints each bank gets right on the bluff question, plus overall accuracy.
 - These runs are reported separately and are not pooled into the main belief results.
+
+## Amendment 2 (belief study)
+
+Study 203 (`20261106-141812-509f`) is invalid. Its last 8 briefings failed with HTTP 402 because the Hindsight Cloud credit ran out ("Insufficient credits"), and the pre-registered rule scored those as wrong answers. That rule was meant for briefings where Hindsight answered badly, not for a service that refused to answer. Any study with a briefing refused for credit or quota is now invalid, the same rule we use for negotiation runs with fallback decisions. The study is kept in `runs/archive-beliefs-invalid/`, and seed 203 is rerun when Hindsight is available again. Studies 201 and 202 had no failed briefings.

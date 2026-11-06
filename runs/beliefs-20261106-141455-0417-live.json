@@ -1,0 +1,967 @@
+{
+ "id": "20261106-141455-0417",
+ "kind": "beliefs",
+ "mode": "live",
+ "protocol": "beliefs-v1",
+ "rows": [
+  {
+   "memory": "arithmetic",
+   "vendor": "apex",
+   "checkpoint": 1,
+   "after_deal": 1,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 4,
+    "walked_at_round": 0,
+    "lowest_close": 83240,
+    "quarter_end": "unknown",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "apex",
+   "checkpoint": 1,
+   "after_deal": 1,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 4,
+    "walked_at_round": 0,
+    "lowest_close": 83240,
+    "quarter_end": "unknown",
+    "advice": "Do not take the vendor's claims about final pricing or market pressure at face value, as they are known to bluff to create artificial urgency."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "nova",
+   "checkpoint": 1,
+   "after_deal": 2,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 5,
+    "walked_at_round": 0,
+    "lowest_close": 88287,
+    "quarter_end": "unknown",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "nova",
+   "checkpoint": 1,
+   "after_deal": 2,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 5,
+    "walked_at_round": 0,
+    "lowest_close": 88287,
+    "quarter_end": "unknown",
+    "advice": "Treat any final price or supply scarcity claim as a fabrication and maintain your position through at least 5 rounds."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "bharat",
+   "checkpoint": 1,
+   "after_deal": 3,
+   "brief": {
+    "final_claims": "usually honest",
+    "safe_rounds": 0,
+    "walked_at_round": 3,
+    "lowest_close": 0,
+    "quarter_end": "unknown",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "bharat",
+   "checkpoint": 1,
+   "after_deal": 3,
+   "brief": {
+    "final_claims": "usually honest",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 0,
+    "quarter_end": "unknown",
+    "advice": "Do not push beyond their stated final price as they are highly likely to walk away from the deal."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "nova",
+   "checkpoint": 2,
+   "after_deal": 4,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 0,
+    "lowest_close": 86422,
+    "quarter_end": "unknown",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "nova",
+   "checkpoint": 2,
+   "after_deal": 4,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 0,
+    "lowest_close": 86422,
+    "quarter_end": "unknown",
+    "advice": "Maintain a high level of skepticism regarding their final price claims and pressure tactics throughout the negotiation."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "apex",
+   "checkpoint": 2,
+   "after_deal": 5,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 5,
+    "walked_at_round": 0,
+    "lowest_close": 82514,
+    "quarter_end": "unknown",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "apex",
+   "checkpoint": 2,
+   "after_deal": 5,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 5,
+    "walked_at_round": 0,
+    "lowest_close": 82514,
+    "quarter_end": "unknown",
+    "advice": "Do not be swayed by claims of final pricing or pressure regarding competitors, as these are established deceptive negotiation patterns for Apex Circuits."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "bharat",
+   "checkpoint": 2,
+   "after_deal": 6,
+   "brief": {
+    "final_claims": "usually honest",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 90532,
+    "quarter_end": "unknown",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "bharat",
+   "checkpoint": 2,
+   "after_deal": 6,
+   "brief": {
+    "final_claims": "usually honest",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 90532,
+    "quarter_end": "unknown",
+    "advice": "Approach the negotiation with caution and treat any final price claim with skepticism, as there is no data on their behavior during quarter-end months."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "nova",
+   "checkpoint": 3,
+   "after_deal": 7,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 7,
+    "lowest_close": 86422,
+    "quarter_end": "unknown",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "nova",
+   "checkpoint": 3,
+   "after_deal": 7,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 7,
+    "lowest_close": 86422,
+    "quarter_end": "unknown",
+    "advice": "Ignore all finality language and expect further price reductions even after the vendor claims a hard floor."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "bharat",
+   "checkpoint": 3,
+   "after_deal": 8,
+   "brief": {
+    "final_claims": "usually honest",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 90453,
+    "quarter_end": "no difference",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "bharat",
+   "checkpoint": 3,
+   "after_deal": 8,
+   "brief": {
+    "final_claims": "unknown",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 90147,
+    "quarter_end": "no difference",
+    "advice": "Test the vendor's round 2 final price claims by pushing for further reductions, but be prepared for them to walk away at round 3."
+   },
+   "score": {
+    "final_claims": null,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "apex",
+   "checkpoint": 3,
+   "after_deal": 9,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 0,
+    "lowest_close": 76905,
+    "quarter_end": "cheaper",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "apex",
+   "checkpoint": 3,
+   "after_deal": 9,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 0,
+    "lowest_close": 76905,
+    "quarter_end": "cheaper",
+    "advice": "Ignore their false final price claims and maintain your position, as they are known to lower prices throughout the negotiation process."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": null,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "nova",
+   "checkpoint": 4,
+   "after_deal": 10,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 7,
+    "lowest_close": 86422,
+    "quarter_end": "unknown",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": null
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "nova",
+   "checkpoint": 4,
+   "after_deal": 10,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 7,
+    "lowest_close": 86422,
+    "quarter_end": "cheaper",
+    "advice": "Ignore any early final price claims and remain skeptical of scarcity pressure, as the vendor is known to bluff and will walk away if pushed beyond seven rounds."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "bharat",
+   "checkpoint": 4,
+   "after_deal": 11,
+   "brief": {
+    "final_claims": "usually honest",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 90453,
+    "quarter_end": "no difference",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "bharat",
+   "checkpoint": 4,
+   "after_deal": 11,
+   "brief": {
+    "final_claims": "unknown",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 90453,
+    "quarter_end": "no difference",
+    "advice": "Expect Bharat PCB to declare their second-round price as final and be prepared for the risk of a broken deal if you choose to challenge their price floor."
+   },
+   "score": {
+    "final_claims": null,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "apex",
+   "checkpoint": 4,
+   "after_deal": 12,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 6,
+    "lowest_close": 76905,
+    "quarter_end": "cheaper",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "apex",
+   "checkpoint": 4,
+   "after_deal": 12,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 5,
+    "walked_at_round": 6,
+    "lowest_close": 76905,
+    "quarter_end": "cheaper",
+    "advice": "Do not accept their initial final price claims as they are a negotiation tactic rather than a ceiling and expect them to push for at least 5 to 6 rounds."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "nova",
+   "checkpoint": 6,
+   "after_deal": 16,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 7,
+    "lowest_close": 80194,
+    "quarter_end": "cheaper",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "nova",
+   "checkpoint": 6,
+   "after_deal": 16,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 7,
+    "lowest_close": 80194,
+    "quarter_end": "cheaper",
+    "advice": "Do not accept their initial final price assertions and maintain pressure through at least 6 rounds as they consistently show flexibility beyond their early claims."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "bharat",
+   "checkpoint": 6,
+   "after_deal": 17,
+   "brief": {
+    "final_claims": "usually honest",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 90196,
+    "quarter_end": "no difference",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "bharat",
+   "checkpoint": 6,
+   "after_deal": 17,
+   "brief": {
+    "final_claims": "unknown",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 90196,
+    "quarter_end": "no difference",
+    "advice": "Approach the second round with extreme skepticism and be prepared to test the final price claim by pushing past the second round while remaining mindful of the risk of a walkaway."
+   },
+   "score": {
+    "final_claims": null,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "apex",
+   "checkpoint": 6,
+   "after_deal": 18,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 6,
+    "lowest_close": 76905,
+    "quarter_end": "cheaper",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "apex",
+   "checkpoint": 6,
+   "after_deal": 18,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 5,
+    "walked_at_round": 6,
+    "lowest_close": 76905,
+    "quarter_end": "cheaper",
+    "advice": "Maintain extreme skepticism toward their final offer claims and remain firm, as they consistently lower prices beyond their initial stated final price."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "nova",
+   "checkpoint": 8,
+   "after_deal": 22,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 7,
+    "lowest_close": 80194,
+    "quarter_end": "cheaper",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "nova",
+   "checkpoint": 8,
+   "after_deal": 22,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 7,
+    "lowest_close": 80073,
+    "quarter_end": "cheaper",
+    "advice": "Assume that any claim of a final price or scarcity is a fabricated tactic and be prepared for the possibility that they will walk away at round 7."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "apex",
+   "checkpoint": 8,
+   "after_deal": 23,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 6,
+    "walked_at_round": 6,
+    "lowest_close": 76905,
+    "quarter_end": "cheaper",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "apex",
+   "checkpoint": 8,
+   "after_deal": 23,
+   "brief": {
+    "final_claims": "usually bluffs",
+    "safe_rounds": 5,
+    "walked_at_round": 6,
+    "lowest_close": 76905,
+    "quarter_end": "cheaper",
+    "advice": "Treat all 'final' price claims as starting points for further negotiation rather than end-of-round ceilings, as the vendor is more flexible during quarter-end months."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "arithmetic",
+   "vendor": "bharat",
+   "checkpoint": 8,
+   "after_deal": 24,
+   "brief": {
+    "final_claims": "usually honest",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 89410,
+    "quarter_end": "no difference",
+    "advice": "Rehearsal summary computed from records, not a Hindsight reflection."
+   },
+   "score": {
+    "final_claims": true,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  },
+  {
+   "memory": "hindsight",
+   "vendor": "bharat",
+   "checkpoint": 8,
+   "after_deal": 24,
+   "brief": {
+    "final_claims": "unknown",
+    "safe_rounds": 2,
+    "walked_at_round": 3,
+    "lowest_close": 89410,
+    "quarter_end": "no difference",
+    "advice": "Be prepared for a firm, truncated negotiation and be ready to push into a third round if you want to test their price floor, while accepting the risk that they may walk away."
+   },
+   "score": {
+    "final_claims": null,
+    "walked_at_round": true,
+    "quarter_end": true
+   }
+  }
+ ],
+ "curve": {
+  "arithmetic": [
+   {
+    "checkpoint": 1,
+    "correct": 4,
+    "answered": 4,
+    "asked": 9,
+    "accuracy": 0.444
+   },
+   {
+    "checkpoint": 2,
+    "correct": 4,
+    "answered": 4,
+    "asked": 9,
+    "accuracy": 0.444
+   },
+   {
+    "checkpoint": 3,
+    "correct": 7,
+    "answered": 7,
+    "asked": 9,
+    "accuracy": 0.778
+   },
+   {
+    "checkpoint": 4,
+    "correct": 8,
+    "answered": 8,
+    "asked": 9,
+    "accuracy": 0.889
+   },
+   {
+    "checkpoint": 6,
+    "correct": 9,
+    "answered": 9,
+    "asked": 9,
+    "accuracy": 1.0
+   },
+   {
+    "checkpoint": 8,
+    "correct": 9,
+    "answered": 9,
+    "asked": 9,
+    "accuracy": 1.0
+   }
+  ],
+  "hindsight": [
+   {
+    "checkpoint": 1,
+    "correct": 4,
+    "answered": 4,
+    "asked": 9,
+    "accuracy": 0.444
+   },
+   {
+    "checkpoint": 2,
+    "correct": 4,
+    "answered": 4,
+    "asked": 9,
+    "accuracy": 0.444
+   },
+   {
+    "checkpoint": 3,
+    "correct": 6,
+    "answered": 6,
+    "asked": 9,
+    "accuracy": 0.667
+   },
+   {
+    "checkpoint": 4,
+    "correct": 8,
+    "answered": 8,
+    "asked": 9,
+    "accuracy": 0.889
+   },
+   {
+    "checkpoint": 6,
+    "correct": 8,
+    "answered": 8,
+    "asked": 9,
+    "accuracy": 0.889
+   },
+   {
+    "checkpoint": 8,
+    "correct": 8,
+    "answered": 8,
+    "asked": 9,
+    "accuracy": 0.889
+   }
+  ]
+ },
+ "specs": [
+  {
+   "index": 1,
+   "vendor_slug": "apex",
+   "month": 1,
+   "year": 2025,
+   "seed": 202001
+  },
+  {
+   "index": 2,
+   "vendor_slug": "nova",
+   "month": 1,
+   "year": 2025,
+   "seed": 202002
+  },
+  {
+   "index": 3,
+   "vendor_slug": "bharat",
+   "month": 1,
+   "year": 2025,
+   "seed": 202003
+  },
+  {
+   "index": 4,
+   "vendor_slug": "nova",
+   "month": 2,
+   "year": 2025,
+   "seed": 202004
+  },
+  {
+   "index": 5,
+   "vendor_slug": "apex",
+   "month": 2,
+   "year": 2025,
+   "seed": 202005
+  },
+  {
+   "index": 6,
+   "vendor_slug": "bharat",
+   "month": 2,
+   "year": 2025,
+   "seed": 202006
+  },
+  {
+   "index": 7,
+   "vendor_slug": "nova",
+   "month": 3,
+   "year": 2025,
+   "seed": 202007
+  },
+  {
+   "index": 8,
+   "vendor_slug": "bharat",
+   "month": 3,
+   "year": 2025,
+   "seed": 202008
+  },
+  {
+   "index": 9,
+   "vendor_slug": "apex",
+   "month": 3,
+   "year": 2025,
+   "seed": 202009
+  },
+  {
+   "index": 10,
+   "vendor_slug": "nova",
+   "month": 4,
+   "year": 2025,
+   "seed": 202010
+  },
+  {
+   "index": 11,
+   "vendor_slug": "bharat",
+   "month": 4,
+   "year": 2025,
+   "seed": 202011
+  },
+  {
+   "index": 12,
+   "vendor_slug": "apex",
+   "month": 4,
+   "year": 2025,
+   "seed": 202012
+  },
+  {
+   "index": 13,
+   "vendor_slug": "apex",
+   "month": 5,
+   "year": 2025,
+   "seed": 202013
+  },
+  {
+   "index": 14,
+   "vendor_slug": "nova",
+   "month": 5,
+   "year": 2025,
+   "seed": 202014
+  },
+  {
+   "index": 15,
+   "vendor_slug": "bharat",
+   "month": 5,
+   "year": 2025,
+   "seed": 202015
+  },
+  {
+   "index": 16,
+   "vendor_slug": "nova",
+   "month": 6,
+   "year": 2025,
+   "seed": 202016
+  },
+  {
+   "index": 17,
+   "vendor_slug": "bharat",
+   "month": 6,
+   "year": 2025,
+   "seed": 202017
+  },
+  {
+   "index": 18,
+   "vendor_slug": "apex",
+   "month": 6,
+   "year": 2025,
+   "seed": 202018
+  },
+  {
+   "index": 19,
+   "vendor_slug": "bharat",
+   "month": 7,
+   "year": 2025,
+   "seed": 202019
+  },
+  {
+   "index": 20,
+   "vendor_slug": "nova",
+   "month": 7,
+   "year": 2025,
+   "seed": 202020
+  },
+  {
+   "index": 21,
+   "vendor_slug": "apex",
+   "month": 7,
+   "year": 2025,
+   "seed": 202021
+  },
+  {
+   "index": 22,
+   "vendor_slug": "nova",
+   "month": 8,
+   "year": 2025,
+   "seed": 202022
+  },
+  {
+   "index": 23,
+   "vendor_slug": "apex",
+   "month": 8,
+   "year": 2025,
+   "seed": 202023
+  },
+  {
+   "index": 24,
+   "vendor_slug": "bharat",
+   "month": 8,
+   "year": 2025,
+   "seed": 202024
+  }
+ ],
+ "brief_failures": {
+  "arithmetic": 0,
+  "hindsight": 0
+ },
+ "bank_id": {
+  "arithmetic": null,
+  "hindsight": "counterparty-20261106-141044-2500"
+ },
+ "provenance": {
+  "model": "",
+  "prompt_version": "v3-frozen-2026-11-06",
+  "prompt_sha": "2952ec4c43f4",
+  "commit": "13533f9",
+  "engine_modified": false
+ }
+}
