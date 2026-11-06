@@ -63,8 +63,15 @@ def make_room(buyer: str, vendor: str, owner: str) -> str:
 
 
 def inbox(handle: str) -> list[dict]:
-    out = band("inbox", "--as", handle, "--json", check=False)
+    """Queued messages. If Band restarted and dropped this agent's worker, reconnect it and try again."""
+    done = subprocess.run([band_exe(), "inbox", "--as", handle, "--json"],
+                          capture_output=True, text=True, encoding="utf-8")
+    if "no running worker" in done.stderr:
+        log.info("Band dropped %s; reconnecting.", handle)
+        go_online(handle.split("/")[-1])
+        return []
     try:
+        out = done.stdout.strip()
         return json.loads(out) if out.startswith("[") else []
     except json.JSONDecodeError:
         return []
