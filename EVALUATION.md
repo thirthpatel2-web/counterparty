@@ -78,3 +78,20 @@ Committed before running. In study 201, the skeptical bank (skepticism 5) called
 ## Amendment 2 (belief study)
 
 Study 203 (`20261106-141812-509f`) is invalid. Its last 8 briefings failed with HTTP 402 because the Hindsight Cloud credit ran out ("Insufficient credits"), and the pre-registered rule scored those as wrong answers. That rule was meant for briefings where Hindsight answered badly, not for a service that refused to answer. Any study with a briefing refused for credit or quota is now invalid, the same rule we use for negotiation runs with fallback decisions. The study is kept in `runs/archive-beliefs-invalid/`, and seed 203 is rerun when Hindsight is available again. Studies 201 and 202 had no failed briefings.
+
+# Briefed buyer (briefed-v1)
+
+Committed before computing. **Question:** does what Hindsight learned turn into better prices?
+
+**Buyer:** a fixed policy with no LLM that follows the latest briefing about the vendor. Its rules, in order:
+
+1. With no briefing, play the rule: offer 70% of the ask and accept the first "final".
+2. If `walked_at_round` is N > 0, accept the vendor's ask before making the round-N offer.
+3. If `final_claims` is "usually bluffs", don't accept a "final". Keep offering 70% of the ask until the round-N limit, or until round `safe_rounds` + 1 if no walk-away is known, then accept.
+4. Otherwise, accept the first "final", as the rule does.
+
+The quarter-end field is not used by this buyer, because it has no way to move a deal to a different month.
+
+**Briefings used:** the briefings Hindsight actually wrote in the valid live studies (201, 202), with no new calls. For each deal, the buyer uses the most recent briefing for that vendor that was written before the deal. Briefings exist only at checkpoints, so between them the buyer uses the last one. The same policy is also run on the arithmetic briefings from the same studies.
+
+**Comparison:** on the same deals and seeds, the rule and the oracle. The result is reported per study and pooled, whatever it shows.
