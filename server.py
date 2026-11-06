@@ -107,7 +107,11 @@ def beliefs():
                         row["brief"].get("advice", ""), "answers": [
                             {"question": q, "said": row["brief"].get(q), "right": row["score"][q],
                              "truth": sorted(real[q]) if isinstance(real[q], set) else real[q]} for q in QUESTIONS]})
-    return {"studies": len(found), "mode": mode, "ids": [s["id"] for s in found],
+    briefed = []
+    if mode == "live":
+        from engine.briefed import replay_study
+        briefed = [{k: v for k, v in replay_study(s).items() if k != "prices"} for s in found]
+    return {"studies": len(found), "mode": mode, "ids": [s["id"] for s in found], "briefed": briefed,
             "curves": {n: pooled_curve(found, n) for n in names}, "vendors": vendors}
 
 

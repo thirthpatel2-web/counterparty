@@ -131,6 +131,11 @@ footer { color: var(--ink-3); font-size: 12px; text-align: center; padding: 0 20
       </div>
       <div id="vendorBriefs"></div>
     </div>
+    <div id="briefedBox" hidden style="margin-top:12px">
+      <h2>Does following the briefings pay?</h2>
+      <p class="sub">A buyer with no AI that follows Hindsight's own briefings, replayed on the same deals as the rule. Negative means cheaper than the rule.</p>
+      <div class="scroll-x"><table id="briefedTable"></table></div>
+    </div>
   </section>
   <div id="err" class="error" hidden></div>
   <section class="top">
@@ -414,6 +419,11 @@ async function loadBeliefs() {
   $("learnedCard").hidden = false;
   $("learnedSub").textContent = `${d.studies} ${d.mode} stud${d.studies === 1 ? "y" : "ies"}. Share of 9 questions answered correctly as each vendor's deals accumulate. "Unknown" counts as not correct.${d.mode === "rehearsal" ? " REHEARSAL: no Hindsight here." : ""}`;
   drawBeliefs(d.curves);
+  if (d.briefed && d.briefed.length) {
+    $("briefedBox").hidden = false;
+    $("briefedTable").innerHTML = "<thead><tr><th>Study</th><th>Briefed buyer avg</th><th>Rule avg</th><th>Perfect knowledge</th><th>Vs rule, all deals</th><th>Vs rule, last third</th><th>Deals lost</th></tr></thead><tbody>" +
+      d.briefed.map(b => { const h = b.memories.hindsight; return `<tr><td>${esc(b.study.slice(0, 15))}</td><td>${rupee(h.avg)}</td><td>${rupee(b.rule_avg)}</td><td>${rupee(b.oracle_avg)}</td><td>${rupee(h.vs_rule)}</td><td><b>${rupee(h.vs_rule_last_third)}</b></td><td>${h.lost}</td></tr>`; }).join("") + "</tbody>";
+  }
   const rows = Object.entries(d.curves);
   $("beliefTable").innerHTML = `<thead><tr><th>Deals seen per vendor</th>${rows[0][1].map(p => `<th>${p.checkpoint}</th>`).join("")}</tr></thead><tbody>` +
     rows.map(([name, c]) => `<tr><td>${name === "hindsight" ? "Hindsight" : "Arithmetic"}</td>${c.map(p => `<td>${Math.round(p.accuracy * 100)}%</td>`).join("")}</tr>`).join("") + "</tbody>";

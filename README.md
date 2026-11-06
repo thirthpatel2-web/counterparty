@@ -110,7 +110,7 @@ The policy and the comparison were committed in [EVALUATION.md](EVALUATION.md) b
 <!-- DISPOSITION -->
 Not measured. The pre-registered skepticism-5 vs skepticism-3 test (seeds 301 and 302) was started on self-hosted Hindsight, then stopped when the laptop ran low on memory.
 
-We first read Hindsight calling honest Bharat PCB a bluffer (study 201, checkpoints 1-6) as a sign of the bank's maximum-skepticism disposition. A blind review found a simpler explanation in our own records. Bharat sometimes says "final" within 1% of its floor (`FINAL_TOLERANCE` in `engine/simulator.py`) and then concedes a few hundred rupees more, and `DealRecord.to_text` labels that claim FALSE. In study 201's first Bharat deal, the only tested "final" was labelled FALSE, so "usually bluffs" was what the evidence said. Study 202 had no such labels, and Hindsight never called Bharat a bluffer. The fix, labelling a sub-1% move as honest or scoring against the evidence actually available, would change the recorded studies, so it waits for new runs.
+We first read Hindsight calling honest Bharat PCB a bluffer (study 201, checkpoints 1-6) as a sign of the bank's maximum-skepticism disposition. A blind review found a simpler explanation in our own records. Bharat sometimes says "final" within 1% of its floor (`FINAL_TOLERANCE` in `engine/simulator.py`) and then concedes a few hundred rupees more, and `DealRecord.to_text` labels that claim FALSE. In study 201's first Bharat deal, the only tested "final" was labelled FALSE, so "usually bluffs" was what the evidence said. Study 202 had no such labels, and Hindsight never called Bharat a bluffer. From Amendment 3 on, a "final" that later moves by under 1% is recorded as having held. The recorded studies keep their original labels, so the fix shows only in new studies.
 <!-- /DISPOSITION -->
 
 ### Does an LLM negotiator with memory beat a simple rule?
@@ -131,7 +131,9 @@ python -m venv .venv
 pip install -r requirements.txt
 cp .env.example .env              # then add an LLM key and HINDSIGHT_API_KEY
 python scripts/preflight.py       # one real call to each service
-python scripts/run_race.py --seed 101   # records a run and rebuilds the results above
+python scripts/belief_study.py --seed 203   # scores Hindsight's briefings against the hidden truth
+python scripts/briefed_buyer.py             # replays a buyer that follows those briefings
+python scripts/run_race.py --seed 101       # an LLM negotiator against the rule
 uvicorn server:app --port 8765    # dashboard at http://localhost:8765
 ```
 

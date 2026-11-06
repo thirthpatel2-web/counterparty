@@ -11,7 +11,7 @@ import uuid
 from typing import Callable
 
 from .brains import PROMPT_VERSION, SYSTEM_PROMPT, Brain, DealState, RuleBrain, ScriptedBrain
-from .memory import DealRecord, LocalMemory, Memory, brief_text
+from .memory import DealRecord, LocalMemory, Memory, brief_text, was_bluff
 from .simulator import VENDOR_BY_SLUG, VENDORS, Negotiation, is_quarter_end, lost_deal_price
 
 MAX_ROUNDS = 12
@@ -206,7 +206,7 @@ def summarize(pairs: list[dict]) -> dict:
 
 def deal_end_event(spec: DealSpec, mem: dict, baseline: dict, cumulative: int, generation: str = "") -> dict:
     record = DealRecord.from_dict(mem["record"])
-    false_finals = sum(after < price for _, price, after in
+    false_finals = sum(was_bluff(price, after) for _, price, after in
                        (tuple(c) if len(c) == 3 else (*c, c[1]) for c in record.final_claims))
     return {"type": "deal_end", "generation": generation, "deal": spec.index, "vendor": record.vendor_name,
             "vendor_slug": spec.vendor_slug, "memory_price": mem["price"], "baseline_price": baseline["price"],

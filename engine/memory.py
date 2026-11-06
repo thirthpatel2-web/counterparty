@@ -29,6 +29,13 @@ BRIEF_SCHEMA = {
 }
 
 
+BLUFF_MARGIN = 0.01  # a "final" that later moves less than 1% held; the vendor was at its floor
+
+
+def was_bluff(price: int, lowest_after: int) -> bool:
+    return lowest_after < price * (1 - BLUFF_MARGIN)
+
+
 def claim_parts(claim) -> tuple[int, int, int]:
     """(round, price, lowest ask after the claim). Runs recorded before the lowest ask was tracked carry two."""
     round_no, price, *rest = claim
@@ -64,8 +71,10 @@ class DealRecord:
         for n, claim in enumerate(self.final_claims, 1):
             round_no, price, lowest_after = claim_parts(claim)
             said = f"At round {round_no} {self.vendor_name} claimed ₹{price:,} was final."
-            if lowest_after < price:
+            if was_bluff(price, lowest_after):
                 lines.append(f"{said} That claim was FALSE: the vendor later went down to ₹{lowest_after:,}.")
+            elif lowest_after < price:
+                lines.append(f"{said} It held: the vendor later moved only ₹{price - lowest_after:,}, under 1%.")
             elif n == len(self.final_claims) and self.accepted_final:
                 lines.append(f"{said} The buyer accepted without testing it, so it is UNKNOWN whether it was a bluff.")
             else:
@@ -133,7 +142,7 @@ class LocalMemory:
         if not rows:
             return {}
         claims = [claim_parts(c) for r in rows for c in r.final_claims]
-        false = sum(after < price for _, price, after in claims)
+        false = sum(was_bluff(price, after) for _, price, after in claims)
         walked = [r.rounds for r in rows if r.outcome != "closed"]
         closed = [r for r in rows if r.outcome == "closed"]
         qe = [r.closing for r in closed if r.quarter_end]

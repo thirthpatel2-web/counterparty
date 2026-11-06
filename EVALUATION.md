@@ -95,3 +95,7 @@ The quarter-end field is not used by this buyer, because it has no way to move a
 **Briefings used:** the briefings Hindsight actually wrote in the valid live studies (201, 202), with no new calls. For each deal, the buyer uses the most recent briefing for that vendor that was written before the deal. Briefings exist only at checkpoints, so between them the buyer uses the last one. The same policy is also run on the arithmetic briefings from the same studies.
 
 **Comparison:** on the same deals and seeds, the rule and the oracle. The result is reported per study and pooled, whatever it shows.
+
+## Amendment 3 (labels, for future studies only)
+
+A second blind review found that a "final" claim which later moved by under 1% was labelled FALSE. Bharat PCB says "final" anywhere within 1% of its floor, so an honest vendor could be recorded as bluffing. From this commit on, a "final" that later moves by under 1% is recorded as having held, both in the text Hindsight receives and in the arithmetic briefing. Studies 201, 202 and 203 were recorded before this change. They keep their original labels and results, and are not rescored.

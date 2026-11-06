@@ -236,3 +236,12 @@ def test_bootstrap_interval_contains_the_mean():
     low, high = bootstrap_ci([100, 200, 300, 400, 500])
     assert low <= 300 <= high
     assert bootstrap_ci([]) == (0.0, 0.0)
+
+
+def test_a_final_that_moves_under_one_percent_held():
+    """Regression: an honest vendor at its floor conceding a few hundred rupees was recorded as bluffing."""
+    nudge = DealRecord("n", "bharat", "Bharat PCB", 1, 2025, 98_000, 90_500, "closed", 3, ((2, 90_837, 90_500),))
+    assert "It held" in nudge.to_text() and "FALSE" not in nudge.to_text()
+    memory = LocalMemory()
+    memory.retain(nudge)
+    assert memory.brief("bharat", "Bharat PCB", 2)["final_claims"] == "usually honest"
