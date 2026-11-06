@@ -12,41 +12,47 @@ One "final price" tells you nothing. The pattern only exists across repeated dea
 
 | Vendor (simulated) | What it hides | What the buyer has to learn |
 | --- | --- | --- |
-| Apex Circuits | Says "final" early, at round 2, but can go much lower | Don't believe the first "final" |
-| Nova Components | Moves slowly, says "final" at round 3, drops more at quarter-end | Be patient |
-| Bharat PCB | Honest about "final", walks away at round 3 | Stop pushing and take the price |
+| Apex Circuits | Usually says "final" at round 2 or 3, but can go much lower | Don't believe the first "final" |
+| Nova Components | Moves slowly, bluffs "final" around round 3, drops more at quarter-end | Be patient, especially at quarter-end |
+| Bharat PCB | Honest about "final", walks away around round 3 | Stop pushing and take the price |
 
-No fixed strategy wins everywhere. A buyer that always believes "final" overpays Apex and Nova. A buyer that never believes it loses every deal to walk-aways.
+These are tendencies, not constants: the bluff and walk-away rounds vary from deal to deal, and a vendor at its patience limit takes a bid within 1% instead of walking. No fixed strategy wins everywhere. A buyer that always believes "final" overpays Apex and Nova, and a buyer that never believes it loses deals to walk-aways.
 
 ## How Hindsight memory is used
 
 ```mermaid
 flowchart LR
-    A[New deal] --> B[recall: this vendor's history]
-    B --> C[LLM decides: offer or accept]
-    C --> D[Band room: vendor replies]
-    D -->|still talking| C
-    D -->|deal closed or lost| E[Human approves]
-    E --> F[retain: facts computed by our code]
-    F --> G[Observations consolidate]
-    G --> H[reflect: vendor playbook]
-    F --> B
+    A[New deal] --> B[reflect: structured briefing on this vendor]
+    A --> C[recall: this vendor's history, month-aware]
+    B --> D[LLM decides: offer or accept]
+    C --> D
+    D --> E[Vendor replies]
+    E -->|still talking| D
+    E -->|deal closed or lost| F[Human approves in Band]
+    F --> G[retain: the outcome only]
+    G --> H[Observations consolidate]
+    H --> B
 ```
 
 | Hindsight feature | How Counterparty uses it | Code |
 | --- | --- | --- |
-| `retain` | One document per deal, tagged by vendor and timestamped when the deal happened | `HindsightMemory.retain` |
-| `recall` | Tag-scoped search of a vendor's history, before every negotiation | `HindsightMemory.recall` |
-| `reflect` | A per-vendor playbook, snapshotted as evidence grows, so you can watch its belief change | `HindsightMemory.playbook` |
-| Disposition | The bank uses skepticism 5, literalism 4, empathy 1, because claims count for less than outcomes | `HindsightMemory.reset` |
+| `retain` | One document per deal: the outcome and what the vendor did after each "final", never a lesson. Tagged by vendor and quarter-end, timestamped when the deal happened | `HindsightMemory.retain` |
+| `reflect` | Before every deal, a structured briefing (`response_schema`): does this vendor bluff, how many rounds it tolerates, where it walked, lowest close, quarter-end effect. **The buyer negotiates from it** | `HindsightMemory.brief` |
+| Disposition | Skepticism 5, literalism 4, empathy 1 shape every briefing, because outcomes count for more than claims | `HindsightMemory.reset` |
+| `recall` | Tag-scoped search of a vendor's history, with the month and quarter-end in the query | `HindsightMemory.recall` |
+| Observations | Consolidated beliefs feed both recall and the briefing | `HindsightMemory.recall` |
+| Bank clone and document delete | Forget really deletes deals from a cloned bank and waits for re-consolidation | `HindsightMemory.forgotten_copy` |
 | Missions | `retain_mission` and `reflect_mission` keep memory focused on negotiation behaviour | `engine/memory.py` |
-| Observations | Consolidated beliefs are used in live deals. Forget compares raw facts only, because an observation could still carry the forgotten deal | `HindsightMemory.recall` |
+
+Our code never writes "what to do next time". It records what happened, and Hindsight works out the pattern.
 
 ## What makes it different
 
-**The Forget button.** Pick any memory, or a whole vendor. The buyer renegotiates the same new deal without it, on the same seeds, and the screen shows the rupee difference. If other memories teach the same lesson, forgetting one changes nothing, and the screen says so.
+**A pre-negotiation briefing.** Before each deal, Hindsight reflects on the vendor's history and briefs the buyer. A human buyer can read the same briefing.
 
-**A race against its memoryless twin.** The same model, prompt, vendors and deals, with one difference: memory. Results come with a 95% bootstrap interval on the paired per-deal differences.
+**The Forget button.** Pick any memory, or a whole vendor. Hindsight clones the bank, deletes those deals from the clone, and the buyer renegotiates the same new deal with each memory, on the same vendor seeds. The screen shows the rupee difference. If other memories teach the same lesson, forgetting one changes nothing, and the screen says so.
+
+**Honest baselines, fixed in advance.** Every deal is also played by a rule with no memory and no AI, a hand-written learner with perfect memory, and an oracle that knows the vendor's hidden limits. The protocol in [EVALUATION.md](EVALUATION.md) was committed before any run.
 
 **Numbers the LLM can't touch.** Vendor prices come from fixed rules and seeds in `engine/simulator.py`. Vendors never use an LLM, so a score is objective and every run is repeatable on the vendor side.
 
@@ -68,15 +74,17 @@ Needs Python 3.11 or newer.
 python -m venv .venv
 .venv/Scripts/activate            # macOS or Linux: source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env              # then add GROQ_API_KEY and HINDSIGHT_API_KEY
+cp .env.example .env              # then add an LLM key and HINDSIGHT_API_KEY
 python scripts/preflight.py       # one real call to each service
-python scripts/run_race.py        # records a run and updates this README
+python scripts/run_race.py --seed 101   # records a run and rebuilds the results above
 uvicorn server:app --port 8765    # dashboard at http://localhost:8765
 ```
 
 Without keys, the app runs in **rehearsal mode**: a scripted buyer and local memory, clearly labelled on screen, for practising the demo. Rehearsal numbers say nothing about the real agent, and the README ignores them.
 
-For a demo, press **Replay** on a recorded live run. It doesn't depend on rate limits or Wi-Fi, and Forget stays available as long as the keys and the run's memory bank are available.
+Any OpenAI-compatible model works. Set `LLM_PROVIDER` to `groq` (the default), `nvidia` for Nemotron on build.nvidia.com, or `openai` with `LLM_BASE_URL`.
+
+For a demo, press **Replay** on a recorded live run. It doesn't depend on rate limits or Wi-Fi. Forget on a live run needs the keys, and refuses rather than showing rehearsal numbers.
 
 ### Negotiate in a Band room
 
@@ -106,7 +114,9 @@ Models sometimes return malformed tool calls. `LLMBrain` recovers the decision f
 
 - Vendors are simulated and their behaviour was designed by us, so savings are simulated too. These are not real procurement savings, and a real vendor is messier.
 - A buyer learns a vendor's limit partly by reaching it, so it can lose a deal while learning.
-- Vendor behaviour here doesn't change over time. A real vendor could adapt to being challenged.
-- Forget measures one rerun scenario, the next deal with that vendor, over a few seeds. It's an estimate, not a full valuation.
+- Vendors don't adapt to being challenged, though their tendencies vary from deal to deal. A real vendor could adapt.
+- One product, one price, no lead times or payment terms. Real procurement has more to negotiate.
+- Forget measures one rerun scenario, the next deal with that vendor, over a few seeds. LLM output varies even at temperature 0, so small differences are noise.
+- Earlier runs under protocol v1 had a memory-labelling bug and a prompt that changed between runs. They're kept in `runs/archive-v1` for transparency and aren't used for any claim.
 
 © 2026 Thirth Patel. Counterparty, a Matrix product. All rights reserved.

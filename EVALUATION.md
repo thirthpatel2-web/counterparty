@@ -43,3 +43,7 @@ The primary result is the mean per-deal difference between the Hindsight buyer a
 ## Earlier runs
 
 Runs recorded under protocol v1 are kept in `runs/archive-v1`. v1 had a memory-labelling bug that stored some bluffs as true claims, and its prompt was changed between runs, so v1 results aren't used for any claim.
+
+## Amendments
+
+1. **Before any valid run:** the first attempt at seed 101 stopped at its first briefing, because Hindsight's reflect returns HTTP 500 for nullable types in `response_schema`. The briefing schema now uses integers, with 0 meaning unknown. A vendor with no history gets no briefing, and a failed briefing is counted in the run as `brief_failures` instead of stopping it. The prompt, model, simulator and seeds are unchanged.

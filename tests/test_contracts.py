@@ -15,7 +15,7 @@ def test_hindsight_calls_match_the_real_client():
     client.recall.return_value = SimpleNamespace(results=[
         RecallResult(id="f1", text="Apex bluffed", type="experience", document_id="deal-1"),
         RecallResult(id="o1", text="Apex usually bluffs", type="observation")])
-    brief = {"final_claims": "usually bluffs", "safe_rounds": 5, "walked_at_round": None, "lowest_close": 82_000,
+    brief = {"final_claims": "usually bluffs", "safe_rounds": 5, "walked_at_round": 0, "lowest_close": 82_000,
              "quarter_end": "unknown", "advice": "Push past the first final."}
     client.reflect.return_value = SimpleNamespace(text="...", structured_output=brief)
     memory = HindsightMemory(client)
@@ -32,6 +32,12 @@ def test_hindsight_calls_match_the_real_client():
     assert "quarter-end" in client.recall.call_args.args[1]
     assert memory.brief("apex", "Apex Circuits", 4) == brief
     assert client.reflect.call_args.kwargs["response_schema"] == BRIEF_SCHEMA
+    assert all(not isinstance(p["type"], list) for p in BRIEF_SCHEMA["properties"].values())  # 500s otherwise
+    client.reflect.side_effect = RuntimeError("500")
+    assert memory.brief("apex", "Apex Circuits", 4) == {} and memory.brief_failures == 1
+    client.recall.return_value = SimpleNamespace(results=[])
+    client.reflect.reset_mock()
+    assert memory.brief("nova", "Nova Components", 1) == {} and not client.reflect.called
 
 
 def test_groq_call_matches_the_real_client():

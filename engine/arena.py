@@ -257,7 +257,8 @@ def run_race(specs: list[DealSpec], brain_memory: Brain, memory: Memory, *, mode
     run_id = f"{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:4]}"
     result = {"id": run_id, "mode": mode, "protocol": "v2", "summary": summarize(pairs), "pairs": pairs,
               "llm_errors": errors, "fallbacks": fallbacks, "specs": [asdict(s) for s in specs],
-              "bank_id": getattr(memory, "bank_id", None), "provenance": provenance(model)}
+              "bank_id": getattr(memory, "bank_id", None), "brief_failures": getattr(memory, "brief_failures", 0),
+              "provenance": provenance(model)}
     if save:
         RUNS_DIR.mkdir(exist_ok=True)
         (RUNS_DIR / f"{run_id}-{mode}.json").write_text(json.dumps(result, indent=1), encoding="utf-8")

@@ -10,16 +10,17 @@ BUYER_MISSION = ("I am a procurement buyer negotiating electronic components. I 
                  "they did in closed deals, not by what they claimed.")
 RETAIN_MISSION = ("Keep per-vendor negotiation behaviour: final-price claims and whether the vendor went lower "
                   "afterwards, closing prices, rounds, walk-aways, quarter-end months and pressure claims.")
+# Plain integers with 0 for "unknown": Hindsight's reflect answers HTTP 500 to nullable types.
 BRIEF_SCHEMA = {
     "type": "object",
     "properties": {
         "final_claims": {"type": "string", "enum": ["usually bluffs", "usually honest", "unknown"],
                          "description": "Whether this vendor's 'final price' claims held up in past deals"},
-        "safe_rounds": {"type": ["integer", "null"],
-                        "description": "Most rounds this vendor has negotiated without walking away"},
-        "walked_at_round": {"type": ["integer", "null"],
-                            "description": "Lowest round at which this vendor walked away, if it ever did"},
-        "lowest_close": {"type": ["integer", "null"], "description": "Lowest closing price reached, in rupees"},
+        "safe_rounds": {"type": "integer",
+                        "description": "Most rounds this vendor has negotiated without walking away, 0 if unknown"},
+        "walked_at_round": {"type": "integer",
+                            "description": "Lowest round at which this vendor walked away, 0 if it never did"},
+        "lowest_close": {"type": "integer", "description": "Lowest closing price reached in rupees, 0 if none"},
         "quarter_end": {"type": "string", "enum": ["cheaper", "no difference", "unknown"],
                         "description": "How prices in quarter-end months compared"},
         "advice": {"type": "string", "description": "One sentence for the buyer before this negotiation"},
@@ -95,7 +96,7 @@ class MemoryItem:
 def brief_text(brief: dict) -> str:
     if not brief:
         return ""
-    known = {k: v for k, v in brief.items() if k != "advice" and v not in (None, "unknown")}
+    known = {k: v for k, v in brief.items() if k != "advice" and v not in (None, 0, "unknown")}
     facts = "; ".join(f"{k.replace('_', ' ')}: {v}" for k, v in known.items()) or "nothing established yet"
     return f"Briefing from memory ({facts}). {brief.get('advice', '')}".strip()
 
@@ -140,9 +141,9 @@ class LocalMemory:
         return {
             "final_claims": "usually bluffs" if false * 2 > len(claims) else "usually honest" if claims and not false
             else "unknown",
-            "safe_rounds": max((r.rounds for r in closed), default=None),
-            "walked_at_round": min(walked, default=None),
-            "lowest_close": min((r.closing for r in closed), default=None),
+            "safe_rounds": max((r.rounds for r in closed), default=0),
+            "walked_at_round": min(walked, default=0),
+            "lowest_close": min((r.closing for r in closed), default=0),
             "quarter_end": ("cheaper" if min(qe) < min(other) * 0.97 else "no difference") if qe and other else "unknown",
             "advice": "Rehearsal summary computed from records, not a Hindsight reflection.",
         }
@@ -159,6 +160,7 @@ class HindsightMemory:
     def __init__(self, client, bank_id: str = ""):
         self.client = client
         self.bank_id = bank_id
+        self.brief_failures = 0
 
     @staticmethod
     def _period(month: int) -> str:
@@ -191,12 +193,21 @@ class HindsightMemory:
                 for f in response.results]
 
     def brief(self, vendor_slug, vendor_name, month):
-        """Hindsight reflects over the vendor's history, shaped by the bank's skeptical disposition."""
-        response = self.client.reflect(
-            self.bank_id, f"Brief a buyer about to negotiate with {vendor_name} in {self._period(month)}. "
-            + self.QUERY.format(name=vendor_name, period=self._period(month)),
-            budget="low", response_schema=BRIEF_SCHEMA, tags=[f"vendor:{vendor_slug}"], tags_match="any_strict",
-        )
+        """Hindsight reflects over the vendor's history, shaped by the bank's skeptical disposition.
+
+        No briefing for a vendor with no history. A failed briefing is counted and the deal goes ahead on recall.
+        """
+        if not self.recall(vendor_slug, vendor_name, month):
+            return {}
+        try:
+            response = self.client.reflect(
+                self.bank_id, f"Brief a buyer about to negotiate with {vendor_name} in {self._period(month)}. "
+                + self.QUERY.format(name=vendor_name, period=self._period(month)),
+                budget="low", response_schema=BRIEF_SCHEMA, tags=[f"vendor:{vendor_slug}"], tags_match="any_strict",
+            )
+        except Exception:
+            self.brief_failures += 1
+            return {}
         data = response.structured_output
         if isinstance(data, str):
             data = json.loads(data)
