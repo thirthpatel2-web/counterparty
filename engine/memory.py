@@ -3,6 +3,7 @@ lesson: what to do next time is left for Hindsight to work out from the outcomes
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import json
+import random
 import time
 from typing import Protocol
 
@@ -56,6 +57,7 @@ class DealRecord:
     final_claims: tuple = ()      # (round, price, lowest ask after it) from the simulator's flag
     false_claims: tuple = ()      # enums of pressure claims proven false by the closing price
     accepted_final: bool = False  # the buyer accepted a "final" without testing it
+    asks: tuple = ()              # (round, ask, said_final) for every vendor reply, for the notes style
 
     @property
     def when(self) -> str:
@@ -88,10 +90,46 @@ class DealRecord:
             lines.append(f"{self.vendor_name} made a {claim.replace('_', ' ')} pressure claim that proved FALSE.")
         return " ".join(lines)
 
+    def to_notes(self) -> str:
+        """A buyer's own messy note on the deal: varied wording, irrelevant detail, and no verdicts.
+
+        Nothing says whether a "final" was true. Hindsight has to work that out from the prices that followed,
+        the way it would from real purchase notes. The wording is seeded by the deal, so it is reproducible.
+        """
+        rng = random.Random(self.deal_id)
+        months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+                  "November", "December"]
+        rep = rng.choice(["Rahul", "Priya", "Arjun", "Meera", "Vikram", "Ananya"])
+        when = rng.choice([f"{months[self.month - 1]} {self.year}", f"mid-{months[self.month - 1]}",
+                           f"the {months[self.month - 1]} order"])
+        opener = rng.choice([f"Call with {rep} from {self.vendor_name} about {when}.",
+                             f"{self.vendor_name} ({rep}) quoted us for {when}.",
+                             f"Notes, {when}: {self.vendor_name}, spoke to {rep}."])
+        filler = rng.choice(["Lead time 3 weeks as usual.", "They asked about our Q4 volumes.",
+                             "Delivery to the Peenya warehouse.", "Rep mentioned a new SMT line.", ""])
+        said = []
+        for round_no, ask, final in self.asks:
+            if round_no == 0:
+                said.append(rng.choice([f"Started at {ask:,}.", f"First quote {ask:,}.", f"Opening ask was Rs {ask:,}."]))
+            elif final:
+                said.append(rng.choice([f"Round {round_no}: '{ask:,} is our final price.'",
+                                        f"Then {rep} said {ask:,} was final, best they can do.",
+                                        f"At {ask:,} they said that's it, final."]))
+            else:
+                said.append(rng.choice([f"Came down to {ask:,}.", f"Round {round_no}: {ask:,}.", f"Next offer {ask:,}."]))
+        if self.outcome == "closed":
+            end = rng.choice([f"Signed at {self.closing:,}.", f"We closed at Rs {self.closing:,}.",
+                              f"PO raised for {self.closing:,}."])
+        else:
+            end = rng.choice(["They pulled the quote after our next counter.", f"{rep} stopped the talks and withdrew.",
+                              "No deal, they walked when we pushed again."])
+        return " ".join(x for x in [opener, *said, end, filler] if x)
+
     @classmethod
     def from_dict(cls, data: dict) -> "DealRecord":
         return cls(**{**data, "final_claims": tuple(tuple(c) for c in data["final_claims"]),
-                      "false_claims": tuple(data["false_claims"])})
+                      "false_claims": tuple(data["false_claims"]),
+                      "asks": tuple(tuple(a) for a in data.get("asks", ()))})
 
 
 @dataclass(frozen=True)
@@ -182,8 +220,9 @@ class HindsightMemory:
     QUERY = ("How does {name} really negotiate, especially in {period}? Which final-price claims were false, what "
              "closing prices were reached, at which round did they walk away, and how do quarter-end months differ?")
 
-    def __init__(self, client, bank_id: str = "", skepticism: int = 5):
+    def __init__(self, client, bank_id: str = "", skepticism: int = 5, style: str = "labelled"):
         self.client = client
+        self.style = style  # "labelled" records carry verdicts; "notes" records are a buyer's messy notes
         self.bank_id = bank_id
         self.skepticism = skepticism
         self.brief_failures = 0
@@ -202,11 +241,19 @@ class HindsightMemory:
         )
 
     def retain(self, record: DealRecord) -> None:
+        text = record.to_notes() if self.style == "notes" else record.to_text()
         patiently(lambda: self.client.retain(
-            self.bank_id, record.to_text(), timestamp=record.when, context="closed procurement negotiation",
+            self.bank_id, text, timestamp=record.when, context="buyer's notes on a supplier negotiation",
             document_id=record.deal_id,
             tags=[f"vendor:{record.vendor_slug}", f"quarter_end:{'yes' if record.quarter_end else 'no'}"],
             metadata={"vendor": record.vendor_slug, "outcome": record.outcome},
+        ))
+
+    def retain_note(self, vendor_slug: str, text: str, when: str, document_id: str) -> None:
+        """A note from a buyer's own purchase history, as written, for vendors outside the simulator."""
+        patiently(lambda: self.client.retain(
+            self.bank_id, text, timestamp=when, context="buyer's notes on a supplier negotiation",
+            document_id=document_id, tags=[f"vendor:{vendor_slug}"], metadata={"vendor": vendor_slug},
         ))
 
     def recall(self, vendor_slug, vendor_name, month):

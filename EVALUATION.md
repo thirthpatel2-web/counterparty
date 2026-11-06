@@ -99,3 +99,14 @@ The quarter-end field is not used by this buyer, because it has no way to move a
 ## Amendment 3 (labels, for future studies only)
 
 A second blind review found that a "final" claim which later moved by under 1% was labelled FALSE. Bharat PCB says "final" anywhere within 1% of its floor, so an honest vendor could be recorded as bluffing. From this commit on, a "final" that later moves by under 1% is recorded as having held, both in the text Hindsight receives and in the arithmetic briefing. Studies 201, 202 and 203 were recorded before this change. They keep their original labels and results, and are not rescored.
+
+# Messy-notes study (beliefs-notes-v1)
+
+Committed before any run. Three blind reviews found that labelled records ("That claim was FALSE") let plain arithmetic match Hindsight, because the records already state the answer. Real purchase history is not labelled.
+
+- **Evidence:** the same learner plays the same kind of deals. Hindsight receives only the buyer's messy notes for each deal (`DealRecord.to_notes`): who quoted, the asks round by round, when a vendor said "final", whether it closed or walked away, and irrelevant detail. The wording varies, and no note contains a verdict such as FALSE, TRUE or bluff. Whether a "final" was real can only be inferred from the prices that came after it.
+- **Comparison:** arithmetic over perfectly structured records of the same deals. A real buyer doesn't have that, so it is a ceiling, not a peer.
+- **Questions, checkpoints and scoring:** identical to beliefs-v1.
+- **Seeds:** 401, 402 and 403. Run with `python scripts/belief_study.py --notes --seed 401`.
+- **Claim:** if Hindsight's accuracy on notes approaches the structured ceiling, then Hindsight learns the vendors from unstructured history, which counting can't read. If it falls well short, we report that.
+- **Invalid runs:** any study with a briefing refused for credit or quota is invalid and rerun, as in Amendment 2.

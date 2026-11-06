@@ -53,7 +53,7 @@ def accuracy(rows: list[dict], memory_name: str, checkpoint: int) -> dict:
 
 
 def run_belief_study(specs: list[DealSpec], memories: dict[str, Memory], *, mode: str, emit=lambda e: None,
-                     save: bool = True, backend: str = "") -> dict:
+                     save: bool = True, backend: str = "", protocol: str = "beliefs-v1") -> dict:
     """Plays the deals once with the learner, writes every outcome into each memory, and scores their briefings."""
     for memory in memories.values():
         memory.reset()
@@ -78,7 +78,7 @@ def run_belief_study(specs: list[DealSpec], memories: dict[str, Memory], *, mode
                 emit({"type": "belief", **row})
     curve = {name: [accuracy(rows, name, c) for c in CHECKPOINTS] for name in memories}
     result = {"id": f"{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:4]}", "kind": "beliefs", "mode": mode,
-              "protocol": "beliefs-v1", "rows": rows, "curve": curve, "specs": [asdict(s) for s in specs],
+              "protocol": protocol, "rows": rows, "curve": curve, "specs": [asdict(s) for s in specs],
               "brief_failures": {n: getattr(m, "brief_failures", 0) for n, m in memories.items()},
               "bank_id": {n: getattr(m, "bank_id", None) for n, m in memories.items()}, "backend": backend,
               "provenance": provenance("")}

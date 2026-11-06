@@ -67,6 +67,10 @@ Our code never writes "what to do next time". It records what happened, and Hind
 
 **Human approval.** In a Band room, a deal is remembered only after a person approves it.
 
+## Bring your own purchase history
+
+Point Counterparty at a CSV of past negotiation notes, with columns `vendor`, `date` and `notes`, written the way buyers actually write them. Each note is retained in Hindsight as it is, and you get a briefing on every supplier on day one. `data/sample_purchase_history.csv` is a synthetic example generated from the simulator.
+
 ## Results
 
 ### Does Hindsight learn the truth about each vendor?
@@ -89,6 +93,12 @@ Study `20261106-141812-509f` (seed 203) was invalidated when Hindsight Cloud ran
 
 The questions: does the vendor bluff about "final"? At which round does it walk away? Is quarter-end cheaper? The answers are checked against the simulator's hidden traits.
 <!-- /BELIEFS -->
+
+### Can Hindsight learn from messy notes, where counting can't?
+
+<!-- BELIEFS_NOTES -->
+Not run yet. Pre-registered in [EVALUATION.md](EVALUATION.md): `python scripts/belief_study.py --notes --seed 401`
+<!-- /BELIEFS_NOTES -->
 
 ### Does what Hindsight learned turn into better prices?
 
@@ -134,6 +144,7 @@ python scripts/preflight.py       # one real call to each service
 python scripts/belief_study.py --seed 203   # scores Hindsight's briefings against the hidden truth
 python scripts/briefed_buyer.py             # replays a buyer that follows those briefings
 python scripts/live_demo.py                 # live retain, recall and reflect, for a screen recording
+python scripts/import_history.py data/sample_purchase_history.csv   # briefings from your own purchase notes
 python scripts/run_race.py --seed 101       # an LLM negotiator against the rule
 uvicorn server:app --port 8765    # dashboard at http://localhost:8765
 ```

@@ -83,6 +83,7 @@ def run_deal(spec: DealSpec, brain: Brain, memory: Memory | None, *, retain: boo
     opening = reply.price
     transcript, history, claims = [], [], []
     finals: list[list[int]] = []  # [round, price, lowest ask seen after it]
+    asks = [(0, reply.price, False)]
     challenged = accepted_final = False
 
     def say(role: str, text: str, **extra) -> None:
@@ -117,6 +118,8 @@ def run_deal(spec: DealSpec, brain: Brain, memory: Memory | None, *, retain: boo
         reply = talks.counter(decision.price)
         say("vendor", reply.message, price=reply.price, final=reply.says_final, walked=reply.walked)
         history.append(f"Vendor: {reply.message}")
+        if not (reply.deal or reply.walked):
+            asks.append((talks.round, reply.price, reply.says_final))
         if reply.deal:
             outcome, price = "closed", reply.price
         elif reply.walked:
@@ -128,7 +131,7 @@ def run_deal(spec: DealSpec, brain: Brain, memory: Memory | None, *, retain: boo
     scored = price if outcome == "closed" else lost_deal_price()
     false_claims = tuple(c for c, at in claims if outcome == "closed" and price < at)
     record = DealRecord(spec.deal_id, vendor.slug, vendor.name, spec.month, spec.year, opening, price, outcome,
-                        talks.round, tuple(tuple(f) for f in finals), false_claims, accepted_final)
+                        talks.round, tuple(tuple(f) for f in finals), false_claims, accepted_final, tuple(asks))
     if memory and retain:
         memory.retain(record)
     return DealResult(asdict(spec), outcome, scored, opening, talks.round, round(talks.floor),
