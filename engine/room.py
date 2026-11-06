@@ -22,7 +22,9 @@ REJECT = re.compile(r"^\s*reject[.!]?\s*$", re.I)
 
 def strip_mentions(text: str) -> str:
     """Band messages may start with @mentions. Commands are read only from the start of what follows."""
-    return re.sub(r"^(\s*@[\w./-]+[,:]?\s*)+", "", text)
+    # Band Desktop places the mention after the text ("approve @counterparty-buyer"), so trailing ones go too.
+    text = re.sub(r"^(\s*@[\w./-]+[,:]?\s*)+", "", text)
+    return re.sub(r"(\s*@[\w./-]+[,:]?)+\s*$", "", text)
 
 
 def tagged(text: str, ask: int, final: bool, round_no: int, status: str) -> str:
