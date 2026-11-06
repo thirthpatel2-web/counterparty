@@ -7,8 +7,8 @@ A vendor says "this is my final price". One deal can't tell you if that's true. 
 **What we found** (all figures in [Results](#results), from runs recorded under a protocol committed in advance):
 
 - **Hindsight's beliefs track the evidence.** Its briefings went from 33% of questions right after one deal per vendor to 94% after eight, level with exact arithmetic over the same records, checked against the simulator's hidden vendor traits. Arithmetic made fewer confident mistakes.
-- **Our own labels can mislead memory.** Hindsight called honest Bharat PCB a bluffer at its first five checkpoints in one study. A blind reviewer traced this to our records: Bharat sometimes says "final" within 1% of its floor and then concedes a little more, which our code labels FALSE. Hindsight read the evidence correctly. The evidence was wrong.
-- **Following the briefings pays off once learned.** A no-LLM buyer that follows Hindsight's briefings beat the rule by about ₹2,500 per deal in the last third of both studies, and roughly broke even overall, because of deals lost while learning.
+- **Our own labels can mislead memory.** Hindsight called honest Bharat PCB a bluffer at its first five checkpoints in one study. A blind reviewer traced this to our records: Bharat sometimes says "final" within 1% of its floor and then concedes a little more, which our code labels FALSE. The evidence was ambiguous, and Hindsight over-read it where arithmetic said "unknown".
+- **The knowledge pays once learned, and Hindsight matches exact counting.** A no-LLM buyer following Hindsight's briefings beat the rule by about ₹2,500 per deal in the last third of both studies. A buyer following arithmetic over the same records did exactly as well, so Hindsight's value here is reaching the same knowledge from plain text, not beating counting.
 - **An LLM negotiator didn't beat a one-line rule**, even with memory. Knowing a vendor is not the same as bargaining well.
 
 ## Why memory is the product
@@ -43,7 +43,7 @@ flowchart LR
 | --- | --- | --- |
 | `retain` | One document per deal: the outcome and what the vendor did after each "final", never a lesson. Tagged by vendor and quarter-end, timestamped when the deal happened | `HindsightMemory.retain` |
 | `reflect` | Before every deal, a structured briefing (`response_schema`): does this vendor bluff, how many rounds it tolerates, where it walked, lowest close, quarter-end effect. **The buyer negotiates from it** | `HindsightMemory.brief` |
-| Disposition | Skepticism 5, literalism 4, empathy 1 shape every briefing, because outcomes count for more than claims | `HindsightMemory.reset` |
+| Disposition | Set to skepticism 5, literalism 4, empathy 1, because outcomes should count for more than claims. Its effect on briefings hasn't been measured yet | `HindsightMemory.reset` |
 | `recall` | Tag-scoped search of a vendor's history, with the month and quarter-end in the query | `HindsightMemory.recall` |
 | Observations | Consolidated beliefs feed both recall and the briefing | `HindsightMemory.recall` |
 | Bank clone and document delete | Forget really deletes deals from a cloned bank and waits for re-consolidation | `HindsightMemory.forgotten_copy` |
@@ -55,7 +55,7 @@ Our code never writes "what to do next time". It records what happened, and Hind
 
 **A pre-negotiation briefing.** Before each deal, Hindsight reflects on the vendor's history and briefs the buyer. A human buyer can read the same briefing.
 
-**The Forget button.** Pick any memory, or a whole vendor. Hindsight clones the bank, deletes those deals from the clone, and the buyer renegotiates the same new deal with each memory, on the same vendor seeds. The screen shows the rupee difference. If other memories teach the same lesson, forgetting one changes nothing, and the screen says so.
+**The Forget button.** Pick any memory, or a whole vendor. Hindsight clones the bank, deletes those deals from the clone, and the buyer renegotiates the same new deal with each memory, on the same vendor seeds. The screen shows the rupee difference. If forgetting one deal changes nothing on those reruns, the screen says so. Often other deals with the same vendor carry the same lesson.
 
 **Beliefs checked against the truth.** Vendors are simulated, so their real traits are known. Every briefing Hindsight writes is scored question by question against them, and the dashboard marks each answer right or wrong.
 
@@ -93,7 +93,7 @@ The questions: does the vendor bluff about "final"? At which round does it walk 
 ### Does what Hindsight learned turn into better prices?
 
 <!-- BRIEFED -->
-A buyer with no LLM that follows Hindsight's own briefings, replayed on the same deals as the rule. Across 2 studies it paid ₹210 less per deal overall than the rule, and **₹2,566 less per deal in the last third**, once it had learned. Early on it loses some deals finding where each vendor walks away.
+A buyer with no LLM that follows Hindsight's own briefings, replayed on the same deals as the rule. Across 2 studies it paid ₹210 less per deal overall than the rule, and **₹2,566 less per deal in the last third**, once it had learned. Early on it loses some deals finding where each vendor walks away. The same buyer following arithmetic over the same records is shown for comparison: where the two match, the saving comes from the knowledge, which Hindsight reached from plain text, not from Hindsight beating counting.
 
 | Study | Buyer | Avg paid | Rule avg | Oracle avg | Vs rule, all deals | Vs rule, last third | Deals lost |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -133,6 +133,7 @@ cp .env.example .env              # then add an LLM key and HINDSIGHT_API_KEY
 python scripts/preflight.py       # one real call to each service
 python scripts/belief_study.py --seed 203   # scores Hindsight's briefings against the hidden truth
 python scripts/briefed_buyer.py             # replays a buyer that follows those briefings
+python scripts/live_demo.py                 # live retain, recall and reflect, for a screen recording
 python scripts/run_race.py --seed 101       # an LLM negotiator against the rule
 uvicorn server:app --port 8765    # dashboard at http://localhost:8765
 ```
@@ -141,11 +142,11 @@ Without keys, the app runs in **rehearsal mode**: a scripted buyer and local mem
 
 Any OpenAI-compatible model works. Set `LLM_PROVIDER` to `groq` (the default), `nvidia` for Nemotron on build.nvidia.com, or `openai` with `LLM_BASE_URL`.
 
-For a demo, press **Replay** on a recorded live run. It doesn't depend on rate limits or Wi-Fi. Forget on a live run needs the keys, and refuses rather than showing rehearsal numbers.
+No live negotiation run under protocol v2 has been recorded yet, so Replay has nothing live to show. The belief results and the briefed-buyer table load from saved studies and work offline. Forget on a live run needs the keys, and refuses rather than showing rehearsal numbers.
 
 ### Negotiate in a Band room
 
-1. Create two agents in the [Band web app](https://docs.band.ai/quickstart). The vendor's name must contain "vendor".
+1. Install [Band Desktop](https://docs.band.ai/band-desktop/install.md) and create two agents. The vendor's name must contain "vendor".
 2. Copy `agent_config.example.yaml` to `agent_config.yaml` and add their credentials.
 3. Run `python band_agents.py vendor` and, in a second terminal, `python band_agents.py buyer`.
 4. Create a room with both agents, then send `@buyer negotiate apex month 9`. Reply `approve` when the buyer asks.

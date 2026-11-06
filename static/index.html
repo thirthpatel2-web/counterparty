@@ -347,7 +347,7 @@ function renderMems() {
     if (v && v.error) value = `<div class="value neg">${esc(v.error)}</div>`;
     else if (v && v !== "busy") {
       const cls = v.value > 0 ? "pos" : v.value < 0 ? "neg" : "none";
-      const head = v.value > 0 ? `This memory was worth ${rupee(v.value)} on the next deal` : v.value < 0 ? `This memory cost ${rupee(-v.value)} on the next deal` : "Forgetting this one changed nothing: other memories teach the same lesson";
+      const head = v.value > 0 ? `This memory was worth ${rupee(v.value)} on the next deal` : v.value < 0 ? `This memory cost ${rupee(-v.value)} on the next deal` : "Forgetting this one changed nothing on these reruns. Other deals may carry the same lesson";
       value = `<div class="value ${cls}"><b>${head}</b><br>${v.seeds} reruns of the next ${esc(group.name)} deal, range ${rupee(v.min)} to ${rupee(v.max)}. With it ${rupee(v.rows[0].with_memory)}, without it ${rupee(v.rows[0].without_memory)} on the first rerun.</div>`;
     }
     return `<div class="mem"><p>${esc(m.memory_text)}</p><button class="forget" data-id="${esc(m.deal_id)}" ${state.running ? "disabled" : ""}>${v === "busy" ? "Rerunning…" : "Forget"}</button>${v === "busy" ? "" : value}</div>`;
