@@ -21,7 +21,7 @@ def studies() -> list[dict]:
     out = []
     for path in sorted(RUNS_DIR.glob("beliefs-*-live.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
-        if data.get("protocol") == "beliefs-v1":
+        if data.get("protocol") == "beliefs-v1" and "hindsight_neutral" not in data["curve"]:
             out.append(data)
     return out
 
@@ -57,12 +57,16 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=201)
     parser.add_argument("--deals", type=int, default=24)
     parser.add_argument("--report", action="store_true")
+    parser.add_argument("--neutral", action="store_true", help="also test a bank with neutral skepticism (3 of 5)")
     args = parser.parse_args()
     if not args.report:
         stack = build("auto")
         memories = {"arithmetic": LocalMemory()}
         if stack.mode == "live":
             memories["hindsight"] = stack.memory
+            if args.neutral:
+                from engine.memory import HindsightMemory
+                memories["hindsight_neutral"] = HindsightMemory(stack.memory.client, skepticism=3)
         print(f"Mode: {stack.mode}", flush=True)
 
         def show(event: dict) -> None:

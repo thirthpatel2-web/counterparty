@@ -66,3 +66,11 @@ Committed before any live belief study.
 ## Negotiation runs under protocol v2
 
 Seed 101 was stopped by Groq's daily token limit after 19 of 24 deals, so it is not a recorded result. Its console output is kept in `runs/archive-v2-partial/seed-101-console.txt`. Across those 19 deals, the LLM buyer with Hindsight memory paid more than the rule on every deal, including the first deal, where it had no memory. The LLM negotiator itself is weaker than a one-line rule, and that is what we report.
+
+## Disposition experiment
+
+Committed before running. In study 201, the skeptical bank (skepticism 5) called honest Bharat PCB a bluffer for its first 6 deals. Hypothesis: the skeptical disposition causes that bias.
+
+- **Design:** the same evidence goes to two Hindsight banks that differ only in skepticism, 5 and 3. Run with `python scripts/belief_study.py --seed 301 --neutral`, then `--seed 302 --neutral`.
+- **Measure:** how many of Bharat's checkpoints each bank gets right on the bluff question, plus overall accuracy.
+- These runs are reported separately and are not pooled into the main belief results.

@@ -79,6 +79,38 @@ def status():
             "vendors": [v.name for v in VENDORS], "runs": list_runs()}
 
 
+@app.get("/api/beliefs")
+def beliefs():
+    """Every belief study, pooled per checkpoint, plus the latest briefing per vendor scored against the truth."""
+    from engine.beliefs import QUESTIONS, pooled_curve, truth
+
+    found, mode = [], "live"
+    for wanted in ("live", "rehearsal"):
+        for path in sorted(RUNS_DIR.glob(f"beliefs-*-{wanted}.json")):
+            data = json.loads(path.read_text(encoding="utf-8"))
+            if data.get("protocol") == "beliefs-v1":
+                found.append(data)
+        if found:
+            mode = wanted
+            break
+    if not found:
+        return {"studies": 0}
+    names = [n for n in ("hindsight", "arithmetic") if n in found[-1]["curve"]]
+    latest = {}
+    for row in found[-1]["rows"]:
+        if row["memory"] == names[0]:
+            latest[row["vendor"]] = row
+    vendors = []
+    for slug, row in latest.items():
+        real = truth(slug)
+        vendors.append({"vendor": VENDOR_BY_SLUG[slug].name, "checkpoint": row["checkpoint"], "advice":
+                        row["brief"].get("advice", ""), "answers": [
+                            {"question": q, "said": row["brief"].get(q), "right": row["score"][q],
+                             "truth": sorted(real[q]) if isinstance(real[q], set) else real[q]} for q in QUESTIONS]})
+    return {"studies": len(found), "mode": mode, "ids": [s["id"] for s in found],
+            "curves": {n: pooled_curve(found, n) for n in names}, "vendors": vendors}
+
+
 def list_runs() -> list[dict]:
     rows = []
     for path in sorted(RUNS_DIR.glob("*.json"), reverse=True):

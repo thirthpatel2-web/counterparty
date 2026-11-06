@@ -65,7 +65,18 @@ Our code never writes "what to do next time". It records what happened, and Hind
 ### Does Hindsight learn the truth about each vendor?
 
 <!-- BELIEFS -->
-No live belief studies recorded yet.
+1 live study (`20261106-141022-41b9`), 0 failed briefings.
+
+Share of the 9 questions (3 per vendor) that the briefing answered correctly. Saying "unknown" counts as not correct.
+
+| Deals seen per vendor | 1 | 2 | 3 | 4 | 6 | 8 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Hindsight reflect briefing | 22% | 33% | 78% | 78% | 78% | 100% |
+| Exact arithmetic over the same records | 22% | 33% | 67% | 78% | 89% | 89% |
+
+Range across studies for Hindsight: 22%–22% | 33%–33% | 78%–78% | 78%–78% | 78%–78% | 100%–100%.
+
+The questions: does the vendor bluff about "final"? At which round does it walk away? Is quarter-end cheaper? The answers are checked against the simulator's hidden traits.
 <!-- /BELIEFS -->
 
 ### Does an LLM negotiator with memory beat a simple rule?

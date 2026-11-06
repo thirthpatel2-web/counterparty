@@ -89,6 +89,18 @@ td { border-bottom: 1px solid var(--grid); padding: 6px 8px 6px 0; }
 .tip { position: absolute; pointer-events: none; background: var(--navy); color: #fff; border-radius: 7px; padding: 6px 9px; font-size: 12px; white-space: nowrap; display: none; z-index: 2; }
 svg text { fill: var(--ink-3); font-size: 11px; font-variant-numeric: tabular-nums; }
 details summary { cursor: pointer; color: var(--ink-3); font-size: 12.5px; margin-top: 8px; }
+.learned { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-2); margin: 2px 0 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.answer { display: inline-block; min-width: 18px; text-align: center; font-weight: 700; border-radius: 5px; padding: 0 5px; margin-right: 4px; }
+.answer.yes { background: var(--good-tint); color: var(--good); }
+.answer.no { background: var(--bad-tint); color: var(--bad); }
+.answer.unk { background: var(--bg); color: var(--ink-3); }
+.vendor-brief { border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; margin-bottom: 8px; font-size: 12.5px; }
+.vendor-brief b { font-size: 13px; }
+.vendor-brief p { margin: 4px 0 0; color: var(--ink-2); }
+@media (max-width: 900px) { .learned { grid-template-columns: minmax(0, 1fr); } }
 footer { color: var(--ink-3); font-size: 12px; text-align: center; padding: 0 20px 24px; }
 .error { background: var(--bad-tint); color: var(--bad); border-radius: 8px; padding: 8px 12px; }
 @media (max-width: 900px) { .top, .lanes, .split { grid-template-columns: minmax(0, 1fr); } .hero { font-size: 32px; } .chat { height: 240px; } }
@@ -108,6 +120,18 @@ footer { color: var(--ink-3); font-size: 12px; text-align: center; padding: 0 20
 </div></header>
 <div class="notice" id="notice"><div id="noticeText">Connecting…</div></div>
 <main>
+  <section class="card" id="learnedCard" hidden>
+    <h2>What Hindsight learned about each vendor</h2>
+    <p class="sub" id="learnedSub">Hindsight's briefings, scored against the simulator's hidden truth</p>
+    <div class="learned">
+      <div>
+        <div class="legend"><span><i class="swatch" style="background:var(--memory)"></i>Hindsight reflect briefing</span><span><i class="swatch" style="background:var(--ink-3)"></i>Exact arithmetic over the same records</span></div>
+        <div class="chart-wrap"><svg id="beliefChart" width="100%" height="236" role="img" aria-label="Briefing accuracy as deals accumulate"></svg><div class="tip" id="beliefTip"></div></div>
+        <details><summary>Show as a table</summary><div class="scroll-x"><table id="beliefTable"></table></div></details>
+      </div>
+      <div id="vendorBriefs"></div>
+    </div>
+  </section>
   <div id="err" class="error" hidden></div>
   <section class="top">
     <div class="card">
@@ -382,6 +406,51 @@ async function post(path, body) {
 $("start").onclick = () => post("/api/race", { deals: +$("deals").value, mode: "auto" });
 $("replay").onclick = () => $("runs").value && post("/api/replay", { run: $("runs").value, pace: 0.05 });
 window.addEventListener("resize", renderChart);
+const QUESTION_LABEL = { final_claims: "Bluffs about \"final\"?", walked_at_round: "Walks away at round", quarter_end: "Quarter-end" };
+async function loadBeliefs() {
+  let d;
+  try { d = await (await fetch("/api/beliefs")).json(); } catch { return; }
+  if (!d.studies) return;
+  $("learnedCard").hidden = false;
+  $("learnedSub").textContent = `${d.studies} ${d.mode} stud${d.studies === 1 ? "y" : "ies"}. Share of 9 questions answered correctly as each vendor's deals accumulate. "Unknown" counts as not correct.${d.mode === "rehearsal" ? " REHEARSAL: no Hindsight here." : ""}`;
+  drawBeliefs(d.curves);
+  const rows = Object.entries(d.curves);
+  $("beliefTable").innerHTML = `<thead><tr><th>Deals seen per vendor</th>${rows[0][1].map(p => `<th>${p.checkpoint}</th>`).join("")}</tr></thead><tbody>` +
+    rows.map(([name, c]) => `<tr><td>${name === "hindsight" ? "Hindsight" : "Arithmetic"}</td>${c.map(p => `<td>${Math.round(p.accuracy * 100)}%</td>`).join("")}</tr>`).join("") + "</tbody>";
+  $("vendorBriefs").innerHTML = d.vendors.map(v => `<div class="vendor-brief"><b>${esc(v.vendor)}</b> <span class="sub">after ${v.checkpoint} deals</span>` +
+    v.answers.map(a => {
+      const cls = a.right === true ? "yes" : a.right === false ? "no" : "unk", mark = a.right === true ? "✓" : a.right === false ? "✗" : "?";
+      const said = a.said === 0 || a.said == null ? "unknown" : a.said, truth = Array.isArray(a.truth) ? a.truth.join(" or ") : a.truth;
+      return `<p><span class="answer ${cls}">${mark}</span>${QUESTION_LABEL[a.question]}: <b>${esc(said)}</b>${a.right === true ? "" : ` (truth: ${esc(truth)})`}</p>`;
+    }).join("") + (v.advice ? `<p>${esc(v.advice)}</p>` : "") + "</div>").join("");
+}
+
+function drawBeliefs(curves) {
+  const svg = $("beliefChart"), W = svg.clientWidth || 600, H = 236, L = 44, R = 14, T = 12, B = 44;
+  const pts = Object.values(curves)[0], n = pts.length;
+  const X = i => L + (i / (n - 1)) * (W - L - R), Y = v => T + (1 - v) * (H - T - B);
+  let g = "";
+  for (const v of [0, 0.25, 0.5, 0.75, 1]) g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v === 0 ? "var(--ink-3)" : "var(--grid)"}"/><text x="${L - 8}" y="${Y(v) + 4}" text-anchor="end">${v * 100}%</text>`;
+  pts.forEach((p, i) => g += `<text x="${X(i)}" y="${H - 26}" text-anchor="middle">${p.checkpoint}</text>`);
+  const colors = { hindsight: "var(--memory)", arithmetic: "var(--ink-3)" };
+  for (const [name, c] of Object.entries(curves)) {
+    if (name === "hindsight" && c.some(p => p.high > p.low))
+      g += `<path d="${c.map((p, i) => `${i ? "L" : "M"}${X(i)} ${Y(p.high)}`).join("")}${c.map((p, i) => `L${X(n - 1 - i)} ${Y(c[n - 1 - i].low)}`).join("")}Z" fill="var(--memory)" opacity=".12"/>`;
+    g += `<path d="${c.map((p, i) => `${i ? "L" : "M"}${X(i)} ${Y(p.accuracy)}`).join("")}" fill="none" stroke="${colors[name]}" stroke-width="2" ${name === "arithmetic" ? 'stroke-dasharray="5 4"' : ""}/>`;
+    c.forEach((p, i) => g += `<circle cx="${X(i)}" cy="${Y(p.accuracy)}" r="4" fill="${colors[name]}" stroke="var(--surface)" stroke-width="2"/>`);
+  }
+  g += `<text x="${(L + W - R) / 2}" y="${H - 4}" text-anchor="middle">deals seen per vendor</text>`;
+  svg.innerHTML = g;
+  svg.onmousemove = ev => {
+    const rect = svg.getBoundingClientRect(), i = Math.max(0, Math.min(n - 1, Math.round((ev.clientX - rect.left - L) / (W - L - R) * (n - 1))));
+    const tip = $("beliefTip"); tip.style.display = "block";
+    tip.innerHTML = `After ${pts[i].checkpoint} deals per vendor<br>` + Object.entries(curves).map(([k, c]) => `${k === "hindsight" ? "Hindsight" : "Arithmetic"}: ${Math.round(c[i].accuracy * 100)}%`).join("<br>");
+    tip.style.left = Math.min(X(i) + 10, W - tip.offsetWidth - 4) + "px"; tip.style.top = "10px";
+  };
+  svg.onmouseleave = () => $("beliefTip").style.display = "none";
+}
+window.addEventListener("resize", () => loadBeliefs());
+loadBeliefs();
 refreshStatus().then(connect);
 renderChart();
 </script>

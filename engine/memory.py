@@ -157,9 +157,10 @@ class HindsightMemory:
     QUERY = ("How does {name} really negotiate, especially in {period}? Which final-price claims were false, what "
              "closing prices were reached, at which round did they walk away, and how do quarter-end months differ?")
 
-    def __init__(self, client, bank_id: str = ""):
+    def __init__(self, client, bank_id: str = "", skepticism: int = 5):
         self.client = client
         self.bank_id = bank_id
+        self.skepticism = skepticism
         self.brief_failures = 0
 
     @staticmethod
@@ -171,7 +172,7 @@ class HindsightMemory:
         self.bank_id = f"counterparty-{time.strftime('%Y%m%d-%H%M%S')}-{time.time_ns() % 10_000:04d}"
         self.client.create_bank(
             self.bank_id, name="Counterparty buyer", mission=BUYER_MISSION, retain_mission=RETAIN_MISSION,
-            disposition_skepticism=5, disposition_literalism=4, disposition_empathy=1,
+            disposition_skepticism=self.skepticism, disposition_literalism=4, disposition_empathy=1,
             reflect_mission=BUYER_MISSION,
         )
 

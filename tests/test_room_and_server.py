@@ -203,3 +203,21 @@ def test_stream_resets_when_a_new_race_starts():
     assert not session.try_begin()  # one race at a time
     session.running = False
     assert session.try_begin() and session.generation != first and session.events == []
+
+
+def test_beliefs_endpoint_scores_latest_briefings(monkeypatch, tmp_path):
+    import engine.arena
+    import engine.beliefs
+    import server
+    from engine.arena import schedule
+    from engine.beliefs import run_belief_study
+
+    for module in (engine.arena, engine.beliefs, server):
+        monkeypatch.setattr(module, "RUNS_DIR", tmp_path)
+    client = TestClient(server.app)
+    assert client.get("/api/beliefs").json() == {"studies": 0}
+    run_belief_study(schedule(12, 201), {"arithmetic": LocalMemory()}, mode="rehearsal")
+    data = client.get("/api/beliefs").json()
+    assert data["studies"] == 1 and data["mode"] == "rehearsal" and len(data["curves"]["arithmetic"]) == 6
+    assert {v["vendor"] for v in data["vendors"]} == {"Apex Circuits", "Bharat PCB", "Nova Components"}
+    assert all(len(v["answers"]) == 3 for v in data["vendors"])
