@@ -221,3 +221,15 @@ def test_beliefs_endpoint_scores_latest_briefings(monkeypatch, tmp_path):
     assert data["studies"] == 1 and data["mode"] == "rehearsal" and len(data["curves"]["arithmetic"]) == 6
     assert {v["vendor"] for v in data["vendors"]} == {"Apex Circuits", "Bharat PCB", "Nova Components"}
     assert all(len(v["answers"]) == 3 for v in data["vendors"])
+
+
+def test_status_ignores_result_files_that_are_not_runs(monkeypatch, tmp_path):
+    """Regression: runs/briefed-v1.json is a list, and it once crashed /api/status and the whole dashboard."""
+    import engine.arena
+    import server
+
+    monkeypatch.setattr(engine.arena, "RUNS_DIR", tmp_path)
+    monkeypatch.setattr(server, "RUNS_DIR", tmp_path)
+    (tmp_path / "briefed-v1.json").write_text("[]", encoding="utf-8")
+    (tmp_path / "broken.json").write_text("{not json", encoding="utf-8")
+    assert TestClient(server.app).get("/api/status").status_code == 200

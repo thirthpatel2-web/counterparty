@@ -122,7 +122,7 @@ def list_runs() -> list[dict]:
             data = json.loads(path.read_text(encoding="utf-8"))
         except ValueError:
             continue
-        if data.get("protocol") != "v2":
+        if not isinstance(data, dict) or data.get("protocol") != "v2":
             continue
         s = data["summary"]
         rows.append({"file": path.name, "mode": data["mode"], "deals": s["deals"], "vs_rule": s["vs_rule"],
