@@ -5,6 +5,7 @@ Credentials live in agent_config.yaml under the keys counterparty_buyer and coun
 """
 import asyncio
 import logging
+import os
 import sys
 from typing import Any, ClassVar, Unpack
 
@@ -87,6 +88,8 @@ async def main(role: str) -> None:
         agent = Agent.from_config("counterparty_vendor", adapter=VendorAdapter())
     else:
         stack = build("auto")
+        if hasattr(stack.memory, "use_bank"):  # live mode needs a real bank for retain and recall
+            stack.memory.use_bank(os.getenv("COUNTERPARTY_ROOM_BANK", "counterparty-band-room"))
         log.info("Buyer running in %s mode", stack.mode)
         agent = Agent.from_config("counterparty_buyer", adapter=BuyerAdapter(stack))
     await agent.run()

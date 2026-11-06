@@ -157,10 +157,15 @@ No live negotiation run under protocol v2 has been recorded yet, so Replay has n
 
 ### Negotiate in a Band room
 
-1. Install [Band Desktop](https://docs.band.ai/band-desktop/install.md) and create two agents. The vendor's name must contain "vendor".
-2. Copy `agent_config.example.yaml` to `agent_config.yaml` and add their credentials.
-3. Run `python band_agents.py vendor` and, in a second terminal, `python band_agents.py buyer`.
-4. Create a room with both agents, then send `@buyer negotiate apex month 9`. Reply `approve` when the buyer asks.
+**With Band Desktop (no API keys).** This is how we ran it.
+
+1. Install [Band Desktop](https://www.band.ai/download) and sign in. `band whoami` should show your account.
+2. Run `python band_desktop.py vendor` and, in a second terminal, `python band_desktop.py buyer`. On first run the buyer creates the agents `counterparty-buyer` and `counterparty-vendor` and a room with both of them and you.
+3. In that room in Band Desktop, send `@counterparty-buyer negotiate apex month 9`. Reply `approve` when the buyer asks, and the deal is retained in the Hindsight bank `counterparty-band-room`. The next deal with that vendor recalls it.
+
+In our first live run, Bharat closed at ₹90,784 and was approved. On the next Bharat deal the buyer recalled 4 memories and opened at ₹85,000 instead of ₹90,000. One deal is a demonstration, not evidence: the measured results are the studies above.
+
+**With the Band SDK.** Create two remote agents in the Band web app (the vendor's name must contain "vendor"), copy `agent_config.example.yaml` to `agent_config.yaml` with their credentials, then run `python band_agents.py vendor` and `python band_agents.py buyer`.
 
 ## Project layout
 
@@ -170,7 +175,7 @@ No live negotiation run under protocol v2 has been recorded yet, so Replay has n
 | `engine/memory.py` | Deal records and Hindsight integration |
 | `engine/brains.py` | LLM buyer with function-call error recovery, plus the rehearsal policy |
 | `engine/arena.py` | Deals, the race, statistics, Forget |
-| `engine/room.py`, `band_agents.py` | Negotiation protocol and Band agents |
+| `engine/room.py`, `band_desktop.py`, `band_agents.py` | Negotiation protocol and Band agents (Band Desktop CLI, or the Band SDK) |
 | `server.py`, `static/index.html` | Dashboard |
 | `scripts/` | Preflight, recording runs, content checks |
 | `tests/` | Run with `pytest` |

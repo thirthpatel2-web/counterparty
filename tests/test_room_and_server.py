@@ -6,7 +6,12 @@ from fastapi.testclient import TestClient
 
 from engine.brains import ScriptedBrain
 from engine.memory import DealRecord, LocalMemory
-from engine.room import TAG, BuyerRoom, VendorRoom
+from engine.room import TAG, BuyerRoom, VendorRoom, strip_mentions
+
+
+def test_strip_mentions_handles_band_desktop_handles():
+    assert strip_mentions("@thirthpatel2/counterparty-buyer negotiate apex month 9") == "negotiate apex month 9"
+    assert strip_mentions("@buyer, @vendor: approve") == "approve"
 
 
 def play(buyer: BuyerRoom, vendor: VendorRoom, command: str) -> list[tuple[str, str]]:

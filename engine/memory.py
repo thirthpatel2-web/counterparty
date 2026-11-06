@@ -237,7 +237,11 @@ class HindsightMemory:
 
     def reset(self) -> None:
         # A fresh bank per race keeps earlier runs replayable, including Forget on their memories.
-        self.bank_id = f"counterparty-{time.strftime('%Y%m%d-%H%M%S')}-{time.time_ns() % 10_000:04d}"
+        self.use_bank(f"counterparty-{time.strftime('%Y%m%d-%H%M%S')}-{time.time_ns() % 10_000:04d}")
+
+    def use_bank(self, bank_id: str) -> None:
+        """Creates the bank, or keeps an existing one's memories and refreshes its settings."""
+        self.bank_id = bank_id
         self.client.create_bank(
             self.bank_id, name="Counterparty buyer", mission=BUYER_MISSION, retain_mission=RETAIN_MISSION,
             disposition_skepticism=self.skepticism, disposition_literalism=4, disposition_empathy=1,
@@ -261,11 +265,16 @@ class HindsightMemory:
         ))
 
     def recall(self, vendor_slug, vendor_name, month):
-        response = self.client.recall(
-            self.bank_id, self.QUERY.format(name=vendor_name, period=self._period(month)),
-            types=["world", "experience", "observation"], budget="mid", max_tokens=1200,
-            tags=[f"vendor:{vendor_slug}"], tags_match="any_strict",
-        )
+        try:
+            response = self.client.recall(
+                self.bank_id, self.QUERY.format(name=vendor_name, period=self._period(month)),
+                types=["world", "experience", "observation"], budget="mid", max_tokens=1200,
+                tags=[f"vendor:{vendor_slug}"], tags_match="any_strict",
+            )
+        except Exception as exc:
+            if getattr(exc, "status", None) == 404:  # a bank with nothing retained yet has no memories
+                return []
+            raise
         return [MemoryItem(str(f.id), f.text, getattr(f, "document_id", None) or "", getattr(f, "type", None) or "fact")
                 for f in response.results]
 
