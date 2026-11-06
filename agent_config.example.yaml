@@ -1,4 +1,4 @@
-# Copy to agent_config.yaml. Create both agents in the Band web app. Never commit the real file.
+# Copy to agent_config.yaml. Create both agents in Band Desktop. Never commit the real file.
 counterparty_buyer:
   agent_id: ""
   api_key: ""
