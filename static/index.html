@@ -111,35 +111,35 @@ footer { color: var(--ink-3); font-size: 12px; text-align: center; padding: 0 20
   <div id="err" class="error" hidden></div>
   <section class="top">
     <div class="card">
-      <h2>Saved by remembering</h2>
-      <p class="sub">Memoryless buyer's cost minus the remembering buyer's cost, on identical deals</p>
+      <h2>Memory vs the rule</h2>
+      <p class="sub">Rupees the memory buyer saved against the rule on identical deals. The rule offers low and accepts the first "final", with no memory and no AI. Negative means memory cost money.</p>
       <div class="hero" id="hero">₹0</div>
       <div id="progress" class="sub" style="margin:0">No race yet</div>
       <div class="tiles">
-        <div class="tile"><small>Average per deal</small><b id="meanGap">–</b></div>
-        <div class="tile"><small>95% interval, per deal</small><b id="ci">–</b></div>
+        <div class="tile"><small>Saved per deal vs rule</small><b id="meanGap">–</b></div>
+        <div class="tile"><small>95% interval</small><b id="ci">–</b></div>
         <div class="tile"><small>Deals lost, with memory</small><b id="lostM">–</b></div>
-        <div class="tile"><small>Deals lost, no memory</small><b id="lostT">–</b></div>
+        <div class="tile"><small>Deals lost, rule</small><b id="lostT">–</b></div>
         <div class="tile"><small>"Final" prices challenged</small><b id="bluffs">–</b></div>
         <div class="tile"><small>LLM errors / fallbacks</small><b id="llm">–</b></div>
       </div>
     </div>
     <div class="card">
       <h2>Is it learning?</h2>
-      <p class="sub">Cumulative rupees saved over the deals. A rising line means memory keeps paying.</p>
+      <p class="sub">Cumulative rupees saved against the rule. A rising line means memory is paying off.</p>
       <div class="chart-wrap" id="chartWrap"><svg id="chart" width="100%" height="230" role="img" aria-label="Cumulative rupees saved per deal"></svg><div class="tip" id="tip"></div></div>
-      <details><summary>Show as a table</summary><div class="scroll-x"><table id="dealTable"><thead><tr><th>#</th><th>Vendor</th><th>No memory</th><th>With memory</th><th>Saved</th></tr></thead><tbody></tbody></table></div></details>
+      <details><summary>Show as a table</summary><div class="scroll-x"><table id="dealTable"><thead><tr><th>#</th><th>Vendor</th><th>Rule</th><th>With memory</th><th>Saved</th></tr></thead><tbody></tbody></table></div></details>
     </div>
   </section>
   <section class="lanes">
     <div class="card twin">
-      <div class="lane-head"><span class="dot" style="background:var(--twin)"></span><h2>No memory</h2><span class="price" id="twinPrice"></span></div>
-      <p class="sub deal-sub" style="margin-bottom:8px">Every deal is its first deal</p>
+      <div class="lane-head"><span class="dot" style="background:var(--twin)"></span><h2>The rule, no memory</h2><span class="price" id="twinPrice"></span></div>
+      <p class="sub deal-sub" style="margin-bottom:8px">Offers low, accepts the first "final". No AI.</p>
       <div class="chat" id="chatTwin" aria-live="off"><div class="empty">Waiting for a deal</div></div>
     </div>
     <div class="card memory">
       <div class="lane-head"><span class="dot" style="background:var(--memory)"></span><h2 id="memTitle">With memory</h2><span class="price" id="memPrice"></span></div>
-      <p class="sub deal-sub" id="memSub" style="margin-bottom:8px">Recalls this vendor's history before negotiating</p>
+      <p class="sub deal-sub" id="memSub" style="margin-bottom:8px">Reads a briefing from memory before negotiating</p>
       <div class="chat" id="chatMem" aria-live="off"><div class="empty">Waiting for a deal</div></div>
     </div>
   </section>
@@ -156,9 +156,9 @@ footer { color: var(--ink-3); font-size: 12px; text-align: center; padding: 0 20
       <h2>Vendor track record</h2>
       <p class="sub">Computed from closed deals, never from what vendors claimed</p>
       <div class="scroll-x"><table id="ledger"><thead><tr><th>Vendor</th><th>False finals</th><th>False claims</th><th>Walked</th><th>Avg saved</th></tr></thead><tbody></tbody></table></div>
-      <h2 style="margin-top:16px">How its belief changed</h2>
-      <p class="sub">The bank's reflection on each vendor as evidence grew</p>
-      <div id="beliefs"><div class="empty">Reflections appear during the race</div></div>
+      <h2 style="margin-top:16px">Briefings it negotiated from</h2>
+      <p class="sub">What memory told the buyer before each deal. In live mode Hindsight writes these with reflect</p>
+      <div id="beliefs"><div class="empty">Briefings appear during the race</div></div>
     </div>
   </section>
 </main>
@@ -188,7 +188,7 @@ async function refreshStatus() {
   const s = await (await fetch("/api/status")).json();
   setNotice(s.mode, s.mode === "rehearsal" && s.missing.length ? "Add " + s.missing.join(" and ") + " to .env for live mode." : "");
   const select = $("runs");
-  select.innerHTML = s.runs.length ? s.runs.map(r => `<option value="${esc(r.file)}">${esc(r.mode)} · ${r.deals} deals · ${rupee(r.mean_gap)}/deal · ${esc(r.file.slice(0, 13))}</option>`).join("") : "<option value=''>No recorded runs</option>";
+  select.innerHTML = s.runs.length ? s.runs.map(r => `<option value="${esc(r.file)}">${esc(r.mode)} · ${r.deals} deals · memory vs rule ${rupee(-r.vs_rule)}/deal · ${esc(r.file.slice(0, 13))}</option>`).join("") : "<option value=''>No recorded runs</option>";
   $("replay").disabled = !s.runs.length || s.running;
   $("start").disabled = s.running;
 }
@@ -200,7 +200,7 @@ function connect() {
 }
 
 function line(arm, m) {
-  const box = arm === "twin" ? $("chatTwin") : $("chatMem");
+  const box = arm === "baseline" ? $("chatTwin") : $("chatMem");
   const empty = box.querySelector(".empty"); if (empty) empty.remove();
   const el = document.createElement("div");
   const challenge = m.role === "buyer" && m.against_final;
@@ -220,15 +220,14 @@ function handle(e) {
   }
   if (e.type === "message") line(e.arm, e);
   if (e.type === "deal_end") dealEnd(e);
-  if (e.type === "playbook") { state.beliefs.push(e); renderBeliefs(); }
   if (e.type === "race_end") {
     state.running = false; const s = e.summary;
-    $("meanGap").textContent = rupee(s.mean_gap);
-    $("ci").textContent = `${rupee(s.ci95[0])} to ${rupee(s.ci95[1])}`;
-    $("lostM").textContent = s.memory_lost; $("lostT").textContent = s.twin_lost;
+    $("meanGap").textContent = rupee(-s.vs_rule);
+    $("ci").textContent = `${rupee(-s.vs_rule_ci95[1])} to ${rupee(-s.vs_rule_ci95[0])}`;
+    $("lostM").textContent = s.memory_lost; $("lostT").textContent = s.rule_lost;
     $("bluffs").textContent = s.bluffs_challenged;
     $("llm").textContent = `${e.llm_errors ?? 0} / ${e.fallbacks ?? 0}`;
-    $("progress").textContent = `Finished ${s.deals} deals. First third ${rupee(s.first_third_gap)}/deal, last third ${rupee(s.last_third_gap)}/deal.`;
+    $("progress").textContent = `Finished ${s.deals} deals. Average paid: memory ${rupee(s.memory_avg)}, rule ${rupee(s.rule_avg)}, rule-based learner ${rupee(s.learner_avg)}, perfect knowledge ${rupee(s.oracle_avg)}.`;
     controls(); refreshStatus();
   }
   if (e.type === "error") { $("err").hidden = false; $("err").textContent = e.message; state.running = false; controls(); }
@@ -239,18 +238,19 @@ function controls() { $("start").disabled = state.running; $("replay").disabled 
 function dealEnd(e) {
   state.deals.push(e);
   $("hero").textContent = rupee(e.cumulative_saved);
-  $("twinPrice").textContent = e.twin_outcome === "closed" ? rupee(e.twin_price) : "Lost: " + rupee(e.twin_price);
+  $("twinPrice").textContent = e.baseline_outcome === "closed" ? rupee(e.baseline_price) : "Lost: " + rupee(e.baseline_price);
   $("memPrice").textContent = e.memory_outcome === "closed" ? rupee(e.memory_price) : "Lost: " + rupee(e.memory_price);
-  $("memSub").textContent = `Recalled ${e.memories_used.length} memories for this deal`;
+  $("memSub").textContent = `Recalled ${e.memories_used.length} memories${e.brief && Object.keys(e.brief).length ? " and a briefing" : ""} for this deal`;
+  if (e.brief && Object.keys(e.brief).length) { state.beliefs.push({ name: e.vendor, after_deal: e.deal - 1, text: briefLine(e.brief) }); renderBeliefs(); }
   (state.memories[e.vendor_slug] = state.memories[e.vendor_slug] || { name: e.vendor, items: [] }).items.unshift(e);
   if (!vendorTab) vendorTab = e.vendor_slug;
   const row = document.createElement("tr");
-  row.innerHTML = `<td>${e.deal}</td><td>${esc(e.vendor)}</td><td>${rupee(e.twin_price)}</td><td>${rupee(e.memory_price)}</td><td>${rupee(e.saved)}</td>`;
+  row.innerHTML = `<td>${e.deal}</td><td>${esc(e.vendor)}</td><td>${rupee(e.baseline_price)}</td><td>${rupee(e.memory_price)}</td><td>${rupee(e.saved)}</td>`;
   document.querySelector("#dealTable tbody").append(row);
   const gaps = state.deals.map(d => d.saved);
   $("meanGap").textContent = rupee(gaps.reduce((a, b) => a + b, 0) / gaps.length);
   $("lostM").textContent = state.deals.filter(d => d.memory_outcome !== "closed").length;
-  $("lostT").textContent = state.deals.filter(d => d.twin_outcome !== "closed").length;
+  $("lostT").textContent = state.deals.filter(d => d.baseline_outcome !== "closed").length;
   $("bluffs").textContent = state.deals.filter(d => d.challenged).length;
   renderChart(); renderTabs(); renderMems(); renderLedger();
 }
@@ -347,9 +347,19 @@ function renderLedger() {
     `<tr><td>${esc(name)}</td><td>${r.finals}</td><td>${r.claims}</td><td>${r.walks}</td><td>${rupee(r.saved / r.n)}</td></tr>`).join("");
 }
 
+function briefLine(b) {
+  const parts = [];
+  if (b.final_claims && b.final_claims !== "unknown") parts.push(`"final" ${b.final_claims}`);
+  if (b.walked_at_round) parts.push(`walked away at round ${b.walked_at_round}`);
+  if (b.safe_rounds) parts.push(`safe for ${b.safe_rounds} rounds`);
+  if (b.lowest_close) parts.push(`lowest close ${rupee(b.lowest_close)}`);
+  if (b.quarter_end && b.quarter_end !== "unknown") parts.push(`quarter-end: ${b.quarter_end}`);
+  return (parts.length ? parts.join(" · ") + ". " : "") + (b.advice || "");
+}
+
 function renderBeliefs() {
   const latest = state.beliefs.slice(-6).reverse();
-  $("beliefs").innerHTML = latest.map(b => `<div class="belief"><b>${esc(b.name)}, after ${b.after_deal} deals</b>${esc(b.text)}</div>`).join("");
+  $("beliefs").innerHTML = latest.map(b => `<div class="belief"><b>${esc(b.name)}, before deal ${b.after_deal + 1}</b>${esc(b.text)}</div>`).join("");
 }
 
 function resetView() {
@@ -359,7 +369,7 @@ function resetView() {
   $("twinPrice").textContent = ""; $("memPrice").textContent = ""; $("tabs").innerHTML = "";
   $("forgetVendor").hidden = true; $("vendorValue").hidden = true;
   $("mems").innerHTML = '<div class="empty">Memories appear as deals finish</div>';
-  $("beliefs").innerHTML = '<div class="empty">Reflections appear during the race</div>';
+  $("beliefs").innerHTML = '<div class="empty">Briefings appear during the race</div>';
   document.querySelector("#ledger tbody").innerHTML = ""; document.querySelector("#dealTable tbody").innerHTML = "";
   $("err").hidden = true; renderChart();
 }

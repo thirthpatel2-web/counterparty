@@ -1,18 +1,22 @@
-"""Runs deals, the memory-versus-memoryless race, and the Forget counterfactual."""
+"""Runs deals, the race against baselines, and the Forget counterfactual."""
 from dataclasses import asdict, dataclass, field
+import hashlib
 import json
 import pathlib
 import random
 import statistics
+import subprocess
 import time
+import uuid
 from typing import Callable
 
-from .brains import Brain, DealState
-from .memory import DealRecord, Memory
+from .brains import PROMPT_VERSION, SYSTEM_PROMPT, Brain, DealState, RuleBrain, ScriptedBrain
+from .memory import DealRecord, LocalMemory, Memory, brief_text
 from .simulator import VENDOR_BY_SLUG, VENDORS, Negotiation, is_quarter_end, lost_deal_price
 
 MAX_ROUNDS = 12
-RUNS_DIR = pathlib.Path(__file__).resolve().parents[1] / "runs"
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+RUNS_DIR = ROOT / "runs"
 Emit = Callable[[dict], None]
 
 
@@ -46,6 +50,7 @@ class DealResult:
     memories_used: list = field(default_factory=list)
     record: dict = field(default_factory=dict)
     final_challenged: bool = False
+    brief: dict = field(default_factory=dict)
 
 
 def schedule(n_deals: int, seed: int = 7, start_year: int = 2025) -> list[DealSpec]:
@@ -66,18 +71,19 @@ def schedule(n_deals: int, seed: int = 7, start_year: int = 2025) -> list[DealSp
     return specs
 
 
-def run_deal(spec: DealSpec, brain: Brain, memory: Memory | None, *, exclude: frozenset = frozenset(),
-             raw_facts_only: bool = False, retain: bool = True, seed: int | None = None, emit: Emit = no_emit,
-             arm: str = "memory") -> DealResult:
+def run_deal(spec: DealSpec, brain: Brain, memory: Memory | None, *, retain: bool = True, seed: int | None = None,
+             emit: Emit = no_emit, arm: str = "memory") -> DealResult:
     vendor = VENDOR_BY_SLUG[spec.vendor_slug]
     effective_seed = spec.seed if seed is None else seed
     talks = Negotiation(vendor, spec.month, effective_seed)
-    items = memory.recall(vendor.slug, vendor.name, spec.month, exclude, raw_facts_only) if memory else []
-    memory_texts = [m.text for m in items]
+    items = memory.recall(vendor.slug, vendor.name, spec.month) if memory else []
+    brief = memory.brief(vendor.slug, vendor.name, spec.month) if memory else {}
+    memory_texts = ([brief_text(brief)] if brief else []) + [m.text for m in items]
     reply = talks.opening()
     opening = reply.price
-    transcript, history, final_claims, claims = [], [], [], []
-    challenged = False
+    transcript, history, claims = [], [], []
+    finals: list[list[int]] = []  # [round, price, lowest ask seen after it]
+    challenged = accepted_final = False
 
     def say(role: str, text: str, **extra) -> None:
         line = {"arm": arm, "deal": spec.index, "role": role, "text": text, **extra}
@@ -88,14 +94,17 @@ def run_deal(spec: DealSpec, brain: Brain, memory: Memory | None, *, exclude: fr
     history.append(f"Vendor: {reply.message}")
     outcome, price = "", reply.price
     while not outcome:
+        for claim in finals:
+            claim[2] = min(claim[2], reply.price)
         if reply.claim:
             claims.append((reply.claim, reply.price))
         if reply.says_final:
-            final_claims.append((talks.round, reply.price))
+            finals.append([talks.round, reply.price, reply.price])
         state = DealState(vendor.name, spec.month, reply.price, talks.round, reply.says_final, reply.message,
                           list(history), lost_deal_price())
         decision = brain.decide(state, memory_texts, effective_seed)
         if decision.action == "accept" or talks.round >= MAX_ROUNDS:
+            accepted_final = reply.says_final
             say("buyer", decision.message or "We accept.", action="accept")
             reply = talks.accept()
             say("vendor", reply.message, price=reply.price)
@@ -112,20 +121,42 @@ def run_deal(spec: DealSpec, brain: Brain, memory: Memory | None, *, exclude: fr
             outcome, price = "closed", reply.price
         elif reply.walked:
             outcome, price = "vendor_walked", reply.price
+        if not reply.walked:
+            for claim in finals:
+                claim[2] = min(claim[2], reply.price)
 
     scored = price if outcome == "closed" else lost_deal_price()
     false_claims = tuple(c for c, at in claims if outcome == "closed" and price < at)
     record = DealRecord(spec.deal_id, vendor.slug, vendor.name, spec.month, spec.year, opening, price, outcome,
-                        talks.round, tuple(final_claims), false_claims)
+                        talks.round, tuple(tuple(f) for f in finals), false_claims, accepted_final)
     if memory and retain:
         memory.retain(record)
     return DealResult(asdict(spec), outcome, scored, opening, talks.round, round(talks.floor),
-                      scored - round(talks.floor), transcript,
-                      [asdict(m) for m in items], asdict(record), challenged)
+                      scored - round(talks.floor), transcript, [asdict(m) for m in items], asdict(record),
+                      challenged, brief)
+
+
+def oracle_price(spec: DealSpec) -> int:
+    """The ceiling: a buyer that knows this deal's hidden floor and patience."""
+    talks = Negotiation(VENDOR_BY_SLUG[spec.vendor_slug], spec.month, spec.seed)
+    talks.opening()
+    for _ in range(talks.walk_round - 1):
+        reply = talks.counter(talks.floor)
+        if reply.deal:
+            return reply.price
+        if talks.ask <= talks.floor + 1:
+            break
+    return talks.accept().price
+
+
+def learner_prices(specs: list[DealSpec]) -> list[int]:
+    """A learner with exact memory and hand-written rules, no LLM and no Hindsight. The bar memory must clear."""
+    memory = LocalMemory()
+    return [run_deal(s, ScriptedBrain(), memory, arm="learner").price for s in specs]
 
 
 def bootstrap_ci(values: list[float], draws: int = 2000, seed: int = 11) -> tuple[float, float]:
-    """95% confidence interval of the mean, resampling the paired per-deal differences."""
+    """95% interval of the mean from resampled values. Use per-run means across runs where possible."""
     if not values:
         return (0.0, 0.0)
     rng = random.Random(seed)
@@ -133,117 +164,120 @@ def bootstrap_ci(values: list[float], draws: int = 2000, seed: int = 11) -> tupl
     return (means[int(0.025 * draws)], means[int(0.975 * draws) - 1])
 
 
-def accept_first_final(spec: DealSpec) -> int:
-    """The strongest fixed no-memory strategy we know: offer low, accept the first "final" price.
-
-    It needs no LLM, so it is a baseline that wording in a prompt cannot weaken.
-    """
-    talks = Negotiation(VENDOR_BY_SLUG[spec.vendor_slug], spec.month, spec.seed)
-    bid = talks.opening().price * 0.7
-    while True:
-        reply = talks.counter(bid)
-        if reply.deal:
-            return reply.price
-        if reply.walked:
-            return lost_deal_price()
-        if reply.says_final:
-            return talks.accept().price
+def mean(values) -> int:
+    values = list(values)
+    return round(statistics.fmean(values)) if values else 0
 
 
 def summarize(pairs: list[dict]) -> dict:
-    gaps = [p["twin"]["price"] - p["memory"]["price"] for p in pairs]
+    """Positive "vs" numbers mean the memory buyer paid more than that comparison."""
+    specs = [DealSpec(**p["memory"]["spec"]) for p in pairs]
+    memory = [p["memory"]["price"] for p in pairs]
+    rule = [p["baseline"]["price"] for p in pairs]
+    learner = learner_prices(specs)
+    oracle = [oracle_price(s) for s in specs]
     third = max(1, len(pairs) // 3)
-    low, high = bootstrap_ci(gaps)
+    vs_rule = [m - r for m, r in zip(memory, rule)]
     per_vendor = {}
     for vendor in VENDORS:
-        rows = [p for p in pairs if p["memory"]["spec"]["vendor_slug"] == vendor.slug]
-        if rows:
+        idx = [i for i, s in enumerate(specs) if s.vendor_slug == vendor.slug]
+        if idx:
             per_vendor[vendor.slug] = {
-                "name": vendor.name, "deals": len(rows),
-                "memory_avg": round(statistics.fmean(r["memory"]["price"] for r in rows)),
-                "twin_avg": round(statistics.fmean(r["twin"]["price"] for r in rows)),
-                "memory_lost": sum(r["memory"]["outcome"] != "closed" for r in rows),
-                "twin_lost": sum(r["twin"]["outcome"] != "closed" for r in rows),
+                "name": vendor.name, "deals": len(idx), "memory_avg": mean(memory[i] for i in idx),
+                "rule_avg": mean(rule[i] for i in idx), "learner_avg": mean(learner[i] for i in idx),
+                "oracle_avg": mean(oracle[i] for i in idx),
+                "memory_lost": sum(pairs[i]["memory"]["outcome"] != "closed" for i in idx),
+                "rule_lost": sum(pairs[i]["baseline"]["outcome"] != "closed" for i in idx),
             }
-    fixed = [p["memory"]["price"] - accept_first_final(DealSpec(**p["memory"]["spec"])) for p in pairs]
-    return {
-        "vs_fixed_mean": round(statistics.fmean(fixed)) if fixed else 0,
-        "vs_fixed_ci95": [round(v) for v in bootstrap_ci(fixed)],
-        "vs_fixed_last_third": round(statistics.fmean(fixed[-third:])) if fixed else 0,
-        "deals": len(pairs), "total_saved": sum(gaps),
-        "mean_gap": round(statistics.fmean(gaps)) if gaps else 0,
-        "ci95": [round(low), round(high)],
-        "first_third_gap": round(statistics.fmean(gaps[:third])) if gaps else 0,
-        "last_third_gap": round(statistics.fmean(gaps[-third:])) if gaps else 0,
+    summary = {
+        "deals": len(pairs), "memory_avg": mean(memory), "rule_avg": mean(rule), "learner_avg": mean(learner),
+        "oracle_avg": mean(oracle), "vs_rule": mean(vs_rule), "vs_rule_ci95": [round(v) for v in bootstrap_ci(vs_rule)],
+        "vs_rule_first_third": mean(vs_rule[:third]), "vs_rule_last_third": mean(vs_rule[-third:]),
+        "vs_learner": mean(m - l for m, l in zip(memory, learner)),
         "memory_lost": sum(p["memory"]["outcome"] != "closed" for p in pairs),
-        "twin_lost": sum(p["twin"]["outcome"] != "closed" for p in pairs),
+        "rule_lost": sum(p["baseline"]["outcome"] != "closed" for p in pairs),
         "bluffs_challenged": sum(p["memory"]["final_challenged"] for p in pairs),
         "per_vendor": per_vendor,
     }
+    if all(p.get("twin") for p in pairs):
+        summary["vs_twin"] = mean(p["memory"]["price"] - p["twin"]["price"] for p in pairs)
+    return summary
 
 
-def deal_end_event(spec: DealSpec, mem: dict, twin: dict, cumulative: int) -> dict:
-    r = mem["record"]
-    record = DealRecord(**{**r, "final_claims": tuple(tuple(c) for c in r["final_claims"]),
-                           "false_claims": tuple(r["false_claims"])})
-    return {"type": "deal_end", "deal": spec.index, "vendor": record.vendor_name, "vendor_slug": spec.vendor_slug,
-            "memory_price": mem["price"], "twin_price": twin["price"], "memory_outcome": mem["outcome"],
-            "twin_outcome": twin["outcome"], "saved": twin["price"] - mem["price"], "cumulative_saved": cumulative,
-            "memories_used": mem["memories_used"], "deal_id": spec.deal_id, "challenged": mem["final_challenged"],
-            "memory_text": record.to_text(), "false_finals": sum(record.closing < p for _, p in record.final_claims)
-            if record.outcome == "closed" else 0, "false_claims": len(record.false_claims),
-            "walked": record.outcome != "closed"}
+def deal_end_event(spec: DealSpec, mem: dict, baseline: dict, cumulative: int, generation: str = "") -> dict:
+    record = DealRecord.from_dict(mem["record"])
+    false_finals = sum(after < price for _, price, after in
+                       (tuple(c) if len(c) == 3 else (*c, c[1]) for c in record.final_claims))
+    return {"type": "deal_end", "generation": generation, "deal": spec.index, "vendor": record.vendor_name,
+            "vendor_slug": spec.vendor_slug, "memory_price": mem["price"], "baseline_price": baseline["price"],
+            "memory_outcome": mem["outcome"], "baseline_outcome": baseline["outcome"],
+            "saved": baseline["price"] - mem["price"], "cumulative_saved": cumulative,
+            "memories_used": mem["memories_used"], "brief": mem.get("brief", {}), "deal_id": spec.deal_id,
+            "challenged": mem["final_challenged"], "memory_text": record.to_text(), "false_finals": false_finals,
+            "false_claims": len(record.false_claims), "walked": record.outcome != "closed"}
 
 
-def run_race(specs: list[DealSpec], brain_memory: Brain, brain_twin: Brain, memory: Memory, *, mode: str,
-             emit: Emit = no_emit, playbook_every: int = 6, save: bool = True) -> dict:
+def provenance(model: str) -> dict:
+    """What produced a run, so results can be traced to the exact prompt and code."""
+    try:
+        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True,
+                                timeout=10).stdout.strip()
+        dirty = bool(subprocess.run(["git", "status", "--porcelain", "engine"], cwd=ROOT, capture_output=True,
+                                    text=True, timeout=10).stdout.strip())
+    except (OSError, subprocess.SubprocessError):
+        commit, dirty = "", False
+    return {"model": model, "prompt_version": PROMPT_VERSION,
+            "prompt_sha": hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest()[:12],
+            "commit": commit, "engine_modified": dirty}
+
+
+def run_race(specs: list[DealSpec], brain_memory: Brain, memory: Memory, *, mode: str, brain_twin: Brain | None = None,
+             emit: Emit = no_emit, save: bool = True, model: str = "", generation: str = "") -> dict:
+    """Memory buyer against the rule on every deal, with an optional memoryless LLM twin."""
     memory.reset()
-    pairs, playbooks = [], []
+    pairs = []
     cumulative = 0
-    for n, spec in enumerate(specs, 1):
+
+    def tagged(event: dict) -> None:
+        emit({**event, "generation": generation})
+
+    for spec in specs:
         vendor = VENDOR_BY_SLUG[spec.vendor_slug]
-        emit({"type": "deal_start", "deal": spec.index, "vendor": vendor.name, "month": spec.month, "year": spec.year,
-              "quarter_end": is_quarter_end(spec.month), "total": len(specs)})
-        twin = run_deal(spec, brain_twin, None, retain=False, emit=emit, arm="twin")
-        mem = run_deal(spec, brain_memory, memory, emit=emit, arm="memory")
-        cumulative += twin.price - mem.price
-        pairs.append({"memory": asdict(mem), "twin": asdict(twin), "cumulative_saved": cumulative})
-        emit(deal_end_event(spec, asdict(mem), asdict(twin), cumulative))
-        if n % playbook_every == 0 or n == len(specs):
-            for v in VENDORS:
-                try:
-                    text = memory.playbook(v.slug, v.name)
-                except Exception as exc:  # a failed reflection must not lose a finished race
-                    text = f"Reflection unavailable: {exc}"
-                entry = {"after_deal": n, "vendor": v.slug, "name": v.name, "text": text}
-                playbooks.append(entry)
-                emit({"type": "playbook", **entry})
-    result = {"id": time.strftime("%Y%m%d-%H%M%S"), "mode": mode, "summary": summarize(pairs), "pairs": pairs,
-              "playbooks": playbooks, "llm_errors": brain_memory.llm_errors + brain_twin.llm_errors,
-              "fallbacks": getattr(brain_memory, "fallbacks", 0) + getattr(brain_twin, "fallbacks", 0),
-              "specs": [asdict(s) for s in specs], "bank_id": getattr(memory, "bank_id", None)}
+        tagged({"type": "deal_start", "deal": spec.index, "vendor": vendor.name, "month": spec.month, "year": spec.year,
+                "quarter_end": is_quarter_end(spec.month), "total": len(specs)})
+        baseline = run_deal(spec, RuleBrain(), None, retain=False, emit=tagged, arm="baseline")
+        twin = run_deal(spec, brain_twin, None, retain=False, arm="twin") if brain_twin else None
+        mem = run_deal(spec, brain_memory, memory, emit=tagged, arm="memory")
+        cumulative += baseline.price - mem.price
+        pairs.append({"memory": asdict(mem), "baseline": asdict(baseline), "twin": asdict(twin) if twin else None,
+                      "cumulative_saved": cumulative})
+        emit(deal_end_event(spec, asdict(mem), asdict(baseline), cumulative, generation))
+    errors = brain_memory.llm_errors + (brain_twin.llm_errors if brain_twin else 0)
+    fallbacks = getattr(brain_memory, "fallbacks", 0) + (getattr(brain_twin, "fallbacks", 0) if brain_twin else 0)
+    run_id = f"{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:4]}"
+    result = {"id": run_id, "mode": mode, "protocol": "v2", "summary": summarize(pairs), "pairs": pairs,
+              "llm_errors": errors, "fallbacks": fallbacks, "specs": [asdict(s) for s in specs],
+              "bank_id": getattr(memory, "bank_id", None), "provenance": provenance(model)}
     if save:
         RUNS_DIR.mkdir(exist_ok=True)
-        (RUNS_DIR / f"{result['id']}-{mode}.json").write_text(json.dumps(result, indent=1), encoding="utf-8")
-    emit({"type": "race_end", "summary": result["summary"], "run_id": result["id"], "mode": mode,
-          "llm_errors": result["llm_errors"], "fallbacks": result["fallbacks"]})
+        (RUNS_DIR / f"{run_id}-{mode}.json").write_text(json.dumps(result, indent=1), encoding="utf-8")
+    tagged({"type": "race_end", "summary": result["summary"], "run_id": run_id, "mode": mode,
+            "llm_errors": errors, "fallbacks": fallbacks})
     return result
 
 
-def forget_value(spec: DealSpec, document_ids: str | set, brain: Brain, memory: Memory, seeds: int = 5) -> dict:
-    """What remembered deals are worth: rerun the same deal with and without them, on the same seeds.
-
-    Raw facts only on both sides, because a consolidated observation could still carry the forgotten deal.
-    """
-    forgotten = frozenset({document_ids} if isinstance(document_ids, str) else document_ids)
+def forget_value(spec: DealSpec, document_ids: str | set, brain: Brain, memory: Memory, seeds: int = 3) -> dict:
+    """What remembered deals are worth: the same new deal, on the same vendor seeds, with full memory and with a
+    copy of memory where those deals were really deleted. Both sides use the live recall and briefing."""
+    forgotten = {document_ids} if isinstance(document_ids, str) else set(document_ids)
+    without = memory.forgotten_copy(forgotten)
     rows = []
     for k in range(seeds):
         seed = spec.seed + 100 * (k + 1)
-        kept = run_deal(spec, brain, memory, raw_facts_only=True, retain=False, seed=seed, arm="kept")
-        gone = run_deal(spec, brain, memory, exclude=forgotten, raw_facts_only=True, retain=False,
-                        seed=seed, arm="forgot")
+        kept = run_deal(spec, brain, memory, retain=False, seed=seed, arm="kept")
+        gone = run_deal(spec, brain, without, retain=False, seed=seed, arm="forgot")
         rows.append({"seed": seed, "with_memory": kept.price, "without_memory": gone.price,
                      "difference": gone.price - kept.price, "kept": kept.transcript, "forgot": gone.transcript})
     diffs = [r["difference"] for r in rows]
-    return {"forgotten": sorted(forgotten), "deal": spec.deal_id, "seeds": seeds, "value": round(statistics.fmean(diffs)),
+    return {"forgotten": sorted(forgotten), "deal": spec.deal_id, "seeds": seeds, "value": mean(diffs),
             "min": min(diffs), "max": max(diffs), "rows": rows}

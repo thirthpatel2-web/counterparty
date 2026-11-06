@@ -1,79 +1,99 @@
-"""Records a race for the demo and writes its measured results into the README."""
+"""Records a race, and rebuilds the README's results from every valid recorded run.
+
+Usage: python scripts/run_race.py --deals 24 --seed 101      record one run
+       python scripts/run_race.py --report                    rebuild the README results only
+"""
 import argparse
+import json
 import pathlib
 import re
+import statistics
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from engine.arena import run_race, schedule  # noqa: E402
+from engine.arena import RUNS_DIR, bootstrap_ci, run_race, schedule  # noqa: E402
+from engine.brains import QuotaExhausted  # noqa: E402
 from engine.factory import build  # noqa: E402
 
 
-def results_block(result: dict) -> str:
-    s = result["summary"]
-    rows = "\n".join(f"| {v['name']} | {v['deals']} | ₹{v['twin_avg']:,} | ₹{v['memory_avg']:,} | {v['twin_lost']} "
-                     f"| {v['memory_lost']} |" for v in s["per_vendor"].values())
-    def versus(amount: int) -> str:
-        return f"₹{abs(amount):,} {'more' if amount > 0 else 'less'}"
+def valid_runs() -> list[dict]:
+    runs = []
+    for path in sorted(RUNS_DIR.glob("*-live.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if data.get("protocol") == "v2" and not data.get("fallbacks"):
+            runs.append(data)
+    return runs
 
-    low, high = s["vs_fixed_ci95"]
-    return (f"Run `{result['id']}`: {s['deals']} simulated deals, {result['llm_errors']} LLM errors, "
-            f"{result['fallbacks']} fallback decisions.\n\n"
-            "**Against the strongest fixed no-memory strategy** (offer low, accept the first \"final\"), replayed "
-            "on the same deals without an LLM, the Hindsight buyer paid "
-            f"{versus(s['vs_fixed_mean'])} per deal (95% interval ₹{low:,} to ₹{high:,}; positive means it paid "
-            f"more). In the last third of deals it paid {versus(s['vs_fixed_last_third'])} per deal.\n\n"
-            "Against an LLM buyer with no memory and the same prompt: "
-            f"₹{s['mean_gap']:,} saved per deal (95% interval ₹{s['ci95'][0]:,} to ₹{s['ci95'][1]:,}). "
-            "Treat this as the weaker comparison, because that buyer's results depend heavily on prompt wording.\n\n"
-            "| Vendor | Deals | No memory, avg | With Hindsight, avg | Lost, no memory | Lost, with memory |\n"
-            f"| --- | --- | --- | --- | --- | --- |\n{rows}\n\n"
-            "Vendors are simulated, so these are not real procurement savings.")
+
+def money(value: int) -> str:
+    return f"₹{abs(value):,} {'more' if value > 0 else 'less'}" if value else "₹0 different"
+
+
+def results_block(runs: list[dict]) -> str:
+    if not runs:
+        return "No valid live runs recorded yet under the current protocol."
+    rows = []
+    for r in runs:
+        s, p = r["summary"], r.get("provenance", {})
+        rows.append(f"| `{r['id']}` | {s['deals']} | {p.get('model', '')} | {p.get('prompt_version', '')} | "
+                    f"₹{s['memory_avg']:,} | ₹{s['rule_avg']:,} | ₹{s['learner_avg']:,} | ₹{s['oracle_avg']:,} | "
+                    f"{money(s['vs_rule'])} | {money(s['vs_rule_last_third'])} |")
+    per_run = [r["summary"]["vs_rule"] for r in runs]
+    low, high = bootstrap_ci(per_run) if len(runs) > 1 else tuple(runs[0]["summary"]["vs_rule_ci95"])
+    verdict = ("beats" if high < 0 else "loses to" if low > 0 else "is not distinguishable from")
+    return (f"{len(runs)} valid live run(s). Across them, the Hindsight buyer paid {money(round(statistics.fmean(per_run)))} "
+            f"per deal than the rule (95% interval ₹{round(low):,} to ₹{round(high):,}), so it **{verdict}** the rule.\n\n"
+            "| Run | Deals | Model | Prompt | Hindsight buyer avg | Rule avg | Learner avg | Oracle avg | "
+            "Hindsight vs rule | Last third vs rule |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n"
+            + "\n".join(rows) +
+            "\n\n- **Rule:** offer low and accept the first \"final\", with no memory and no LLM.\n"
+            "- **Learner:** exact memory and hand-written rules, with no LLM and no Hindsight.\n"
+            "- **Oracle:** knows each deal's hidden floor and patience. It's the ceiling.\n\n"
+            "Every valid live run under the current protocol is listed here, and runs with any fallback decision "
+            "are excluded. Vendors are simulated, so these are not real procurement savings.")
+
+
+def write_readme(runs: list[dict]) -> None:
+    readme = ROOT / "README.md"
+    text = readme.read_text(encoding="utf-8")
+    readme.write_text(re.sub(r"(<!-- RESULTS -->).*?(<!-- /RESULTS -->)",
+                             lambda m: f"{m.group(1)}\n{results_block(runs)}\n{m.group(2)}", text, flags=re.S),
+                      encoding="utf-8")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--deals", type=int, default=24)
-    parser.add_argument("--seed", type=int, default=7)
-    parser.add_argument("--from-run", help="rewrite the README from a recorded live run instead of racing")
+    parser.add_argument("--seed", type=int, default=101)
+    parser.add_argument("--twin", action="store_true", help="also run a memoryless LLM buyer (doubles LLM use)")
+    parser.add_argument("--report", action="store_true", help="only rebuild the README from recorded runs")
     args = parser.parse_args()
-    if args.from_run:
-        import json
-        from engine.arena import summarize
-        result = json.loads((ROOT / "runs" / pathlib.Path(args.from_run).name).read_text(encoding="utf-8"))
-        result["summary"] = summarize(result["pairs"])
-        write_readme(result)
-        print(results_block(result).encode("ascii", "replace").decode())
-        return 0
-    stack = build("auto")
-    print(f"Mode: {stack.mode}")
+    if not args.report:
+        stack = build("auto")
+        print(f"Mode: {stack.mode} {stack.model}")
 
-    def progress(event: dict) -> None:
-        if event["type"] == "deal_end":
-            print(f"Deal {event['deal']:>3} {event['vendor']:<16} no memory {event['twin_price']:>7,} "
-                  f"memory {event['memory_price']:>7,} total saved {event['cumulative_saved']:>9,}", flush=True)
+        def progress(event: dict) -> None:
+            if event["type"] == "deal_end":
+                print(f"Deal {event['deal']:>3} {event['vendor']:<16} rule {event['baseline_price']:>7,} "
+                      f"memory {event['memory_price']:>7,}", flush=True)
 
-    result = run_race(schedule(args.deals, args.seed), stack.brain_memory, stack.brain_twin, stack.memory,
-                      mode=stack.mode, emit=progress)
-    print(results_block(result).encode("ascii", "replace").decode())
-    if result["fallbacks"]:
-        print(f"{result['fallbacks']} decisions were fallbacks, not the model's, so this run is not a result. "
-              "The README was left alone. Check the API's rate limits and run again.")
-    elif stack.mode == "live":
-        write_readme(result)
-        print("README updated with these results.")
-    else:
-        print("Rehearsal numbers are not results, so the README was left alone.")
+        try:
+            result = run_race(schedule(args.deals, args.seed), stack.brain_memory, stack.memory, mode=stack.mode,
+                              brain_twin=stack.brain_twin if args.twin else None, emit=progress, model=stack.model)
+        except QuotaExhausted as exc:
+            print(f"Stopped: the LLM provider's daily quota is used up, so no result was recorded. {exc}"[:400])
+            return 1
+        s = result["summary"]
+        print(f"Run {result['id']}: memory {s['memory_avg']:,}, rule {s['rule_avg']:,}, learner {s['learner_avg']:,}, "
+              f"oracle {s['oracle_avg']:,}. Memory vs rule {s['vs_rule']:+,} per deal, last third "
+              f"{s['vs_rule_last_third']:+,}. Errors {result['llm_errors']}, fallbacks {result['fallbacks']}.")
+        if stack.mode != "live":
+            print("Rehearsal numbers are not results, so the README was left alone.")
+            return 0
+    write_readme(valid_runs())
+    print("README results rebuilt from every valid live run.")
     return 0
-
-
-def write_readme(result: dict) -> None:
-    readme = ROOT / "README.md"
-    text = readme.read_text(encoding="utf-8")
-    readme.write_text(re.sub(r"(<!-- RESULTS -->).*?(<!-- /RESULTS -->)",
-                             lambda m: f"{m.group(1)}\n{results_block(result)}\n{m.group(2)}", text, flags=re.S),
-                      encoding="utf-8")
 
 
 if __name__ == "__main__":

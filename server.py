@@ -1,9 +1,10 @@
-"""Dashboard server: runs a race live, replays a recorded run, and prices a memory with Forget."""
+"""Dashboard server: runs a race, replays a recorded run, and prices memories with Forget."""
 import asyncio
 import json
 import pathlib
 import threading
 import time
+import uuid
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
@@ -19,24 +20,31 @@ app = FastAPI(title="Counterparty")
 
 
 class Session:
-    """The one race the dashboard is showing. Events are append-only, so any browser can catch up."""
+    """The one race the dashboard shows. Every race gets a new generation, so a browser
+    watching an old race resets as soon as a new one starts."""
     def __init__(self):
         self.lock = threading.Lock()
         self.events: list[dict] = []
+        self.generation = ""
         self.running = False
         self.result: dict | None = None
         self.memory = None
         self.brain = None
+        self.mode = ""
 
     def emit(self, event: dict) -> None:
         with self.lock:
-            self.events.append(event)
+            self.events.append({**event, "generation": self.generation})
 
-    def begin(self) -> None:
+    def try_begin(self) -> bool:
         with self.lock:
-            self.events = []
+            if self.running:
+                return False
             self.running = True
+            self.generation = uuid.uuid4().hex[:8]
+            self.events = []
             self.result = None
+            return True
 
 
 session = Session()
@@ -78,26 +86,29 @@ def list_runs() -> list[dict]:
             data = json.loads(path.read_text(encoding="utf-8"))
         except ValueError:
             continue
+        if data.get("protocol") != "v2":
+            continue
         s = data["summary"]
-        rows.append({"file": path.name, "mode": data["mode"], "deals": s["deals"], "mean_gap": s["mean_gap"]})
+        rows.append({"file": path.name, "mode": data["mode"], "deals": s["deals"], "vs_rule": s["vs_rule"],
+                     "fallbacks": data.get("fallbacks", 0)})
     return rows
 
 
 @app.post("/api/race")
 def start_race(request: RaceRequest):
-    if session.running:
-        raise HTTPException(409, "A race is already running.")
     stack = build(request.mode)
     if request.mode == "live" and stack.mode != "live":
         raise HTTPException(400, f"Live mode needs: {', '.join(stack.missing)}")
-    session.begin()
-    session.memory, session.brain = stack.memory, stack.brain_memory
+    if not session.try_begin():
+        raise HTTPException(409, "A race is already running.")
+    session.memory, session.brain, session.mode = stack.memory, stack.brain_memory, stack.mode
+    generation = session.generation
 
     def work():
         try:
             session.emit({"type": "race_start", "mode": stack.mode, "total": request.deals})
-            session.result = run_race(schedule(request.deals, request.seed), stack.brain_memory, stack.brain_twin,
-                                      stack.memory, mode=stack.mode, emit=session.emit)
+            session.result = run_race(schedule(request.deals, request.seed), stack.brain_memory, stack.memory,
+                                      mode=stack.mode, emit=session.emit, model=stack.model, generation=generation)
         except Exception as exc:
             session.emit({"type": "error", "message": f"Race stopped: {exc}"})
         finally:
@@ -109,41 +120,37 @@ def start_race(request: RaceRequest):
 
 @app.post("/api/replay")
 def start_replay(request: ReplayRequest):
-    if session.running:
-        raise HTTPException(409, "A race is already running.")
     path = RUNS_DIR / pathlib.Path(request.run).name
-    if not path.exists():
+    if path.suffix != ".json" or not path.is_file():
         raise HTTPException(404, "Recorded run not found.")
     data = json.loads(path.read_text(encoding="utf-8"))
-    session.begin()
+    if data.get("protocol") != "v2":
+        raise HTTPException(400, "That run was recorded with an older protocol and can't be replayed.")
+    if not session.try_begin():
+        raise HTTPException(409, "A race is already running.")
     stack = build(data["mode"])
     session.result = data
-    session.brain = stack.brain_memory
-    # Rehearsal memory lives in-process, so rebuild it. A live run's memory stays in its Hindsight bank.
     if data["mode"] == "live" and stack.mode == "live":
         stack.memory.bank_id = data["bank_id"]
-        session.memory = stack.memory
+        session.memory, session.brain, session.mode = stack.memory, stack.brain_memory, "live"
+    elif data["mode"] == "live":
+        session.memory, session.brain, session.mode = None, None, "replay-only"  # Forget needs the live services
     else:
-        session.memory = rebuilt_memory(data)
+        session.memory, session.brain, session.mode = rebuilt_memory(data), stack.brain_memory, "rehearsal"
 
     def work():
         try:
             session.emit({"type": "race_start", "mode": data["mode"], "total": data["summary"]["deals"],
-                          "replay": path.name})
-            shown_playbooks = {p["after_deal"]: [] for p in data["playbooks"]}
-            for p in data["playbooks"]:
-                shown_playbooks[p["after_deal"]].append(p)
-            for n, pair in enumerate(data["pairs"], 1):
+                          "replay": path.name, "forget": session.mode})
+            for pair in data["pairs"]:
                 spec = DealSpec(**pair["memory"]["spec"])
                 vendor = VENDOR_BY_SLUG[spec.vendor_slug]
                 session.emit({"type": "deal_start", "deal": spec.index, "vendor": vendor.name, "month": spec.month,
                               "year": spec.year, "quarter_end": spec.month % 3 == 0, "total": len(data["pairs"])})
-                for line in pair["twin"]["transcript"] + pair["memory"]["transcript"]:
+                for line in pair["baseline"]["transcript"] + pair["memory"]["transcript"]:
                     session.emit({"type": "message", **line})
                     time.sleep(request.pace)
-                session.emit(deal_end_event(spec, pair["memory"], pair["twin"], pair["cumulative_saved"]))
-                for p in shown_playbooks.get(n, []):
-                    session.emit({"type": "playbook", **p})
+                session.emit(deal_end_event(spec, pair["memory"], pair["baseline"], pair["cumulative_saved"]))
             session.emit({"type": "race_end", "summary": data["summary"], "run_id": data["id"], "mode": data["mode"],
                           "llm_errors": data.get("llm_errors", 0), "fallbacks": data.get("fallbacks", 0)})
         finally:
@@ -156,32 +163,26 @@ def start_replay(request: ReplayRequest):
 def rebuilt_memory(data: dict) -> LocalMemory:
     memory = LocalMemory()
     for pair in data["pairs"]:
-        r = pair["memory"]["record"]
-        memory.retain(DealRecord(**{**r, "final_claims": tuple(tuple(c) for c in r["final_claims"]),
-                                    "false_claims": tuple(r["false_claims"])}))
+        memory.retain(DealRecord.from_dict(pair["memory"]["record"]))
     return memory
 
 
 @app.get("/api/stream")
-async def stream(after: int = 0):
+async def stream():
     async def generate():
-        index = after
-        idle = 0
+        index, generation, idle = 0, None, 0
         while True:
             with session.lock:
+                if session.generation != generation:
+                    generation, index = session.generation, 0
+                    yield 'data: {"type": "reset"}\n\n'
                 batch = session.events[index:]
             for event in batch:
-                yield f"id: {index}\ndata: {json.dumps(event, ensure_ascii=False)}\n\n"
-                index += 1
-            if batch:
-                idle = 0
-            else:
-                idle += 1
-                if idle % 75 == 0:
-                    yield ": keep-alive\n\n"
-                if len(session.events) < index:  # a new race started: send the browser back to the start
-                    yield 'data: {"type": "reset"}\n\n'
-                    index = 0
+                yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+            index += len(batch)
+            idle = 0 if batch else idle + 1
+            if idle and idle % 75 == 0:
+                yield ": keep-alive\n\n"
             await asyncio.sleep(0.2)
 
     return StreamingResponse(generate(), media_type="text/event-stream")
@@ -191,8 +192,11 @@ async def stream(after: int = 0):
 def forget(request: ForgetRequest):
     if session.running:
         raise HTTPException(409, "Wait for the race to finish.")
-    if not session.result or session.memory is None:
+    if not session.result:
         raise HTTPException(400, "Run or replay a race first.")
+    if session.memory is None:
+        raise HTTPException(400, "Forget on a live run needs the live keys in .env, so it reruns with the real "
+                                 "model and Hindsight. Rehearsal numbers would be misleading here.")
     records = [p["memory"]["record"] for p in session.result["pairs"]]
     chosen = [r for r in records if r["deal_id"] == request.document_id or r["vendor_slug"] == request.vendor]
     if not chosen:
@@ -202,6 +206,7 @@ def forget(request: ForgetRequest):
     year = last["year"] + (1 if last["month"] == 12 else 0)
     spec = DealSpec(last["index"] + 1, chosen[0]["vendor_slug"], next_month, year, last["seed"] + 500)
     try:
-        return forget_value(spec, {r["deal_id"] for r in chosen}, session.brain, session.memory, seeds=request.seeds)
+        report = forget_value(spec, {r["deal_id"] for r in chosen}, session.brain, session.memory, seeds=request.seeds)
     except Exception as exc:
         raise HTTPException(502, f"Could not rerun the deal: {exc}") from exc
+    return {**report, "mode": session.mode}
