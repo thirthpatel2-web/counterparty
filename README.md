@@ -8,7 +8,7 @@ A vendor says "this is my final price". One deal can't tell you if that's true. 
 
 - **Hindsight's beliefs track the evidence.** Its briefings went from 33% of questions right after one deal per vendor to 94% after eight, level with exact arithmetic over the same records, checked against the simulator's hidden vendor traits. Arithmetic made fewer confident mistakes.
 - **Our own labels can mislead memory.** Hindsight called honest Bharat PCB a bluffer at its first five checkpoints in one study. A blind reviewer traced this to our records: Bharat sometimes says "final" within 1% of its floor and then concedes a little more, which our code labels FALSE. The evidence was ambiguous, and Hindsight over-read it where arithmetic said "unknown".
-- **The knowledge pays once learned, and Hindsight matches exact counting.** A no-LLM buyer following Hindsight's briefings beat the rule by about ₹2,500 per deal in the last third of both studies. A buyer following arithmetic over the same records did exactly as well, so Hindsight's value here is reaching the same knowledge from plain text, not beating counting.
+- **The knowledge pays once learned, and Hindsight matches exact counting.** A no-LLM buyer following Hindsight's briefings beat the rule by about ₹2,500 per deal in the last third of both studies. A buyer following arithmetic over the same records did exactly as well. Our records state each outcome ("That claim was FALSE"), so this shows Hindsight matching counting, not beating it. The pre-registered study on unlabelled notes is the test of reading what counting can't, and it hasn't run yet.
 - **An LLM negotiator didn't beat a one-line rule**, even with memory. Knowing a vendor is not the same as bargaining well.
 
 ## Why memory is the product
@@ -103,7 +103,7 @@ Not run yet. Pre-registered in [EVALUATION.md](EVALUATION.md): `python scripts/b
 ### Does what Hindsight learned turn into better prices?
 
 <!-- BRIEFED -->
-A buyer with no LLM that follows Hindsight's own briefings, replayed on the same deals as the rule. Across 2 studies it paid ₹210 less per deal overall than the rule, and **₹2,566 less per deal in the last third**, once it had learned. Early on it loses some deals finding where each vendor walks away. The same buyer following arithmetic over the same records is shown for comparison: where the two match, the saving comes from the knowledge, which Hindsight reached from plain text, not from Hindsight beating counting.
+A buyer with no LLM that follows Hindsight's own briefings, replayed on the same deals as the rule. Across 2 studies it paid ₹210 less per deal overall than the rule, and **₹2,566 less per deal in the last third**, once it had learned. Early on it loses some deals finding where each vendor walks away. The same buyer following arithmetic over the same records is shown for comparison: where the two match, the saving comes from the knowledge, which Hindsight matched from labelled outcome records, not from Hindsight beating counting.
 
 | Study | Buyer | Avg paid | Rule avg | Oracle avg | Vs rule, all deals | Vs rule, last third | Deals lost |
 | --- | --- | --- | --- | --- | --- | --- | --- |

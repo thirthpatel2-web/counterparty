@@ -45,8 +45,8 @@ def block(results: list[dict]) -> str:
             f"Across {len(hs)} studies it paid {money(overall)} per deal overall than the rule, and "
             f"**{money(last)} per deal in the last third**, once it had learned. Early on it loses some deals "
             "finding where each vendor walks away. The same buyer following arithmetic over the same records is shown "
-            "for comparison: where the two match, the saving comes from the knowledge, which Hindsight reached from "
-            "plain text, not from Hindsight beating counting.\n\n"
+            "for comparison: where the two match, the saving comes from the knowledge, which Hindsight matched from labelled outcome "
+            "records, not from Hindsight beating counting.\n\n"
             "| Study | Buyer | Avg paid | Rule avg | Oracle avg | Vs rule, all deals | Vs rule, last third | Deals lost |\n"
             "| --- | --- | --- | --- | --- | --- | --- | --- |\n" + "\n".join(rows) +
             "\n\nThe policy and the comparison were committed in [EVALUATION.md](EVALUATION.md) before computing. "
