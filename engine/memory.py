@@ -204,15 +204,19 @@ def rate_limited(exc: Exception) -> bool:
     return "429" in text or "rate limit" in text or "quota exhausted" in text
 
 
-def patiently(call, attempts: int = 8, wait: float = 15.0):
-    """Retries a Hindsight call while its LLM provider is rate-limited per minute. Anything else fails at once."""
+def patiently(call, attempts: int = 14, wait: float = 15.0):
+    """Retries a Hindsight call while its LLM provider is rate-limited, for up to about 20 minutes.
+
+    Self-hosted Hindsight on a free LLM tier can mark the provider as blocked for several minutes after a burst.
+    Anything other than a rate limit fails at once, including running out of credit.
+    """
     for attempt in range(attempts):
         try:
             return call()
         except Exception as exc:
             if not rate_limited(exc) or attempt + 1 == attempts:
                 raise
-            time.sleep(min(60.0, wait * (attempt + 1)))
+            time.sleep(min(120.0, wait * (attempt + 1)))
 
 
 class HindsightMemory:

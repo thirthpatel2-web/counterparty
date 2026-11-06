@@ -110,3 +110,7 @@ Committed before any run. Three blind reviews found that labelled records ("That
 - **Seeds:** 401, 402 and 403. Run with `python scripts/belief_study.py --notes --seed 401`.
 - **Claim:** if Hindsight's accuracy on notes approaches the structured ceiling, then Hindsight learns the vendors from unstructured history, which counting can't read. If it falls well short, we report that.
 - **Invalid runs:** any study with a briefing refused for credit or quota is invalid and rerun, as in Amendment 2.
+
+## Messy-notes study status
+
+Not run yet. The Hindsight Cloud credit is used up. Self-hosted Hindsight on Groq's free tier was tried with two models: `gpt-oss-20b` hit its daily token limit, and `qwen/qwen3.8-27b` allows about 7,000 tokens a minute, roughly one Hindsight step a minute, too slow for a 24-deal study before the deadline. No notes study has produced a result, so nothing has been reported or dropped. The protocol above is unchanged and runs as soon as credit is available.
