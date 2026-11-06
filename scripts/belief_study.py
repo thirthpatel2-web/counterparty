@@ -34,12 +34,33 @@ def block(found: list[dict]) -> str:
     row = lambda name, curve: f"| {name} | " + " | ".join(f"{p['accuracy']:.0%}" for p in curve) + " |"
     spread = lambda curve: " | ".join(f"{p['low']:.0%}–{p['high']:.0%}" for p in curve)
     failures = sum(s["brief_failures"].get("hindsight", 0) for s in found)
-    return (f"{len(found)} live stud{'y' if len(found) == 1 else 'ies'} "
-            f"({', '.join('`' + s['id'] + '`' for s in found)}), {failures} failed briefings.\n\n"
+
+    def tally(name: str, studies_: list[dict], max_checkpoint: int = 99) -> str:
+        marks = [v for s in studies_ for r in s["rows"] if r["memory"] == name and r["checkpoint"] <= max_checkpoint
+                 for v in r["score"].values()]
+        right, wrong = sum(v is True for v in marks), sum(v is False for v in marks)
+        return (f"{right} right, {wrong} confidently wrong, {len(marks) - right - wrong} unknown, out of {len(marks)}; "
+                f"calibrated score {(right - wrong) / len(marks):+.2f}")
+
+    partial = sorted(RUNS_DIR.glob("archive-beliefs-invalid/beliefs-*-live.json"))
+    partial_note = ""
+    if partial:
+        p = json.loads(partial[0].read_text(encoding="utf-8"))
+        partial_note = (f"\n\nStudy `{p['id']}` (seed 203) was invalidated when Hindsight Cloud ran out of credit "
+                        "after checkpoint 3. Its valid checkpoints 1-3 alone give Hindsight "
+                        f"{tally('hindsight', [p], 3)}, and arithmetic {tally('arithmetic', [p], 3)}.")
+    return (f"{len(found)} live stud{'y' if len(found) == 1 else 'ies'}: "
+            + ", ".join(f"`{s['id']}` ({s.get('backend') or 'Hindsight Cloud'})" for s in found)
+            + f". {failures} failed briefings.\n\n"
             "Share of the 9 questions (3 per vendor) that the briefing answered correctly. Saying \"unknown\" counts "
             "as not correct.\n\n"
             f"{head}\n{row('Hindsight reflect briefing', hs)}\n{row('Exact arithmetic over the same records', ar)}\n\n"
             f"Range across studies for Hindsight: {spread(hs)}.\n\n"
+            f"Across all checkpoints, Hindsight: {tally('hindsight', found)}. Arithmetic: "
+            f"{tally('arithmetic', found)}. The calibrated score counts +1 per right answer and -1 per confidently "
+            "wrong one, so guessing doesn't pay. Both curves rise as the same records arrive. Arithmetic is a "
+            "hand-written rule over the same labels, not a ceiling."
+            f"{partial_note}\n\n"
             "The questions: does the vendor bluff about \"final\"? At which round does it walk away? Is quarter-end "
             "cheaper? The answers are checked against the simulator's hidden traits.")
 

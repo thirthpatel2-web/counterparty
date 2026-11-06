@@ -212,10 +212,8 @@ class HindsightMemory:
     def brief(self, vendor_slug, vendor_name, month):
         """Hindsight reflects over the vendor's history, shaped by the bank's skeptical disposition.
 
-        No briefing for a vendor with no history. A failed briefing is counted and the deal goes ahead on recall.
+        Callers skip it for a vendor with no history. A failed briefing is counted and the deal goes ahead on recall.
         """
-        if not self.recall(vendor_slug, vendor_name, month):
-            return {}
         try:
             response = patiently(lambda: self.client.reflect(
                 self.bank_id, f"Brief a buyer about to negotiate with {vendor_name} in {self._period(month)}. "
@@ -241,12 +239,17 @@ class HindsightMemory:
         for document_id in document_ids:
             _run_async(self.client.documents.delete_document(target, document_id))
 
-        def pending():
-            ops = _run_async(self.client.operations.list_operations(target, status="pending", limit=1))
-            busy = _run_async(self.client.operations.list_operations(target, status="processing", limit=1))
-            return "busy" if (getattr(ops, "operations", None) or getattr(busy, "operations", None)) else "completed"
+        started = time.monotonic()
 
-        self._wait(pending, timeout)
+        def settled():
+            # Done once nothing is queued and either a consolidation has run or none was queued within 20 seconds.
+            ops = _run_async(self.client.operations.list_operations(target, limit=50)).operations or []
+            if any(o.status in {"pending", "processing"} for o in ops):
+                return "busy"
+            consolidated = any((o.operation_type or o.task_type or "") == "consolidation" for o in ops)
+            return "completed" if consolidated or time.monotonic() - started > 20 else "busy"
+
+        self._wait(settled, timeout)
         return HindsightMemory(self.client, target)
 
     @staticmethod

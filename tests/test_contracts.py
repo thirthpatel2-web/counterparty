@@ -35,9 +35,13 @@ def test_hindsight_calls_match_the_real_client():
     assert all(not isinstance(p["type"], list) for p in BRIEF_SCHEMA["properties"].values())  # 500s otherwise
     client.reflect.side_effect = RuntimeError("500")
     assert memory.brief("apex", "Apex Circuits", 4) == {} and memory.brief_failures == 1
+    client.reflect.side_effect = None
     client.recall.return_value = SimpleNamespace(results=[])
     client.reflect.reset_mock()
-    assert memory.brief("nova", "Nova Components", 1) == {} and not client.reflect.called
+    from engine.arena import DealSpec, run_deal
+    from engine.brains import RuleBrain
+    run_deal(DealSpec(1, "nova", 1, 2025, 3), RuleBrain(), memory)  # no history: no briefing call
+    assert not client.reflect.called
 
 
 def test_groq_call_matches_the_real_client():

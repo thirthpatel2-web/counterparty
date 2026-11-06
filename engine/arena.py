@@ -77,7 +77,7 @@ def run_deal(spec: DealSpec, brain: Brain, memory: Memory | None, *, retain: boo
     effective_seed = spec.seed if seed is None else seed
     talks = Negotiation(vendor, spec.month, effective_seed)
     items = memory.recall(vendor.slug, vendor.name, spec.month) if memory else []
-    brief = memory.brief(vendor.slug, vendor.name, spec.month) if memory else {}
+    brief = memory.brief(vendor.slug, vendor.name, spec.month) if memory and items else {}
     memory_texts = ([brief_text(brief)] if brief else []) + [m.text for m in items]
     reply = talks.opening()
     opening = reply.price

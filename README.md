@@ -6,9 +6,10 @@ A vendor says "this is my final price". One deal can't tell you if that's true. 
 
 **What we found** (all figures in [Results](#results), from runs recorded under a protocol committed in advance):
 
-- **Hindsight learns the truth.** Its briefings went from about 1 in 5 questions right after one deal per vendor to matching exact arithmetic over the same records, checked against the simulator's hidden vendor traits.
-- **Its disposition shapes its beliefs.** A bank set to maximum skepticism called an honest vendor a bluffer for its first 6 deals. We test that directly.
-- **An LLM negotiator didn't beat a one-line rule**, even with memory. Knowing a vendor is not the same as bargaining well, so the briefing is for the human buyer first.
+- **Hindsight's beliefs track the evidence.** Its briefings went from 33% of questions right after one deal per vendor to 94% after eight, level with exact arithmetic over the same records, checked against the simulator's hidden vendor traits. Arithmetic made fewer confident mistakes.
+- **Our own labels can mislead memory.** Hindsight called honest Bharat PCB a bluffer at its first five checkpoints in one study. A blind reviewer traced this to our records: Bharat sometimes says "final" within 1% of its floor and then concedes a little more, which our code labels FALSE. Hindsight read the evidence correctly. The evidence was wrong.
+- **Following the briefings pays off once learned.** A no-LLM buyer that follows Hindsight's briefings beat the rule by about ₹2,500 per deal in the last third of both studies, and roughly broke even overall, because of deals lost while learning.
+- **An LLM negotiator didn't beat a one-line rule**, even with memory. Knowing a vendor is not the same as bargaining well.
 
 ## Why memory is the product
 
@@ -71,7 +72,7 @@ Our code never writes "what to do next time". It records what happened, and Hind
 ### Does Hindsight learn the truth about each vendor?
 
 <!-- BELIEFS -->
-2 live studies (`20261106-141022-41b9`, `20261106-141455-0417`), 0 failed briefings.
+2 live studies: `20261106-141022-41b9` (Hindsight Cloud), `20261106-141455-0417` (Hindsight Cloud). 0 failed briefings.
 
 Share of the 9 questions (3 per vendor) that the briefing answered correctly. Saying "unknown" counts as not correct.
 
@@ -82,13 +83,34 @@ Share of the 9 questions (3 per vendor) that the briefing answered correctly. Sa
 
 Range across studies for Hindsight: 22%–44% | 33%–44% | 67%–78% | 78%–89% | 78%–89% | 89%–100%.
 
+Across all checkpoints, Hindsight: 73 right, 5 confidently wrong, 30 unknown, out of 108; calibrated score +0.63. Arithmetic: 75 right, 0 confidently wrong, 33 unknown, out of 108; calibrated score +0.69. The calibrated score counts +1 per right answer and -1 per confidently wrong one, so guessing doesn't pay. Both curves rise as the same records arrive. Arithmetic is a hand-written rule over the same labels, not a ceiling.
+
+Study `20261106-141812-509f` (seed 203) was invalidated when Hindsight Cloud ran out of credit after checkpoint 3. Its valid checkpoints 1-3 alone give Hindsight 12 right, 3 confidently wrong, 12 unknown, out of 27; calibrated score +0.33, and arithmetic 11 right, 0 confidently wrong, 16 unknown, out of 27; calibrated score +0.41.
+
 The questions: does the vendor bluff about "final"? At which round does it walk away? Is quarter-end cheaper? The answers are checked against the simulator's hidden traits.
 <!-- /BELIEFS -->
+
+### Does what Hindsight learned turn into better prices?
+
+<!-- BRIEFED -->
+A buyer with no LLM that follows Hindsight's own briefings, replayed on the same deals as the rule. Across 2 studies it paid ₹210 less per deal overall than the rule, and **₹2,566 less per deal in the last third**, once it had learned. Early on it loses some deals finding where each vendor walks away.
+
+| Study | Buyer | Avg paid | Rule avg | Oracle avg | Vs rule, all deals | Vs rule, last third | Deals lost |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `20261106-141022-41b9` | Hindsight briefings | ₹88,510 | ₹88,390 | ₹85,382 | ₹120 more | ₹2,450 less | 3 |
+| `20261106-141022-41b9` | Arithmetic briefings | ₹87,895 | ₹88,390 | ₹85,382 | ₹496 less | ₹2,450 less | 2 |
+| `20261106-141455-0417` | Hindsight briefings | ₹87,772 | ₹88,311 | ₹85,445 | ₹539 less | ₹2,681 less | 2 |
+| `20261106-141455-0417` | Arithmetic briefings | ₹87,772 | ₹88,311 | ₹85,445 | ₹539 less | ₹2,681 less | 2 |
+
+The policy and the comparison were committed in [EVALUATION.md](EVALUATION.md) before computing. The briefings are the ones Hindsight wrote during the live studies, so no new calls were made. With 2 studies and 8 deals each in the last third, treat this as early evidence, not proof.
+<!-- /BRIEFED -->
 
 ### Does disposition change what Hindsight believes?
 
 <!-- DISPOSITION -->
-Not measured yet. The pre-registered test (seeds 301 and 302: identical evidence into banks with skepticism 5 and 3) was started on self-hosted Hindsight, then stopped when the laptop ran low on memory, so it has no result. What we have so far is one observation: in study 201, the skepticism-5 bank called honest Bharat PCB a bluffer at its first 6 checkpoints, while exact arithmetic said "unknown". In study 202, the same question was answered correctly at deals 1 and 2, then "unknown". Together these suggest a skeptical disposition, but they don't prove it.
+Not measured. The pre-registered skepticism-5 vs skepticism-3 test (seeds 301 and 302) was started on self-hosted Hindsight, then stopped when the laptop ran low on memory.
+
+We first read Hindsight calling honest Bharat PCB a bluffer (study 201, checkpoints 1-6) as a sign of the bank's maximum-skepticism disposition. A blind review found a simpler explanation in our own records. Bharat sometimes says "final" within 1% of its floor (`FINAL_TOLERANCE` in `engine/simulator.py`) and then concedes a few hundred rupees more, and `DealRecord.to_text` labels that claim FALSE. In study 201's first Bharat deal, the only tested "final" was labelled FALSE, so "usually bluffs" was what the evidence said. Study 202 had no such labels, and Hindsight never called Bharat a bluffer. The fix, labelling a sub-1% move as honest or scoring against the evidence actually available, would change the recorded studies, so it waits for new runs.
 <!-- /DISPOSITION -->
 
 ### Does an LLM negotiator with memory beat a simple rule?
@@ -97,7 +119,7 @@ Not measured yet. The pre-registered test (seeds 301 and 302: identical evidence
 No valid live runs recorded yet under the current protocol.
 <!-- /RESULTS -->
 
-The one protocol v2 negotiation attempt (seed 101, `openai/gpt-oss-120b`) was stopped by Groq's daily token limit after 19 of 24 deals, so it isn't a recorded result. Its console output is in [runs/archive-v2-partial](runs/archive-v2-partial/seed-101-console.txt). The LLM buyer paid more than the rule on all 19 deals, including the first, where it had no memory. So the gap comes from the LLM's bargaining, not from memory. We report it rather than tune the prompt against the test again.
+The one protocol v2 negotiation attempt (seed 101, `openai/gpt-oss-120b`) was stopped by Groq's daily token limit after 19 of 24 deals, so it isn't a recorded result. Its console output is in [runs/archive-v2-partial](runs/archive-v2-partial/seed-101-console.txt). The LLM buyer paid more than the rule on all 19 deals. On deal 1 it had no memory yet and still paid more, which suggests the gap is the LLM's bargaining, but the memoryless LLM arm wasn't run, so that isn't measured. We report it rather than tune the prompt against the test again.
 
 ## Run it
 
