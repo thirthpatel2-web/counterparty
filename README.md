@@ -88,7 +88,7 @@ The questions: does the vendor bluff about "final"? At which round does it walk 
 ### Does disposition change what Hindsight believes?
 
 <!-- DISPOSITION -->
-Not run yet.
+Not measured yet. The pre-registered test (seeds 301 and 302: identical evidence into banks with skepticism 5 and 3) was started on self-hosted Hindsight, then stopped when the laptop ran low on memory, so it has no result. What we have so far is one observation: in study 201, the skepticism-5 bank called honest Bharat PCB a bluffer at its first 6 checkpoints, while exact arithmetic said "unknown". In study 202, the same question was answered correctly at deals 1 and 2, then "unknown". Together these suggest a skeptical disposition, but they don't prove it.
 <!-- /DISPOSITION -->
 
 ### Does an LLM negotiator with memory beat a simple rule?

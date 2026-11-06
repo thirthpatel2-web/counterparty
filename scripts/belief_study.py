@@ -74,7 +74,11 @@ def main() -> int:
                 print(f"after {event['checkpoint']} {event['vendor']} deals: {event['score']} {event['brief']}"[:300],
                       flush=True)
 
-        result = run_belief_study(schedule(args.deals, args.seed), memories, mode=stack.mode, emit=show)
+        import os
+        backend = os.getenv("HINDSIGHT_BASE_URL") or "Hindsight Cloud"
+        backend = "self-hosted Hindsight 1.2.0, LLM groq/openai/gpt-oss-20b" if "localhost" in backend else backend
+        result = run_belief_study(schedule(args.deals, args.seed), memories, mode=stack.mode, emit=show,
+                                  backend=backend if stack.mode == "live" else "")
         for name, curve in result["curve"].items():
             print(name, " ".join(f"{p['checkpoint']}:{p['accuracy']:.0%}" for p in curve), flush=True)
         if stack.mode != "live":

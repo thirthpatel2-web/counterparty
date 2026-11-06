@@ -51,3 +51,29 @@ def test_groq_call_matches_the_real_client():
     assert LLMBrain(client).decide(state, [], 1).action == "accept"
     kwargs = create.call_args.kwargs
     assert kwargs["tools"] == TOOLS and kwargs["tool_choice"] == "required" and kwargs["reasoning_effort"] == "low"
+
+
+def test_rate_limits_are_retried_but_other_errors_are_not(monkeypatch):
+    import engine.memory as memory_module
+
+    monkeypatch.setattr(memory_module.time, "sleep", lambda s: None)
+    calls = []
+
+    def flaky():
+        calls.append(1)
+        if len(calls) < 3:
+            raise RuntimeError("HTTP 429: Rate limit reached")
+        return "ok"
+
+    assert memory_module.patiently(flaky) == "ok" and len(calls) == 3
+    calls.clear()
+
+    def broke():
+        calls.append(1)
+        raise RuntimeError("402 Insufficient credits")
+
+    try:
+        memory_module.patiently(broke)
+    except RuntimeError:
+        pass
+    assert len(calls) == 1

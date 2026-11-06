@@ -152,6 +152,22 @@ class LocalMemory:
         return LocalMemory([r for r in self.records if r.deal_id not in document_ids], self.limit)
 
 
+def rate_limited(exc: Exception) -> bool:
+    text = str(exc).lower()
+    return "429" in text or "rate limit" in text or "quota exhausted" in text
+
+
+def patiently(call, attempts: int = 8, wait: float = 15.0):
+    """Retries a Hindsight call while its LLM provider is rate-limited per minute. Anything else fails at once."""
+    for attempt in range(attempts):
+        try:
+            return call()
+        except Exception as exc:
+            if not rate_limited(exc) or attempt + 1 == attempts:
+                raise
+            time.sleep(min(60.0, wait * (attempt + 1)))
+
+
 class HindsightMemory:
     """Hindsight Cloud or self-hosted memory: one bank per race, one document per deal, tagged by vendor."""
     QUERY = ("How does {name} really negotiate, especially in {period}? Which final-price claims were false, what "
@@ -177,12 +193,12 @@ class HindsightMemory:
         )
 
     def retain(self, record: DealRecord) -> None:
-        self.client.retain(
+        patiently(lambda: self.client.retain(
             self.bank_id, record.to_text(), timestamp=record.when, context="closed procurement negotiation",
             document_id=record.deal_id,
             tags=[f"vendor:{record.vendor_slug}", f"quarter_end:{'yes' if record.quarter_end else 'no'}"],
             metadata={"vendor": record.vendor_slug, "outcome": record.outcome},
-        )
+        ))
 
     def recall(self, vendor_slug, vendor_name, month):
         response = self.client.recall(
@@ -201,11 +217,11 @@ class HindsightMemory:
         if not self.recall(vendor_slug, vendor_name, month):
             return {}
         try:
-            response = self.client.reflect(
+            response = patiently(lambda: self.client.reflect(
                 self.bank_id, f"Brief a buyer about to negotiate with {vendor_name} in {self._period(month)}. "
                 + self.QUERY.format(name=vendor_name, period=self._period(month)),
                 budget="low", response_schema=BRIEF_SCHEMA, tags=[f"vendor:{vendor_slug}"], tags_match="any_strict",
-            )
+            ))
         except Exception:
             self.brief_failures += 1
             return {}
