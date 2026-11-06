@@ -1,0 +1,21 @@
+Mode: live openai/gpt-oss-120b
+Deal   1 Bharat PCB       rule  90,450 memory  95,583
+Deal   2 Apex Circuits    rule  84,536 memory  96,114
+Deal   3 Nova Components  rule  89,801 memory  94,537
+Deal   4 Apex Circuits    rule  87,759 memory  96,585
+Deal   5 Bharat PCB       rule  89,760 memory  94,411
+Deal   6 Nova Components  rule  87,843 memory  95,887
+Deal   7 Nova Components  rule  85,549 memory  96,302
+Deal   8 Apex Circuits    rule  81,123 memory  96,515
+Deal   9 Bharat PCB       rule  90,018 memory  93,611
+Deal  10 Bharat PCB       rule  91,114 memory  94,850
+Deal  11 Apex Circuits    rule  87,988 memory  97,487
+Deal  12 Nova Components  rule  90,334 memory  97,426
+Deal  13 Bharat PCB       rule  89,773 memory  94,768
+Deal  14 Apex Circuits    rule  88,699 memory  97,408
+Deal  15 Nova Components  rule  88,095 memory  96,324
+Deal  16 Apex Circuits    rule  84,865 memory  96,100
+Deal  17 Nova Components  rule  85,375 memory  94,796
+Deal  18 Bharat PCB       rule  90,928 memory  93,327
+Deal  19 Bharat PCB       rule  89,450 memory  89,941
+Stopped: the LLM provider's daily quota is used up, so no result was recorded. Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_[redacted]` service tier `on_demand` on tokens per day (TPD): Limit 

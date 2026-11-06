@@ -47,3 +47,22 @@ Runs recorded under protocol v1 are kept in `runs/archive-v1`. v1 had a memory-l
 ## Amendments
 
 1. **Before any valid run:** the first attempt at seed 101 stopped at its first briefing, because Hindsight's reflect returns HTTP 500 for nullable types in `response_schema`. The briefing schema now uses integers, with 0 meaning unknown. A vendor with no history gets no briefing, and a failed briefing is counted in the run as `brief_failures` instead of stopping it. The prompt, model, simulator and seeds are unchanged.
+
+# Belief study (beliefs-v1)
+
+Committed before any live belief study.
+
+**Question:** does Hindsight learn the truth about each vendor from deal outcomes alone?
+
+- **Evidence:** the rule-based learner (no LLM) plays 24 deals per study, and every outcome is retained in a fresh Hindsight bank. The learner pushes past "final" claims and finds walk-away rounds, so the evidence is informative and identical for every memory being tested.
+- **Questions, per vendor:** does it bluff about "final"? At which round does it walk away? Is quarter-end cheaper? Each is checked against the simulator's hidden traits. Walk-away rounds vary by one, so either value counts as right. "Unknown" counts as not correct.
+- **Checkpoints:** after each vendor's 1st, 2nd, 3rd, 4th, 6th and 8th deal.
+- **Comparison:** exact arithmetic over the same records (`LocalMemory.brief`). This is the ceiling for what the records support.
+- **Seeds:** 201, 202 and 203, in that order. `python scripts/belief_study.py --seed 201`
+- **Reported:** every live study, pooled per checkpoint, with the range across studies.
+
+**Known limit:** Bharat PCB only says "final" when its ask lands within 1% of its floor, and that doesn't happen in every deal. Some of its deals carry no "final" claim at all, so even perfect arithmetic can't always answer the bluff question for Bharat.
+
+## Negotiation runs under protocol v2
+
+Seed 101 was stopped by Groq's daily token limit after 19 of 24 deals, so it is not a recorded result. Its console output is kept in `runs/archive-v2-partial/seed-101-console.txt`. Across those 19 deals, the LLM buyer with Hindsight memory paid more than the rule on every deal, including the first deal, where it had no memory. The LLM negotiator itself is weaker than a one-line rule, and that is what we report.

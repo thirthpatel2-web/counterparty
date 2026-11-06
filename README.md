@@ -62,6 +62,14 @@ Our code never writes "what to do next time". It records what happened, and Hind
 
 ## Results
 
+### Does Hindsight learn the truth about each vendor?
+
+<!-- BELIEFS -->
+No live belief studies recorded yet.
+<!-- /BELIEFS -->
+
+### Does an LLM negotiator with memory beat a simple rule?
+
 <!-- RESULTS -->
 No valid live runs recorded yet under the current protocol.
 <!-- /RESULTS -->
