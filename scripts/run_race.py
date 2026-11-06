@@ -57,7 +57,10 @@ def main() -> int:
     result = run_race(schedule(args.deals, args.seed), stack.brain_memory, stack.brain_twin, stack.memory,
                       mode=stack.mode, emit=progress)
     print(results_block(result).encode("ascii", "replace").decode())
-    if stack.mode == "live":
+    if result["fallbacks"]:
+        print(f"{result['fallbacks']} decisions were fallbacks, not the model's, so this run is not a result. "
+              "The README was left alone. Check the API's rate limits and run again.")
+    elif stack.mode == "live":
         write_readme(result)
         print("README updated with these results.")
     else:
